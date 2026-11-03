@@ -7,6 +7,9 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '31 5 * * 1' # Weekly Monday 05:31 UTC
+concurrency:
+  group: public-activity-discovery-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
