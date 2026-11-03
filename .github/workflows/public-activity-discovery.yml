@@ -1,9 +1,5 @@
 name: Public external activity discovery (read-only)
 on:
-  pull_request:
-    paths:
-      - 'scripts/discover_public_activity.py'
-      - '.github/workflows/public-activity-discovery.yml'
   workflow_dispatch:
   schedule:
     - cron: '31 5 * * 1' # Weekly Monday 05:31 UTC
