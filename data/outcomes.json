@@ -54,8 +54,14 @@
       "project": "NVIDIA/aicr",
       "status": "UPSTREAM_REVIEWER_ACKNOWLEDGED_GAP",
       "source_url": "https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760",
-      "description": "Upstream reviewer noted nonblocking bundler-level test gap; upstream author's PR merged; AETHER's proposed test not verified included.",
-      "as_of": "2026-11-03"
+      "description": "AETHER proposed a bundler-level test for verified attestation bytes matching written bundle bytes; an upstream reviewer recognized this as a nonblocking future test gap. Original upstream author mohityadav8's fix merged on 2026-11-01 at 3013757e14742640032148fb84c42e745ea00399. The AETHER-suggested additional bundler-level regression was not included in the verified merged patch; no AETHER-owned upstream code merge.",
+      "as_of": "2026-11-03",
+      "upstream_pr_url": "https://github.com/NVIDIA/aicr/pull/3539",
+      "upstream_merge_commit": "3013757e14742640032148fb84c42e745ea00399",
+      "upstream_merged_at": "2026-11-01T23:12:43Z",
+      "upstream_author": "mohityadav8",
+      "aether_test_merged": false,
+      "follow_up_disposition": "DOCUMENTED_AND_CLOSED_NO_PENDING_UPSTREAM_SUBMISSION"
     },
     {
       "id": "NODE-REDIS-3564",
