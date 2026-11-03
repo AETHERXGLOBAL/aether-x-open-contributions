@@ -1,0 +1,32 @@
+name: Public external activity discovery (read-only)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '31 5 * * 1' # Weekly Monday 05:31 UTC
+permissions:
+  contents: read
+jobs:
+  discover-public-activity:
+    name: discover-public-activity
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout pinned official GitHub action
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Read and verify public GitHub contributor activity
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/discover_public_activity.py \
+            --catalog data/contributions.json \
+            --output "$RUNNER_TEMP/aether-public-discovery"
+      - name: Preserve review-only evidence
+        if: success()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: aether-public-discovery
+          path: ${{ runner.temp }}/aether-public-discovery/
+          retention-days: 30
+          if-no-files-found: error
