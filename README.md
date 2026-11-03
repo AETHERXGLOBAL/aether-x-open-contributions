@@ -48,7 +48,7 @@ These are **upstream-authored outcomes**, not AETHER-owned merged code, and are 
 
 ## Historical discovery and controlled updates
 
-An expanded GitHub Search census found **233 distinct public external discussion threads**, including **200 threads beyond the original curated discussion index**. These are discovery leads, **not 233 verified technical achievements or accepted contributions**. See the [historical discovery census](data/discovery/2026-11-03-public-threads.json) and [governed weekly review process](docs/GOVERNED_UPDATES.md). The 43 independently cataloged source links above remain the verified initial baseline.
+An expanded GitHub Search census found **233 distinct public external discussion threads** and a completed native GitHub Actions replay verified **242 original comment/review URLs** by the contributor account, including **210 URLs outside the original curated 43-reference portfolio**. These are verified public participation records, **not 242 engineering achievements or accepted fixes**. See the [public historical register](data/discovery/README.md), [original source permalinks](data/discovery/2026-11-03-author-verified-links.json), and [governed weekly review process](docs/GOVERNED_UPDATES.md). The 43 carefully classified sources above remain the initial curated engineering baseline.
 
 ## Integrity and reuse
 
