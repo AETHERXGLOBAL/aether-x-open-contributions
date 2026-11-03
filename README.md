@@ -46,6 +46,10 @@ These are **upstream-authored outcomes**, not AETHER-owned merged code, and are 
 | [Evidence taxonomy](docs/STATUS_DEFINITIONS.md) | Distinction between comment, executed test, adoption, merge and release |
 | [Publications policy](docs/PUBLICATION_POLICY.md) | Privacy, licensing, disclosure, correction and publication controls |
 
+## Historical discovery and controlled updates
+
+An expanded GitHub Search census found **233 distinct public external discussion threads** and a completed native GitHub Actions replay verified **242 original comment/review URLs** by the contributor account, including **210 URLs outside the original curated 43-reference portfolio**. These are verified public participation records, **not 242 engineering achievements or accepted fixes**. See the [public historical register](data/discovery/README.md), [original source permalinks](data/discovery/2026-11-03-author-verified-links.json), and [governed weekly review process](docs/GOVERNED_UPDATES.md). The 43 carefully classified sources above remain the initial curated engineering baseline.
+
 ## Integrity and reuse
 
 Every factual highlight links to the public original GitHub record. A user-executed native test with independently checked archive bytes is **not** described as a second independently run test. Historical source bytes and their SHA-256 digests are preserved. No private company audit logs, local host identities, cloud account IDs, credentials or private-repository content are mirrored.

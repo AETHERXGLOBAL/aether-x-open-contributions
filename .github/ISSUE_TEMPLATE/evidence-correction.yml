@@ -1,0 +1,37 @@
+name: Correct a published contribution record
+description: Suggest an evidence-backed correction to public GitHub contribution metadata
+title: "[Evidence correction] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please do not post private reports, credentials, tokens, embargoed vulnerabilities, personal data or host logs. Use the original project's private disclosure channel for security issues.
+  - type: input
+    id: source
+    attributes:
+      label: Original public GitHub permalink
+      description: Exact thread, comment, pull request, review or commit URL
+      placeholder: https://github.com/owner/repo/issues/123#issuecomment-456
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: What needs correction?
+      description: Identify the exact record, claim and evidence that contradicts it
+    validations:
+      required: true
+  - type: textarea
+    id: supported
+    attributes:
+      label: Proposed source-backed wording
+      description: Separate verified facts, upstream authorship and outstanding uncertainty
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public disclosure check
+      options:
+        - label: My submission contains no secrets, personal private data or embargoed security details
+          required: true

@@ -1,0 +1,6 @@
+# Review ownership; actual enforcement requires a GitHub ruleset.
+* @aetherxeg-source
+/.github/ @aetherxeg-source
+/data/ @aetherxeg-source
+/scripts/ @aetherxeg-source
+/tests/ @aetherxeg-source
