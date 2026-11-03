@@ -25,4 +25,35 @@ for f in root.rglob("*"):
     if f.is_file() and f.suffix.lower() in {".md",".json",".csv",".go",".tcl",".sh"}:
         t=f.read_text(encoding="utf8")
         assert not re.search(r"(?:ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[0-9A-Z]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----)",t),f
+
+# The historical search census is a discovery tier, not an achievement count.
+threads=json.loads((root/"data/discovery/2026-11-03-public-threads.json").read_text(encoding="utf8"))
+assert len(threads["threads"])==233
+assert len({(x["repo"],x["number"]) for x in threads["threads"]})==233
+assert sum(x["kind"]=="issue" for x in threads["threads"])==217
+assert sum(x["kind"]=="pull_request" for x in threads["threads"])==16
+assert threads["totals"]["discovered_not_in_2026_11_03_verified_thread_set"]==200
+assert all(x["comment_permalink_verification"]=="PENDING" for x in threads["threads"])
+
+# Original public permalink identity proof from the successful GitHub-native discovery job.
+evidence=json.loads((root/"data/discovery/2026-11-03-author-verified-links.json").read_text(encoding="utf8"))
+assert evidence["account"]=="aetherxeg-source"
+assert evidence["source_artifact_sha256"]=="8a163906a86ec7eafad3d4c2776a388c421dc11e004e57a7a40418f157c3c9f4"
+comments=evidence["comments"]
+authored=evidence["authored_discussions"]
+assert len(comments)==242 and len(authored)==10
+assert len({x["source_url"] for x in comments})==242
+assert len({x["source_url"] for x in authored})==10
+assert sum(not x["previously_cataloged"] for x in comments)==210
+assert sum(not x["previously_cataloged"] for x in authored)==7
+catalog_sources={x["source_url"] for x in rows}
+for item in comments+authored:
+    p=urlparse(item["source_url"])
+    assert p.scheme=="https" and p.netloc=="github.com" and p.path.startswith("/"+item["project"]+"/")
+    assert item["author"]=="aetherxeg-source"
+    if item["previously_cataloged"]:
+        assert item["source_url"] in catalog_sources
+    else:
+        assert item["source_url"] not in catalog_sources
+
 print("PUBLIC_CATALOG=PASS entries=43 technical_comments=40 authored_prs=3 merged_prs=2 test_sources=2")
