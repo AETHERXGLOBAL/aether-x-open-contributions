@@ -10,3 +10,9 @@
 8. No automated external GitHub issues, comments, PRs, merges or governance permissions are created by this catalog.
 9. Retain historical snapshots; create new dated state observations only with current primary-source checks.
 10. For upstream vulnerabilities use project-specific private security channels.
+
+## Required upstream communication gate
+
+For each external repository, inspect its current human-contribution and GenAI policies **before writing comments, opening a PR, or proposing code**. Respond appropriately to a maintainer instruction to stop AI-generated commentary; never automatically repeat or debate it. Human review, understanding, authorship disclosure when requested, and exact approval of the outward content are required. Verified local tests are evidence of behavior, not consent to send generated communications.
+
+The public register is **not** an upstream submission queue. See the [single-owner operating policy](GOVERNED_UPDATES.md).
