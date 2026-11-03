@@ -1,31 +1,56 @@
-# GitHub repository identity and branch-protection requirements
+# Verified GitHub repository configuration
 
-Repository: \`AETHERXGLOBAL/aether-x-open-contributions\` — public, default \`main\`.
+**AETHER X GLOBAL — Open Contributions**  
+**Verification date:** 3 November 2026  
+**Result:** `REPOSITORY_CONFIGURATION_PASS` (GitHub REST read-back)
 
-## Proposed public identity
+## Public repository identity
 
-- Description: **Evidence-backed open-source engineering contributions, reproducible tests, and verified collaboration by AETHER X GLOBAL.**
+- Repository: [AETHERXGLOBAL/aether-x-open-contributions](https://github.com/AETHERXGLOBAL/aether-x-open-contributions)
+- Visibility: **Public**
+- Default branch: `main`
+- Description: *Evidence-backed open-source engineering contributions, reproducible tests, and verified collaboration by AETHER X GLOBAL.*
 - Homepage: https://aetherxglobal.com
-- Topics: \`open-source\`, \`engineering\`, \`regression-testing\`, \`reproducibility\`, \`software-assurance\`, \`developer-relations\`, \`aether-x\`
-- Preferred merge: squash only; delete feature branches after merge; maintain Issues; disable Wiki.
+- Topics (as applied): `aether`, `developer-relations`, `engineering`, `open-source`, `regression-testing`, `reproducibility`, `software-assurance`
 
-## Enforced protection target
+## Repository-wide merge policy
 
-Apply one repository-level ruleset named **AETHER X Public Evidence Main Guard** to the default branch:
+| Setting | Read-back |
+|---|---|
+| Squash merges | Enabled |
+| Merge commits | Disabled |
+| Rebase merges | Disabled |
+| Delete head branch after merge | Enabled |
 
-- Require pull requests for changes to \`main\`.
-- Require a successful \`catalog-integrity\` check, with up-to-date branch policy.
-- Block force-pushes and deletion; require linear history.
-- Require resolution of PR review conversations.
-- Do not grant administrator or automation bypass.
-- Set approval count **0 initially** to avoid deadlocking the sole authenticated contributor. Once a genuine second reviewer is authorized and onboarded, require **at least one independent review** and enforce CODEOWNERS. CODEOWNERS alone does *not* activate branch protection.
+## Enforced ruleset for `main`
 
-**Administrative permission gap:** The linked ChatGPT GitHub connector could read repository metadata and list current repository rulesets (\`[]\`), but the classic branch-protection endpoint returned **403**. The connector does not expose repository Administration writes, even though the connected identity may be an administrator in the GitHub UI.
+[**AETHER X Public Evidence Main Guard — Ruleset #26478002**](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/rules/26478002)
 
-## Application gate
+- **Enforcement:** Active
+- **Target:** Default branch (`~DEFAULT_BRANCH`)
+- **Bypass actors:** None; current authenticated user cannot bypass
+- **Prohibit deletion and non-fast-forward / force pushes**
+- **Require linear history**
+- **Require a Pull Request before merging**
+- **Resolve review conversations before merging**
+- **Allowed PR merge method:** Squash only
+- **Required status check:** `catalog-integrity` via GitHub Actions; strict up-to-date policy enabled
+- **Required approving reviews:** `0` — intentional single-operator transitional state; not an independent approval gate
+- **Extra approval for unattributed Copilot changes:** Enabled
+- **Code-owner reviews:** Not yet mandatory
 
-Run [the reviewed admin script](../scripts/apply_repository_admin_settings.sh) from a \`gh\` CLI installation authenticated as a repository administrator. Default behavior is dry-run; \`--apply\` only proceeds after a real hosted \`catalog-integrity\` PASS on \`main\`. It updates description, homepage and topics, then creates the ruleset and prints actual read-back. If the GitHub account/token lacks repository Administration:write, it exits without claiming success.
+The `catalog-integrity` workflow [completed successfully on the baseline `main` merge commit](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/actions/runs/41692976046).
 
-Or use [Repository Settings](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/settings) and [Rulesets](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/settings/rules).
+### Future hardening
 
-**Do not state metadata or protection settings are applied until verified from GitHub after the admin mutation.**
+When a qualified second reviewer is authorized, raise required approvals from zero to one and evaluate mandatory CODEOWNERS reviews. Do not add a review requirement before ensuring the independent reviewer can actually approve, to avoid a repository workflow deadlock.
+
+### Scope of verification
+
+These settings were read back from the live GitHub repository and ruleset endpoints. This is evidence of current configuration, **not** a penetration test, independent security certification, or guarantee against misconfigured future changes.
+
+The historical [admin configuration script](../scripts/apply_repository_admin_settings.sh) is **not needed now** and should not be run: it deliberately refuses an already existing ruleset rather than modifying or duplicating it.
+
+For future changes, use [Repository Settings](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/settings) and open a reviewed PR for any documentation/policy updates.
+
+**Source-backed state:** `REPOSITORY_CONFIGURATION_PASS / INDEPENDENT_REVIEW_APPROVAL_PENDING`.
