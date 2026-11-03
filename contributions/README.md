@@ -69,7 +69,7 @@ Each link identifies a real public GitHub discussion or author-submitted pull re
 
 ## NVIDIA/aicr (1)
 
-- [End-to-end binary attestation read-verify-bundle byte identity under source-path replacement and read/cancellation failure; separate FIFO and cancelled-context behavioral regression.](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6543586434) — Discussion
+- [AETHER's bundler-level attestation byte-identity regression proposal](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6543586434) — Review proposal; [reviewer acknowledged gap](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760); [original author's PR merged 2026-11-01](https://github.com/NVIDIA/aicr/commit/3013757e14742640032148fb84c42e745ea00399). **No AETHER test included in verified merged diff.**
 
 ## NVIDIA/TensorRT-LLM (2)
 
@@ -93,7 +93,7 @@ Each link identifies a real public GitHub discussion or author-submitted pull re
 ## pytorch/pytorch (3)
 
 - [Reentrant autocast per-invocation state restoration](https://github.com/pytorch/pytorch/issues/202706#issuecomment-6519082840) — Discussion
-- [AOTAutograd detached nonzero-offset partial-slice mutation: missing base version bump causes silently wrong gradient; executed CPU regression with positive/negative controls](https://github.com/pytorch/pytorch/issues/202806#issuecomment-6551875732) — Discussion
+- [AOTAutograd detached partial-slice version-check investigation](https://github.com/pytorch/pytorch/issues/202806#issuecomment-6551875732) — Historical AETHER reproducer; [upstream maintainer correction](https://github.com/pytorch/pytorch/issues/202806#issuecomment-6581961573): missing in-place-modification **error check**, not silently wrong gradient from a valid program.
 - [Deterministic Python GIL progress during THPStorage_dealloc: test-owned native DataPtr deleter with handshake and bounded timeout, exactly-once release, shared-memory cleanup, and callback GIL re-acquisition safety.](https://github.com/pytorch/pytorch/pull/202881#issuecomment-6543691954) — Discussion
 
 ## redis/node-redis (2)

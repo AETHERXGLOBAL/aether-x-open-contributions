@@ -18,8 +18,19 @@
 | aws/aws-cdk | `UPSTREAM_AUTHOR_CHANGED_CODE` | [View original](https://github.com/aws/aws-cdk/pull/39581#issuecomment-6543447817) |
 | redis/redis | `UPSTREAM_AUTHOR_ACKNOWLEDGED_PROPOSAL` | [View original](https://github.com/redis/redis/issues/16130#issuecomment-6568601668) |
 | google/gvisor | `UPSTREAM_RELATED_TEST_REPORTED` | [View original](https://github.com/google/gvisor/pull/16774#issuecomment-6542899955) |
-| NVIDIA/aicr | `UPSTREAM_REVIEWER_ACKNOWLEDGED_GAP` | [View original](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760) |
+| NVIDIA/aicr | `UPSTREAM_REVIEWER_ACKNOWLEDGED_GAP` — upstream fix independently merged; our suggested extra test **not** merged | [Reviewer note](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760) · [Merge commit](https://github.com/NVIDIA/aicr/commit/3013757e14742640032148fb84c42e745ea00399) |
 | redis/node-redis | `UPSTREAM_AUTHOR_IMPLEMENTED_TEST_ON_CLOSED_PR` | [View original](https://github.com/redis/node-redis/pull/3564#issuecomment-6544676687) |
+
+### NVIDIA #3539 — completed upstream outcome, no outstanding AETHER submission
+
+- **Upstream status:** [PR #3539](https://github.com/NVIDIA/aicr/pull/3539) merged and closed on **2026-11-01**; merge commit [`3013757e14742640032148fb84c42e745ea00399`](https://github.com/NVIDIA/aicr/commit/3013757e14742640032148fb84c42e745ea00399), authored upstream by `mohityadav8`.
+- **Merged scope (three files):** `pkg/bundler/bundler.go`, `pkg/bundler/verifier/verifier.go`, `pkg/bundler/verifier/verifier_test.go`. The upstream patch reads once, verifies that buffer and writes the same buffer; included tests exercise the reader, symlink refusal and cancellation.
+- **AETHER contribution:** [AETHER's source-linked review](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6543586434) called for an additional deterministic **bundler-level** verified-bytes-versus-written-bytes regression. [Reviewer `yuanchen8911`](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760) independently recognized the gap as a **nonblocking** future test opportunity.
+- **Attribution and closure:** no evidence that AETHER authored the merged fix or that this additional AETHER-proposed test was included. The existing PR is **CLOSED / MERGED**, and the AETHER review-follow-up is **DOCUMENTED / CLOSED**, not a pending PR or an implemented test. A new test would require separate distinct-source qualification and approval.
+
+### Public correction preserved — PyTorch #202806
+
+The original [AETHER technical comment](https://github.com/pytorch/pytorch/issues/202806#issuecomment-6551875732) used a stronger "silently wrong gradient" characterization. [Upstream maintainer `ezyang` clarified](https://github.com/pytorch/pytorch/issues/202806#issuecomment-6581961573) that eager execution should raise an in-place-modification error and the compiler omits this version check; the verified characterization is a **missing error check**, **not** a wrong gradient from a valid program. We retain this correction alongside the original public historical link.
 
 These represent eight source-backed **observations**, not eight AETHER-authored merged fixes. The tests in OpenTelemetry and Redis are AETHER candidate source with local native evidence; PyTorch and AWS CDK modifications belong to the upstream authors. NVIDIA/aicr merged a PR without proof of AETHER test inclusion, and node-redis #3564 was closed unmerged.
 
