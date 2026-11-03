@@ -1,0 +1,10 @@
+.DS_Store
+.env
+.env.*
+*.log
+*.tar.gz
+*.zip
+__pycache__/
+*.pyc
+private/
+evidence-private/

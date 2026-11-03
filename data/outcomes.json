@@ -1,0 +1,69 @@
+{
+  "snapshot_date": "2026-11-03",
+  "outcomes": [
+    {
+      "id": "OTEL-15966",
+      "project": "open-telemetry/opentelemetry-collector",
+      "status": "NATIVE_TEST_EXECUTED",
+      "source_url": "https://github.com/open-telemetry/opentelemetry-collector/pull/15966#issuecomment-6607382404",
+      "description": "AETHER's test passed with Go 1.26.10 at exact PR HEAD and mutation of the warning call caused the expected failure; it is Graph.Build integration, not full Collector startup or upstream merge.",
+      "as_of": "2026-11-03"
+    },
+    {
+      "id": "REDIS-15930",
+      "project": "redis/redis",
+      "status": "NATIVE_TEST_EXECUTED",
+      "source_url": "https://github.com/redis/redis/pull/15930#issuecomment-6605978538",
+      "description": "Native Tcl evidence: two baseline RED failures plus positive control PASS, all three candidate PASS; source hashes inspected. Not upstream merged.",
+      "as_of": "2026-11-03"
+    },
+    {
+      "id": "PYTORCH-202881",
+      "project": "pytorch/pytorch",
+      "status": "UPSTREAM_AUTHOR_IMPLEMENTED_TEST",
+      "source_url": "https://github.com/pytorch/pytorch/pull/202881#issuecomment-6552016471",
+      "description": "Upstream author reported implementing a deterministic native GIL/deleter test after an AETHER proposal. Upstream owns the actual test source.",
+      "as_of": "2026-11-03"
+    },
+    {
+      "id": "AWSCDK-39581",
+      "project": "aws/aws-cdk",
+      "status": "UPSTREAM_AUTHOR_CHANGED_CODE",
+      "source_url": "https://github.com/aws/aws-cdk/pull/39581#issuecomment-6543447817",
+      "description": "Upstream PR author acknowledged the shell failure-path warning and added || exit 1. The upstream author owns the change; PR was open at snapshot.",
+      "as_of": "2026-11-03"
+    },
+    {
+      "id": "REDIS-16130",
+      "project": "redis/redis",
+      "status": "UPSTREAM_AUTHOR_ACKNOWLEDGED_PROPOSAL",
+      "source_url": "https://github.com/redis/redis/issues/16130#issuecomment-6568601668",
+      "description": "Upstream contributor called the post-grant design refinement helpful and proposed future modeling if option B selected; code adoption not proven.",
+      "as_of": "2026-11-03"
+    },
+    {
+      "id": "GVISOR-16774",
+      "project": "google/gvisor",
+      "status": "UPSTREAM_RELATED_TEST_REPORTED",
+      "source_url": "https://github.com/google/gvisor/pull/16774#issuecomment-6542899955",
+      "description": "Upstream contributor published differential observations; direct inclusion of AETHER's suggested separate test unverified.",
+      "as_of": "2026-11-03"
+    },
+    {
+      "id": "NVIDIA-3539",
+      "project": "NVIDIA/aicr",
+      "status": "UPSTREAM_REVIEWER_ACKNOWLEDGED_GAP",
+      "source_url": "https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760",
+      "description": "Upstream reviewer noted nonblocking bundler-level test gap; upstream author's PR merged; AETHER's proposed test not verified included.",
+      "as_of": "2026-11-03"
+    },
+    {
+      "id": "NODE-REDIS-3564",
+      "project": "redis/node-redis",
+      "status": "UPSTREAM_AUTHOR_IMPLEMENTED_TEST_ON_CLOSED_PR",
+      "source_url": "https://github.com/redis/node-redis/pull/3564#issuecomment-6544676687",
+      "description": "Upstream PR author wrote a Redis-backed ACL test in #3564 but PR was closed unmerged. Other #3567 merged without verified AETHER strict-key-pattern test.",
+      "as_of": "2026-11-03"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "snapshot_date": "2026-11-03",
+  "source_ledgers": [
+    {
+      "public_comment_records": 21,
+      "git_blob": "c01bd1d5cc46c6c3d7ce7d7487f65a7f869397b5"
+    },
+    {
+      "public_comment_records": 14,
+      "git_blob": "c473883ddc99943d047fab3e6b524286aa2e32a9"
+    }
+  ],
+  "privacy": "Private ledgers are not mirrored. Blob IDs are provenance receipts, not access rights.",
+  "source_tests": [
+    {
+      "file": "tests/opentelemetry/otel15966_graph_build_test.go",
+      "sha256": "45221c859ecc9da6b190fcef009d66cde64fc1020020d6ddf5813d85bc81685b",
+      "git_blob": "b5b8c3b7f16c9bfc0baca6ac9b7c9f8ecb1fa67b"
+    },
+    {
+      "file": "tests/redis/15930/w07-aof-replay.tcl",
+      "sha256": "bbe6b2ef4970a954f9fb095e818fafdb0f6ffdeb8a6cf482eadafc56c6687f62",
+      "git_blob": "cd340e473196aa2560162a0a0bf8a7f861d4d744"
+    }
+  ]
+}
