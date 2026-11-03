@@ -1,0 +1,23 @@
+name: Public catalog integrity
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  catalog-integrity:
+    name: catalog-integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout pinned official GitHub action
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Validate curated catalog and discovery tooling
+        run: |
+          python3 scripts/validate_catalog.py
+          python3 -m py_compile scripts/discover_public_activity.py
+          python3 -m unittest discover -s scripts -p 'test_*.py' -v
