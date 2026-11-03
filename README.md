@@ -31,8 +31,9 @@ This is AETHER X GLOBAL's **public engineering portfolio** of contributions to i
 - **[PyTorch](https://github.com/pytorch/pytorch/pull/202881#issuecomment-6552016471):** the upstream author implemented a proposed deterministic GIL regression.
 - **[AWS CDK](https://github.com/aws/aws-cdk/pull/39581#issuecomment-6543447817):** upstream author applied a fail-closed shell correction after a technical finding.
 - **[Redis design](https://github.com/redis/redis/issues/16130#issuecomment-6568601668):** upstream author acknowledged a protocol-safety refinement.
+- **[NVIDIA AICR](https://github.com/NVIDIA/aicr/pull/3539):** upstream author's attestation read/verify/copy fix was [merged on 1 November 2026](https://github.com/NVIDIA/aicr/commit/3013757e14742640032148fb84c42e745ea00399). An [upstream reviewer independently noted the extra bundler-level test gap](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760) raised by AETHER; the AETHER-proposed regression was **not included** in the merged change.
 
-These are **upstream-authored outcomes**, not AETHER-owned merged code, and are not claims of vendor endorsement.
+These are **upstream-authored outcomes**, not AETHER-owned merged code, and are not claims of vendor endorsement. A [dated portfolio evidence audit](docs/PORTFOLIO_AUDIT_2026-11-03.md) records the NVIDIA closure and an upstream correction to a separate PyTorch discussion.
 
 ## Explore
 
