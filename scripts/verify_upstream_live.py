@@ -9,6 +9,7 @@ import base64
 import json
 import os
 import urllib.request
+from integrity_runtime import require
 
 API_ROOT = "https://api.github.com/"
 PATHS = {
@@ -54,21 +55,21 @@ def fake_snapshot():
 def audit_live(snapshot):
     a, r, rp = snapshot["apache"], snapshot["redis"], snapshot["redis_pr"]
     w, c, f = snapshot["watch_issue"], snapshot["watch_comment"], snapshot["watch_file"]
-    assert a["user"]["login"] == "aetherxeg-source", "Apache PR author changed"
-    assert a["state"] == "open" and a["merged_at"] is None, "Apache dated state drifted"
-    assert a["head"]["sha"] == "62543d90754a0e77e3d8a765ed82d8ccde9306ce", "Apache HEAD drifted"
-    assert a["head"]["repo"]["full_name"] == "AETHERXGLOBAL/datafusion-ballista"
-    assert a["changed_files"] == 12
-    assert r["user"]["login"] == "aetherxeg-source", "Redis original author mismatch"
-    assert r["state"] == "closed" and r["state_reason"] == "not_planned"
-    assert r["closed_at"] == "2026-11-04T10:10:31Z"
-    assert rp["user"]["login"] != "aetherxeg-source", "Upstream authorship inflated"
-    assert rp["merged_at"] is not None
-    assert w["user"]["login"] == "aetherxeg-source"
-    assert w["state"] == "closed" and w["state_reason"] == "completed"
-    assert c["user"]["login"] == "scadastrangelove"
-    assert "ExecSurface has been added" in c["body"]
-    assert "ExecSurface" in f["decoded_text"] and "AETHERXGLOBAL/execsurface" in f["decoded_text"]
+    require(a["user"]["login"] == "aetherxeg-source", "Apache PR author changed")
+    require(a["state"] == "open" and a["merged_at"] is None, "Apache dated state drifted")
+    require(a["head"]["sha"] == "62543d90754a0e77e3d8a765ed82d8ccde9306ce", "Apache HEAD drifted")
+    require(a["head"]["repo"]["full_name"] == "AETHERXGLOBAL/datafusion-ballista", "integrity assertion 4")
+    require(a["changed_files"] == 12, "integrity assertion 5")
+    require(r["user"]["login"] == "aetherxeg-source", "Redis original author mismatch")
+    require(r["state"] == "closed" and r["state_reason"] == "not_planned", "integrity assertion 7")
+    require(r["closed_at"] == "2026-11-04T10:10:31Z", "integrity assertion 8")
+    require(rp["user"]["login"] != "aetherxeg-source", "Upstream authorship inflated")
+    require(rp["merged_at"] is not None, "integrity assertion 10")
+    require(w["user"]["login"] == "aetherxeg-source", "integrity assertion 11")
+    require(w["state"] == "closed" and w["state_reason"] == "completed", "integrity assertion 12")
+    require(c["user"]["login"] == "scadastrangelove", "integrity assertion 13")
+    require("ExecSurface has been added" in c["body"], "integrity assertion 14")
+    require("ExecSurface" in f["decoded_text"] and "AETHERXGLOBAL/execsurface" in f["decoded_text"], "integrity assertion 15")
     return {"verdict": "SOURCE_FACTS_MATCH_DATED_SNAPSHOT", "remote_public_resources": len(PATHS)}
 
 def fetch_live():

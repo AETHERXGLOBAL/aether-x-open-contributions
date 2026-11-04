@@ -1,0 +1,23 @@
+{
+  "schema_version": "AX-FOUNDER-DIRECT-MERGE-AUTHORITY-v1",
+  "repository": "AETHERXGLOBAL/aether-x-open-contributions",
+  "authority": "FOUNDER_ONLY_FINAL_MERGE_APPROVAL",
+  "approval_scope": "PER_PR_EXACT_HEAD_AND_BASE",
+  "authority_record": "https://github.com/AETHERXGLOBAL/aether-x-open-contributions/issues/9",
+  "reviewer": "OPTIONAL_TECHNICAL_REVIEW_NO_MERGE_AUTHORITY",
+  "previously_named_reviewer": "ahmed363younis-dot",
+  "previously_verified_reviewer_permission": "read",
+  "self_approval_prohibited": true,
+  "mandatory_github_checks": [
+    "catalog-integrity"
+  ],
+  "allowed_merge_methods": [
+    "squash"
+  ],
+  "retained_separation": "Technical claims, legal or project-specific mandatory reviewers remain independent conditions when required",
+  "remote_founder_approval_enforcement": "NOT_IMPLEMENTED",
+  "permitted_execution": "AFTER_EXPLICIT_FOUNDER_APPROVAL_FOR_EXACT_PR_SHA_ONLY",
+  "record_notice": "This repository file records policy only. It cannot authenticate approval expressed outside GitHub.",
+  "older_independent_reviewer_enforcement_proposal": "SUPERSEDED_AS_VOLUNTARY_MERGE_PREREQUISITE",
+  "human_review_requirement": "Only if applicable binding authority requires; optional technical advisory review otherwise"
+}

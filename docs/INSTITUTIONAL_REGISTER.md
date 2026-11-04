@@ -31,3 +31,13 @@ Original 2026-11-03 source observations and the dated 2026-11-04 status/receipt 
 A real negative test copies source files into a temporary directory, replaces the original `Adyen/adyen-flutter#issuecomment-5952974431` permalink with a fabricated comment ID while preserving record counts, then attempts to regenerate the register. This is now rejected by the frozen-source SHA guard.
 
 A future correction must create a new dated evidence item and pass genuine independent review rather than silently replacing historic input URLs or refreshing their pinned hashes. These offline code-defined pins cannot independently withstand an actor that can edit the verifier, pinned digests, and CI itself; enforcement remains part of the separately approved F02 control.
+
+## New dated source links — append-only update lane
+
+The original seven frozen source/receipt files and 262-link/233-thread baseline remain **byte-identical**. For future observations, create `data/updates/YYYY-MM-DD.json` with schema `AX-UNQUALIFIED-PARTICIPATION-v1`, `snapshot_date`, `source_account` and a nonempty `participations` array. Each row must supply exact source permalink, repository, declared author `aetherxeg-source`, `kind` (`comment`, `authored_issue`, `authored_pull_request`), matching `thread_url` and observed state (`open` / `closed` / `unknown`).
+
+Append the dated path and exact file SHA-256 to `data/updates/manifest.json`, sorted by ascending dates. Source/manifest hashes guarantee internal byte consistency **only**, not genuine public authorship or upstream acceptance. The validator rejects duplicate JSON keys, path traversal, duplicate source links, unmanifested snapshots, incorrect digests, wrong repository/thread identities and false qualification fields. Always verify the original GitHub permalink independently before asking the Founder to approve the PR.
+
+Run `python3 scripts/validate_institutional_register.py --write` on the review branch, inspect the derived-index diff, then run normal and optimized-mode CI. The resulting new links **always remain `SOURCE_IDENTITY_ONLY_UNQUALIFIED`** and cannot silently become merged, accepted or security-certified. A later qualified status requires a dedicated, separately reviewed, source-pinned dated status record and validator update. The original 2026-11-03/04 observations must never be rewritten.
+
+For current **zero additional snapshots**, rebuilding reconciles to the same complete source/record identities, although list iteration order can differ; counts are lower bounds (262 sources, 233 threads, three historical dated statuses), not permanent ceilings. No new public source URLs have been claimed or published as part of this engineering upgrade.
