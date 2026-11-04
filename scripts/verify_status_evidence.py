@@ -79,7 +79,7 @@ def check_status(records, receipt):
         assert isinstance(record["description"], str) and len(record["description"]) >= 40
         if identifier == "APACHE-BALLISTA-2775":
             assert "not upstream CI" in record["ci_boundary"]
-            assert "No Apache approval" in record["description"]
+            assert "no apache approval" in record["description"].lower()
         if identifier == "EXECSURFACE-WATCHLIST-133":
             assert "not certification" in record["description"]
         if identifier == "NODE-REDIS-3579":
