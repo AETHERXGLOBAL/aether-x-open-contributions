@@ -9,7 +9,7 @@ import unittest
 
 from validate_institutional_register import build, check_register
 from verify_status_evidence import check_status, read as read_evidence
-from verify_upstream_live import audit as audit_live
+from verify_upstream_live import audit_live
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
