@@ -147,6 +147,16 @@ def check_register(actual, expected=None):
     return True
 
 if __name__ == "__main__":
-    current = read("data/institutional_register.json")
-    check_register(current)
-    print("INSTITUTIONAL_REGISTER=PASS sources=262 threads=233 dated_updates=3")
+    import argparse
+    parser = argparse.ArgumentParser(description="Reconcile the source-linked institutional register")
+    parser.add_argument("--write", action="store_true", help="Regenerate the register for review; never changes source snapshots")
+    args = parser.parse_args()
+    if args.write:
+        generated = build()
+        path = ROOT / "data/institutional_register.json"
+        path.write_text(json.dumps(generated, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print("INSTITUTIONAL_REGISTER=REGENERATED review_diff_before_commit=true")
+    else:
+        current = read("data/institutional_register.json")
+        check_register(current)
+        print("INSTITUTIONAL_REGISTER=PASS sources=262 threads=233 dated_updates=3")
