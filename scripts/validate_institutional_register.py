@@ -5,8 +5,10 @@ No historical records are promoted, overwritten, or treated as proof of adoption
 import json
 import pathlib
 import re
+from integrity_runtime import require
 
 from verify_frozen_snapshots import check_all as assert_frozen_sources
+from append_only_updates import read_updates
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CANONICAL = re.compile(
@@ -19,8 +21,8 @@ def read(path):
 
 def assert_valid_url(url, project):
     m = CANONICAL.fullmatch(url)
-    assert m is not None, ("non-canonical GitHub contribution permalink", url)
-    assert m.group(1) == project, ("wrong owner/repository", url, project)
+    require(m is not None, ("non-canonical GitHub contribution permalink", url))
+    require(m.group(1) == project, ("wrong owner/repository", url, project))
     return "https://github.com/{}/{}/{}".format(m.group(1), m.group(2), m.group(3))
 
 def build():
@@ -47,28 +49,39 @@ def build():
         return entries[url]
 
     for item in discovery["comments"]:
-        assert item["author"] == "aetherxeg-source"
+        require(item["author"] == "aetherxeg-source", "integrity assertion 3")
         get(item["source_url"], item["project"])["identity_evidence"].append(
             "GITHUB_PERMALINK_AUTHOR_VERIFIED_2026_11_03"
         )
 
     for item in discovery["authored_discussions"]:
-        assert item["author"] == "aetherxeg-source"
+        require(item["author"] == "aetherxeg-source", "integrity assertion 4")
         get(item["source_url"], item["project"])["identity_evidence"].append(
             "GITHUB_AUTHORED_DISCUSSION_VERIFIED_2026_11_03"
         )
 
     for item in history["records"]:
         entry = get(item["source_url"], item["project"])
-        assert entry["historical_catalog_id"] is None, item["id"]
+        require(entry["historical_catalog_id"] is None, item["id"])
         entry["historical_catalog_id"] = item["id"]
         entry["historical_catalog_status"] = item["status"]
 
     for item in status["records"]:
         entry = get(item["source_url"], item["project"])
-        assert entry["latest_dated_status_id"] is None, item["id"]
+        require(entry["latest_dated_status_id"] is None, item["id"])
         entry["latest_dated_status_id"] = item["id"]
         entry["latest_dated_status"] = item["status"]
+
+    # New dated source links are always unqualified; authorship requires separate
+    # live source review and a Founder-authorized PR.
+    additions, added_paths, added_dates = read_updates(ROOT)
+    for item in additions:
+        url = item["source_url"]
+        require(url not in entries, ("duplicate historical/dynamic source URL", url))
+        record = get(url, item["project"])
+        record["identity_evidence"].append(
+            "PUBLIC_SOURCE_LINK_DECLARED_UNQUALIFIED_" + item["snapshot_date"].replace("-", "_")
+        )
 
     for entry in entries.values():
         entry["identity_evidence"] = sorted(set(entry["identity_evidence"]))
@@ -85,7 +98,7 @@ def build():
 
     threads = []
     for item in threads_source["threads"]:
-        assert assert_valid_url(item["url"], item["repo"]) == item["url"]
+        require(assert_valid_url(item["url"], item["repo"]) == item["url"], "integrity assertion 7")
         threads.append({
             "thread_url": item["url"],
             "project": item["repo"],
@@ -95,7 +108,7 @@ def build():
             "linked_participation_urls": sorted(by_thread.get(item["url"], [])),
         })
 
-    return {
+    result = {
         "schema_version": "AX-INSTITUTIONAL-CONTRIBUTION-REGISTER-v1",
         "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 dated update",
         "source_files": [
@@ -123,31 +136,67 @@ def build():
         "threads": threads,
     }
 
+    # Preserve exact original index bytes when no updates exist. New links and
+    # threads are added only by dated, hash-reconciled, explicitly reviewed PRs.
+    if added_dates:
+        source_threads = {row["thread_url"]: row for row in result["threads"]}
+        for item in additions:
+            thread = item["thread_url"]
+            if thread in source_threads:
+                row = source_threads[thread]
+                require(row["project"] == item["project"], "thread project drift")
+                if item["source_url"] not in row["linked_participation_urls"]:
+                    row["linked_participation_urls"].append(item["source_url"])
+                    row["linked_participation_urls"].sort()
+            else:
+                number = int(thread.rsplit("/", 1)[-1])
+                row = {
+                    "thread_url": thread,
+                    "project": item["project"],
+                    "discussion_number": number,
+                    "kind": "pull_request" if "/pull/" in thread else "issue",
+                    "observed_state_date": item["snapshot_date"],
+                    "observed_state": item["observed_state"],
+                    "linked_participation_urls": [item["source_url"]],
+                }
+                source_threads[thread] = row
+                result["threads"].append(row)
+        result["source_files"].extend(["data/updates/manifest.json", *added_paths])
+        result["snapshot_generated_from"] += " plus dated append-only updates through " + added_dates[-1]
+        result["counts"]["unique_participation_sources"] = len(result["records"])
+        result["counts"]["discovered_threads"] = len(result["threads"])
+        result["counts"]["discovered_threads_without_matched_participation"] = sum(
+            not row["linked_participation_urls"] for row in result["threads"]
+        )
+        result["counts"]["append_only_unqualified_participations"] = len(additions)
+    return result
+
+
 def check_register(actual, expected=None):
     assert_frozen_sources(ROOT)
     expected = expected or build()
-    assert actual["schema_version"] == expected["schema_version"]
-    assert actual["source_files"] == expected["source_files"]
-    assert actual["identity_rule"] == expected["identity_rule"]
-    assert actual["snapshot_generated_from"] == expected["snapshot_generated_from"]
-    assert actual["counts"] == expected["counts"]
-    assert len(actual["records"]) == len(expected["records"])
-    assert len(actual["threads"]) == len(expected["threads"])
+    require(actual["schema_version"] == expected["schema_version"], "integrity assertion 8")
+    require(actual["source_files"] == expected["source_files"], "integrity assertion 9")
+    require(actual["identity_rule"] == expected["identity_rule"], "integrity assertion 10")
+    require(actual["snapshot_generated_from"] == expected["snapshot_generated_from"], "integrity assertion 11")
+    require(actual["counts"] == expected["counts"], "integrity assertion 12")
+    require(len(actual["records"]) == len(expected["records"]), "integrity assertion 13")
+    require(len(actual["threads"]) == len(expected["threads"]), "integrity assertion 14")
     actual_by_url = {x["source_url"]: x for x in actual["records"]}
     expected_by_url = {x["source_url"]: x for x in expected["records"]}
-    assert len(actual_by_url) == len(actual["records"]), "duplicate contribution URLs"
-    assert set(actual_by_url) == set(expected_by_url), "missing or unverified contribution URLs"
+    require(len(actual_by_url) == len(actual["records"]), "duplicate contribution URLs")
+    require(set(actual_by_url) == set(expected_by_url), "missing or unverified contribution URLs")
     for url, record in expected_by_url.items():
-        assert actual_by_url[url] == record, ("contribution identity/status drift", url)
+        require(actual_by_url[url] == record, ("contribution identity/status drift", url))
     actual_threads = {x["thread_url"]: x for x in actual["threads"]}
     expected_threads = {x["thread_url"]: x for x in expected["threads"]}
-    assert len(actual_threads) == len(actual["threads"]), "duplicate thread"
-    assert set(actual_threads) == set(expected_threads)
+    require(len(actual_threads) == len(actual["threads"]), "duplicate thread")
+    require(set(actual_threads) == set(expected_threads), "integrity assertion 19")
     for url, item in expected_threads.items():
-        assert actual_threads[url] == item, ("thread evidence link drift", url)
-    assert actual["counts"]["unique_participation_sources"] == 262
-    assert actual["counts"]["discovered_threads"] == 233
-    assert actual["counts"]["dated_status_updates"] == 3
+        require(actual_threads[url] == item, ("thread evidence link drift", url))
+    require(actual["counts"]["unique_participation_sources"] >= 262, "original source baseline lost")
+    require(actual["counts"]["discovered_threads"] >= 233, "original thread baseline lost")
+    require(actual["counts"]["dated_status_updates"] == 3, "integrity assertion 23")
     return True
 
 if __name__ == "__main__":
@@ -163,4 +212,4 @@ if __name__ == "__main__":
     else:
         current = read("data/institutional_register.json")
         check_register(current)
-        print("INSTITUTIONAL_REGISTER=PASS sources=262 threads=233 dated_updates=3")
+        print("INSTITUTIONAL_REGISTER=PASS sources={} threads={} dated_updates={}".format(current["counts"]["unique_participation_sources"], current["counts"]["discovered_threads"], current["counts"]["dated_status_updates"]))

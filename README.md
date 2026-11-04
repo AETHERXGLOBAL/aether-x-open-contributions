@@ -20,11 +20,11 @@ These are **dated updates**, not revisions to the 3 November historical counts. 
 
 The original 43-link portfolio, eight source-backed outcome cases and verified test artifacts remain unchanged.
 
-## Unified institutional register — controlled candidate
+## Unified institutional register — merged and governed
 
-[Unified source index](data/institutional_register.json) · [Classification and lineage guide](docs/INSTITUTIONAL_REGISTER.md) · [Evidence requalification](docs/EVIDENCE_REQUALIFICATION.md) · [Independent-review enforcement proposal](docs/INDEPENDENT_REVIEW_GATE.md).
+[Unified source index](data/institutional_register.json) · [Classification and lineage guide](docs/INSTITUTIONAL_REGISTER.md) · [Evidence requalification](docs/EVIDENCE_REQUALIFICATION.md) · [Founder-controlled merge policy](data/founder-merge-policy.json) · [Legacy review proposal and present controls](docs/INDEPENDENT_REVIEW_GATE.md).
 
-The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and three dated observations. **216 identity-only links remain unqualified**; links are not achievements. A proposed independent GitHub reviewer gate is **not yet activated** and requires separate Founder authorization.
+The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and three dated observations. **216 identity-only links remain unqualified**; links are not achievements. The **Founder alone authorizes each final merge** on its exact PR/HEAD; the current GitHub ruleset cannot authenticate a chat approval. The previous mandatory second-reviewer proposal is historical, not an active merge prerequisite. New source links are admitted only through reviewed, append-only dated snapshots as **unqualified participation** until independently verified upstream.
 
 ## Verified portfolio
 

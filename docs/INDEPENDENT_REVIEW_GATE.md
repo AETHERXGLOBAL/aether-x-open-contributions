@@ -1,6 +1,18 @@
-# Independent PR review — proposed enforcement, not activated
+# Current Founder-controlled approval; historical independent-review proposal
 
-**Scope:** AETHER X GLOBAL / `aether-x-open-contributions` · **Status:** PREPARED_NOT_ENFORCED.
+**Current approved rule for this repository:** only the Founder may authorize each final merge, directly, with a scoped PR and exact HEAD. The former plan to require an additional GitHub reviewer as a **separate voluntary merge authority** was superseded by the Founder. See [F02 canonical decision](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/issues/9) and [policy record](../data/founder-merge-policy.json).
+
+The GitHub Ruleset currently enforces a PR, squash-only, unresolved-thread resolution and `catalog-integrity`, but its review count is **0** and it does **not** authenticate Founder chat authorizations. An executor must verify the personal decision and SHA before using the merge API. A technical assessment via `aetherxeg-source` or optional `ahmed363younis-dot` review is not proof of a separately authenticated independent human review. No additional `write` permission is needed for advisory review. Where a binding law, contract, security or original project rule requires Four-Eyes review, that requirement remains intact.
+
+**Technical limitation:** a GitHub administrator currently has the platform ability to merge a passing PR without cryptographically proving a Founder decision. No Founder-only automated release gate or additional access restriction has been activated. Any such enforcement requires explicit Founder-approved GitHub settings changes and negative acceptance tests.
+
+---
+
+## Archived F02 proposal (historical, NOT active)
+
+# Historical proposal for optional independent reviewer enforcement
+
+**Scope:** AETHER X GLOBAL / `aether-x-open-contributions` · **Status:** SUPERSEDED_AS_VOLUNTARY_MERGE_PREREQUISITE; proposal never applied.
 
 ## Current verified condition (4 November 2026)
 

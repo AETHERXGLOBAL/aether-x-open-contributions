@@ -19,8 +19,12 @@ jobs:
       - name: Validate curated catalog and discovery tooling
         run: |
           python3 scripts/validate_catalog.py
+          python3 -O scripts/validate_catalog.py
+          python3 scripts/append_only_updates.py
+          python3 -O scripts/append_only_updates.py
           python3 -m py_compile scripts/discover_public_activity.py
           python3 -m unittest discover -s scripts -p 'test_*.py' -v
+          python3 -O -m unittest discover -s scripts -p 'test_*.py' -v
       - name: Audit admin script syntax without changing settings
         run: |
           bash -n scripts/apply_repository_admin_settings.sh

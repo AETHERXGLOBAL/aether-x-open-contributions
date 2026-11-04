@@ -4,6 +4,7 @@ This is an offline evidence-gate, not a substitute for querying upstream live st
 """
 import json
 import pathlib
+from integrity_runtime import require
 
 from verify_frozen_snapshots import check_all as assert_frozen_sources
 
@@ -65,33 +66,33 @@ def read(path):
 
 def check_status(records, receipt):
     assert_frozen_sources(ROOT)
-    assert receipt["schema_version"] == "AX-PRIMARY-SOURCE-RECEIPTS-v1"
-    assert receipt["observed_as_of"] == "2026-11-04"
-    assert receipt["source_account"] == "aetherxeg-source"
-    assert receipt["original_status_file"] == "data/status-updates/2026-11-04.json"
-    assert len(records) == len(SOURCES) == 3
+    require(receipt["schema_version"] == "AX-PRIMARY-SOURCE-RECEIPTS-v1", "integrity assertion 1")
+    require(receipt["observed_as_of"] == "2026-11-04", "integrity assertion 2")
+    require(receipt["source_account"] == "aetherxeg-source", "integrity assertion 3")
+    require(receipt["original_status_file"] == "data/status-updates/2026-11-04.json", "integrity assertion 4")
+    require(len(records) == len(SOURCES) == 3, "integrity assertion 5")
     by_id = {x["id"]: x for x in records}
-    assert len(by_id) == len(records) and set(by_id) == set(SOURCES)
+    require(len(by_id) == len(records) and set(by_id) == set(SOURCES), "integrity assertion 6")
     pinned = {x["id"]: x for x in receipt["expected_records"]}
-    assert len(pinned) == len(receipt["expected_records"]) and set(pinned) == set(SOURCES)
+    require(len(pinned) == len(receipt["expected_records"]) and set(pinned) == set(SOURCES), "integrity assertion 7")
 
     for identifier, fixed in SOURCES.items():
         record = by_id[identifier]
-        assert record == pinned[identifier], ("dated receipt no longer matches record", identifier)
-        assert record["as_of"] == receipt["observed_as_of"]
-        assert set(record) == set(fixed) | {"id", "as_of"}, ("unexpected or missing record fields", identifier)
+        require(record == pinned[identifier], ("dated receipt no longer matches record", identifier))
+        require(record["as_of"] == receipt["observed_as_of"], "integrity assertion 9")
+        require(set(record) == set(fixed) | {"id", "as_of"}, ("unexpected or missing record fields", identifier))
         for field, exact_value in fixed.items():
-            assert record.get(field) == exact_value, ("wrong source/identity/status/HEAD", identifier, field)
-            assert pinned[identifier].get(field) == exact_value, ("receipt tampering", identifier, field)
+            require(record.get(field) == exact_value, ("wrong source/identity/status/HEAD", identifier, field))
+            require(pinned[identifier].get(field) == exact_value, ("receipt tampering", identifier, field))
         # A free-text assertion is not a substitute for editorial review.
-        assert isinstance(record["description"], str) and len(record["description"]) >= 40
+        require(isinstance(record["description"], str) and len(record["description"]) >= 40, "integrity assertion 13")
         if identifier == "APACHE-BALLISTA-2775":
-            assert "not upstream CI" in record["ci_boundary"]
-            assert "no apache approval" in record["description"].lower()
+            require("not upstream CI" in record["ci_boundary"], "integrity assertion 14")
+            require("no apache approval" in record["description"].lower(), "integrity assertion 15")
         if identifier == "EXECSURFACE-WATCHLIST-133":
-            assert "not certification" in record["description"]
+            require("not certification" in record["description"], "integrity assertion 16")
         if identifier == "NODE-REDIS-3579":
-            assert "No reply or re-submission planned" in record["description"]
+            require("No reply or re-submission planned" in record["description"], "integrity assertion 17")
     return True
 
 if __name__ == "__main__":

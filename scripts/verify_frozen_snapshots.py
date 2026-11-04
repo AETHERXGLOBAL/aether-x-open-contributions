@@ -6,6 +6,7 @@ both source and verifier, which require independent human review.
 """
 import hashlib
 import pathlib
+from integrity_runtime import require
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FROZEN_GIT_BLOBS = {
@@ -22,11 +23,11 @@ def git_blob_sha(raw):
     return hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
 
 def assert_frozen(path, raw=None, *, root=None):
-    assert path in FROZEN_GIT_BLOBS, ("untracked historical snapshot", path)
+    require(path in FROZEN_GIT_BLOBS, ("untracked historical snapshot", path))
     if raw is None:
         raw = ((root or ROOT) / path).read_bytes()
     actual = git_blob_sha(raw)
-    assert actual == FROZEN_GIT_BLOBS[path], ("historical source identity changed", path, actual)
+    require(actual == FROZEN_GIT_BLOBS[path], ("historical source identity changed", path, actual))
     return True
 
 def check_all(root=None):
