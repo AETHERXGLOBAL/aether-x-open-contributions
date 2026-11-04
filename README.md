@@ -20,6 +20,12 @@ These are **dated updates**, not revisions to the 3 November historical counts. 
 
 The original 43-link portfolio, eight source-backed outcome cases and verified test artifacts remain unchanged.
 
+## Unified institutional register — controlled candidate
+
+[Unified source index](data/institutional_register.json) · [Classification and lineage guide](docs/INSTITUTIONAL_REGISTER.md) · [Evidence requalification](docs/EVIDENCE_REQUALIFICATION.md) · [Independent-review enforcement proposal](docs/INDEPENDENT_REVIEW_GATE.md).
+
+The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and three dated observations. **216 identity-only links remain unqualified**; links are not achievements. A proposed independent GitHub reviewer gate is **not yet activated** and requires separate Founder authorization.
+
 ## Verified portfolio
 
 | Public source links | Technical comment links | AETHER-authored merged PRs | Original executable test candidates |

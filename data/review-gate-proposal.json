@@ -1,0 +1,33 @@
+{
+  "schema_version": "AX-REVIEW-GATE-PROPOSAL-v1",
+  "proposed_as_of": "2026-11-04",
+  "repository": "AETHERXGLOBAL/aether-x-open-contributions",
+  "existing_ruleset_id": 26478002,
+  "current_code_owner": "aetherxeg-source",
+  "current_ruleset_required_approvals": 0,
+  "independent_reviewer_verified": false,
+  "activation_state": "PREPARED_NOT_ENFORCED",
+  "proposed_ruleset": {
+    "required_approving_review_count": 1,
+    "dismiss_stale_reviews_on_push": true,
+    "require_last_push_approval": true,
+    "required_review_thread_resolution": true,
+    "require_code_owner_review": true,
+    "required_status_checks": [
+      "catalog-integrity"
+    ],
+    "allowed_merge_methods": [
+      "squash"
+    ]
+  },
+  "pre_activation_requirements": [
+    "Confirm an eligible independent human reviewer GitHub account with repository write or approved organizational reviewer permissions; reviewer must not be the PR author, last pusher, or an alias under the same human.",
+    "Replace author-only CODEOWNERS entries with the approved independent reviewer identity or eligible maintained team before requiring code-owner approval.",
+    "Review approval must be on the exact candidate HEAD; a tool-posted PR comment is not a separate authenticated human GitHub review.",
+    "Founder explicitly approves the exact ruleset/CODEOWNERS change; only then an authorized administrator applies it.",
+    "Verify enforcement using a new disposable PR, reject author-only approval, confirm catalog-integrity and required review on the last push, and maintain recovery access."
+  ],
+  "founder_approval_required": true,
+  "changes_to_remote_settings_performed": false,
+  "policy_scope": "PROPOSAL_ONLY_NO_AUTOMATED_ENFORCEMENT"
+}

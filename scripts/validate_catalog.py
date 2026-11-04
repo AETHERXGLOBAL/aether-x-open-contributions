@@ -89,3 +89,16 @@ assert next(x for x in items if x["id"]=="EXECSURFACE-WATCHLIST-133")["upstream_
 assert next(x for x in items if x["id"]=="NODE-REDIS-3579")["upstream_state_reason"]=="not_planned"
 assert next(x for x in items if x["id"]=="NODE-REDIS-3579")["follow_up_disposition"]=="ARCHIVED_NO_REPOST_UNLESS_NEW_EXECUTABLE_REPRO"
 print("PUBLIC_STATUS_UPDATE=PASS date=2026-11-04 records=3 merged_new=0 historical_catalog=unchanged")
+
+
+# Additive F01/F03 checks; all historical assertions above are preserved.
+from validate_institutional_register import read as read_register, check_register
+from verify_status_evidence import read as read_status_evidence, check_status
+
+check_register(read_register("data/institutional_register.json"))
+print("INSTITUTIONAL_REGISTER=PASS sources=262 threads=233 dated_updates=3")
+check_status(
+    read_status_evidence("data/status-updates/2026-11-04.json")["records"],
+    read_status_evidence("data/evidence/2026-11-04-primary-receipts.json"),
+)
+print("EVIDENCE_PINNING=PASS status_records=3 primary_source_anchors=strict")
