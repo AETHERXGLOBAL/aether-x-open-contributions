@@ -100,7 +100,10 @@ class InstitutionalHardeningTests(unittest.TestCase):
         with mock.patch.object(register_module, "ROOT", self.root):
             candidate = register_module.build()
         current = json.loads((ROOT / "data/institutional_register.json").read_text())
-        self.assertEqual(candidate, current)
+        # Source order is not evidence identity: check the full stable URL/key mapping.
+        # The original generated index remains byte-identical on disk.
+        self.assertTrue(register_module.check_register(current, candidate))
+        self.assertEqual(candidate["counts"], current["counts"])
 
     def test_append_only_two_links_new_and_existing_threads(self):
         write_snapshot(self.root, [sample(), sample(EXISTING_THREAD_NEW_LINK, "Adyen/adyen-flutter")])

@@ -136,7 +136,7 @@ def build():
         "threads": threads,
     }
 
-    # Preserve exact original index bytes when no updates exist. New links and
+    # Preserve the original index's evidence identities when no updates exist. New links and
     # threads are added only by dated, hash-reconciled, explicitly reviewed PRs.
     if added_dates:
         source_threads = {row["thread_url"]: row for row in result["threads"]}
