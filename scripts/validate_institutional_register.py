@@ -6,6 +6,8 @@ import json
 import pathlib
 import re
 
+from verify_frozen_snapshots import check_all as assert_frozen_sources
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CANONICAL = re.compile(
     r"https://github\.com/([^/]+/[^/]+)/(issues|pull)/(\d+)"
@@ -22,6 +24,7 @@ def assert_valid_url(url, project):
     return "https://github.com/{}/{}/{}".format(m.group(1), m.group(2), m.group(3))
 
 def build():
+    assert_frozen_sources(ROOT)
     history = read("data/contributions.json")
     discovery = read("data/discovery/2026-11-03-author-verified-links.json")
     threads_source = read("data/discovery/2026-11-03-public-threads.json")
@@ -121,6 +124,7 @@ def build():
     }
 
 def check_register(actual, expected=None):
+    assert_frozen_sources(ROOT)
     expected = expected or build()
     assert actual["schema_version"] == expected["schema_version"]
     assert actual["source_files"] == expected["source_files"]

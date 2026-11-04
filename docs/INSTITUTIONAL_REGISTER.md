@@ -23,3 +23,11 @@ The register contains `records[]` keyed by canonical `source_url` and `threads[]
 6. Only independently reviewed and Founder-approved internal PRs may update the public portfolio. This code does **not** post comments to any external project or merge code.
 
 **Scope statement:** This is a public-safe, source-linked participation index for the company, not a cryptographically signed institutional approval ledger, warranty of external claims or a complete catalogue of unpublished internal engineering work.
+
+## Targeted F01 frozen source inputs
+
+Original 2026-11-03 source observations and the dated 2026-11-04 status/receipt have fixed Git blob SHAs in `scripts/verify_frozen_snapshots.py`. Both deterministic index generation `build()` and verification `check_register()` reject altered frozen source bytes **before** computing or accepting the derived register.
+
+A real negative test copies source files into a temporary directory, replaces the original `Adyen/adyen-flutter#issuecomment-5952974431` permalink with a fabricated comment ID while preserving record counts, then attempts to regenerate the register. This is now rejected by the frozen-source SHA guard.
+
+A future correction must create a new dated evidence item and pass genuine independent review rather than silently replacing historic input URLs or refreshing their pinned hashes. These offline code-defined pins cannot independently withstand an actor that can edit the verifier, pinned digests, and CI itself; enforcement remains part of the separately approved F02 control.

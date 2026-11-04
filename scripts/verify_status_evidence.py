@@ -5,9 +5,13 @@ This is an offline evidence-gate, not a substitute for querying upstream live st
 import json
 import pathlib
 
+from verify_frozen_snapshots import check_all as assert_frozen_sources
+
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SOURCES = {
     "APACHE-BALLISTA-2775": {
+        "ci_boundary": "Only Process success observed; six upstream workflows required maintainer approval at the 2026-11-04 checkpoint; internal targeted 13/13 tests are not upstream CI.",
+        "description": "AETHER-authored Rust workdir/shuffle lifetime fix published as Apache upstream PR #2775. Open and unmerged; no Apache approval, merge or production adoption established.",
         "project": "apache/datafusion-ballista",
         "kind": "authored_pull_request",
         "status": "OPEN_UNMERGED_AUTHORED_PR",
@@ -25,6 +29,7 @@ SOURCES = {
         "review_state": "UPSTREAM_REVIEW_PENDING",
     },
     "EXECSURFACE-WATCHLIST-133": {
+        "description": "ExecSurface was listed in the upstream WATCHLIST.md, with explicit limitations: early public alpha, Linux x86_64, ptrace observation after the inspected command runs, and possible sensitive evidence artifacts. This is watchlist visibility, not certification, verified runtime testing, security endorsement or broader adoption.",
         "project": "scadastrangelove/awesome-ai-security-tools",
         "kind": "third_party_watchlist_inclusion",
         "status": "THIRD_PARTY_WATCHLIST_LISTED",
@@ -39,6 +44,7 @@ SOURCES = {
         "review_scope": "Static reviewer assessment only; no commands executed by upstream maintainer.",
     },
     "NODE-REDIS-3579": {
+        "description": "Maintainer declined the proposed additional cached EVALSHA_RO/EVAL_RO ACL test as redundant with existing coverage and closed issue #3579 as not planned. The separately authored upstream fix #3567 was merged; the proposed additional test is not a merged AETHER contribution. No reply or re-submission planned absent new runnable evidence.",
         "project": "redis/node-redis",
         "kind": "authored_issue_proposal",
         "status": "CLOSED_NOT_PLANNED_NO_FOLLOWUP",
@@ -58,6 +64,7 @@ def read(path):
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
 
 def check_status(records, receipt):
+    assert_frozen_sources(ROOT)
     assert receipt["schema_version"] == "AX-PRIMARY-SOURCE-RECEIPTS-v1"
     assert receipt["observed_as_of"] == "2026-11-04"
     assert receipt["source_account"] == "aetherxeg-source"
@@ -72,6 +79,7 @@ def check_status(records, receipt):
         record = by_id[identifier]
         assert record == pinned[identifier], ("dated receipt no longer matches record", identifier)
         assert record["as_of"] == receipt["observed_as_of"]
+        assert set(record) == set(fixed) | {"id", "as_of"}, ("unexpected or missing record fields", identifier)
         for field, exact_value in fixed.items():
             assert record.get(field) == exact_value, ("wrong source/identity/status/HEAD", identifier, field)
             assert pinned[identifier].get(field) == exact_value, ("receipt tampering", identifier, field)
