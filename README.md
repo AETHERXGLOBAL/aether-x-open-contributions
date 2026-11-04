@@ -8,6 +8,24 @@ This is AETHER X GLOBAL's **public engineering portfolio** of contributions to i
 
 > **Snapshot as of 3 November 2026.** A curated historical baseline, not an exhaustive or live GitHub feed. References to external projects do not imply partnership, endorsement, sponsorship or affiliation.
 
+## Verified status updates — 4 November 2026
+
+These are **dated updates**, not revisions to the 3 November historical counts. [Detailed evidence and dispositions](docs/STATUS_UPDATE_2026-11-04.md) · [machine-readable status register](data/status-updates/2026-11-04.json).
+
+| External project | Verified status as of 4 November | What it does **not** establish |
+|---|---|---|
+| [Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) | **AETHER-authored PR open**; 12 Rust files; maintainer review/CI authorization pending | No upstream merge or acceptance |
+| [ExecSurface Watchlist #133](https://github.com/scadastrangelove/awesome-ai-security-tools/issues/133) | **Listed by the upstream maintainer** in [WATCHLIST.md](https://github.com/scadastrangelove/awesome-ai-security-tools/blob/e0ec97f6f0b696d6a5ab0cb2158b8b4c1458c831/WATCHLIST.md) | No independent runtime validation, certification or endorsement |
+| [node-redis #3579](https://github.com/redis/node-redis/issues/3579) | **Closed / not planned**; proposal archived after specific maintainer reasoning | No accepted additional test or AETHER-authored merge |
+
+The original 43-link portfolio, eight source-backed outcome cases and verified test artifacts remain unchanged.
+
+## Unified institutional register — controlled candidate
+
+[Unified source index](data/institutional_register.json) · [Classification and lineage guide](docs/INSTITUTIONAL_REGISTER.md) · [Evidence requalification](docs/EVIDENCE_REQUALIFICATION.md) · [Independent-review enforcement proposal](docs/INDEPENDENT_REVIEW_GATE.md).
+
+The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and three dated observations. **216 identity-only links remain unqualified**; links are not achievements. A proposed independent GitHub reviewer gate is **not yet activated** and requires separate Founder authorization.
+
 ## Verified portfolio
 
 | Public source links | Technical comment links | AETHER-authored merged PRs | Original executable test candidates |

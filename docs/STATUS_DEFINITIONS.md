@@ -11,6 +11,9 @@
 | `UPSTREAM_AUTHOR_CHANGED_CODE` | Original upstream author changed code, merge/release separately verified. |
 | `UPSTREAM_REVIEWER_ACKNOWLEDGED_GAP` | Reviewer discussed a gap; not necessarily blocking or fixed. |
 | `UPSTREAM_AUTHOR_IMPLEMENTED_TEST_ON_CLOSED_PR` | Upstream-owned test in a PR closed without merge. |
+| `OPEN_UNMERGED_AUTHORED_PR` | Our account opened a PR at a verifiable upstream head; merge/review/CI are separate unproven states. |
+| `THIRD_PARTY_WATCHLIST_LISTED` | Maintainer visibly listed a project in an external watchlist; not an endorsement, runtime test or certified adoption. |
+| `CLOSED_NOT_PLANNED_NO_FOLLOWUP` | Maintainer declined a proposal with an explicit reason; internal follow-up is archived absent materially new executable evidence. |
 | `MERGED_AUTHORED_PR` | GitHub confirms our account authored and merged this PR. |
 | `CLOSED_UNMERGED_AUTHORED_PR` | Our authored PR closed without merge. |
 

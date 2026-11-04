@@ -9,6 +9,8 @@
 - [الاختبارات الأصلية القابلة للمراجعة](../tests/README.md)
 - [درجات الاعتماد والإثبات](STATUS_DEFINITIONS.md)
 
+**تحديث موثّق بتاريخ 4 نوفمبر 2026:** [ملف حالة المساهمات الجديدة](STATUS_UPDATE_2026-11-04.md) يثبت نشر [Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) للمراجعة دون دمج، وإدراج ExecSurface في [Watchlist خارجية](https://github.com/scadastrangelove/awesome-ai-security-tools/issues/133) دون شهادة أو اعتماد أمني، وإغلاق [اقتراح Redis #3579](https://github.com/redis/node-redis/issues/3579) بقرار `not planned` دون إعادة تقديمه. هذه بيانات جديدة مستقلة ولا تغيّر أرقام لقطة 3 نوفمبر.
+
 **تنبيه:** المشاركة أو التعليق لا يعنيان اعتماد المشروع الخارجي أو وجود شراكة. نحافظ على حقوق مطوري المشاريع الأصلية، ولا ننشر السجلات الداخلية الخاصة أو بيانات التشغيل الحساسة.
 
 [English overview](../README.md)

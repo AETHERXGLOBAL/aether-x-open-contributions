@@ -57,3 +57,48 @@ for item in comments+authored:
         assert item["source_url"] not in catalog_sources
 
 print("PUBLIC_CATALOG=PASS entries=43 technical_comments=40 authored_prs=3 merged_prs=2 test_sources=2")
+
+# The 2026-11-04 supplement is additive. Historical counts and original
+# source byte digests above must continue to pass without relaxation.
+delta=json.loads((root/"data/status-updates/2026-11-04.json").read_text(encoding="utf8"))
+assert delta["schema_version"]=="AX-PUBLIC-STATUS-UPDATE-v1"
+assert delta["snapshot_date"]=="2026-11-04"
+assert delta["historical_catalog_snapshot"]==data["snapshot_date"]
+items=delta["records"]
+expected={
+    "APACHE-BALLISTA-2775":("apache/datafusion-ballista","authored_pull_request","OPEN_UNMERGED_AUTHORED_PR"),
+    "EXECSURFACE-WATCHLIST-133":("scadastrangelove/awesome-ai-security-tools","third_party_watchlist_inclusion","THIRD_PARTY_WATCHLIST_LISTED"),
+    "NODE-REDIS-3579":("redis/node-redis","authored_issue_proposal","CLOSED_NOT_PLANNED_NO_FOLLOWUP"),
+}
+assert len(items)==len(expected)==3
+assert len({x["id"] for x in items})==3
+assert len({x["source_url"] for x in items})==3
+for item in items:
+    assert item["id"] in expected
+    assert (item["project"],item["kind"],item["status"])==expected[item["id"]]
+    assert item["as_of"]==delta["snapshot_date"]
+    for link in [item["source_url"],*item["evidence_urls"]]:
+        p=urlparse(link)
+        assert p.scheme=="https" and p.netloc=="github.com"
+        assert not p.username and not p.password
+    assert item["source_url"].startswith("https://github.com/"+item["project"]+"/")
+    assert item["source_url"] not in catalog_sources
+assert next(x for x in items if x["id"]=="APACHE-BALLISTA-2775")["merged"] is False
+assert next(x for x in items if x["id"]=="APACHE-BALLISTA-2775")["changed_files"]==12
+assert next(x for x in items if x["id"]=="EXECSURFACE-WATCHLIST-133")["upstream_issue_closed_as"]=="completed"
+assert next(x for x in items if x["id"]=="NODE-REDIS-3579")["upstream_state_reason"]=="not_planned"
+assert next(x for x in items if x["id"]=="NODE-REDIS-3579")["follow_up_disposition"]=="ARCHIVED_NO_REPOST_UNLESS_NEW_EXECUTABLE_REPRO"
+print("PUBLIC_STATUS_UPDATE=PASS date=2026-11-04 records=3 merged_new=0 historical_catalog=unchanged")
+
+
+# Additive F01/F03 checks; all historical assertions above are preserved.
+from validate_institutional_register import read as read_register, check_register
+from verify_status_evidence import read as read_status_evidence, check_status
+
+check_register(read_register("data/institutional_register.json"))
+print("INSTITUTIONAL_REGISTER=PASS sources=262 threads=233 dated_updates=3")
+check_status(
+    read_status_evidence("data/status-updates/2026-11-04.json")["records"],
+    read_status_evidence("data/evidence/2026-11-04-primary-receipts.json"),
+)
+print("EVIDENCE_PINNING=PASS status_records=3 primary_source_anchors=strict")

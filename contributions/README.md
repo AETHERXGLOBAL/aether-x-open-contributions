@@ -2,6 +2,8 @@
 
 Each link identifies a real public GitHub discussion or author-submitted pull request. **A comment is not evidence of a merged patch.**
 
+This index is the preserved **3 November 2026 historical catalog**. For the separately verified **4 November** Apache #2775 publication, ExecSurface third-party Watchlist listing and declined node-redis #3579 proposal, see the [dated status update](../docs/STATUS_UPDATE_2026-11-04.md). The historical index and counts are not retroactively modified.
+
 ## aws/aws-cdk (1)
 
 - [NAT setup shell false-success report](https://github.com/aws/aws-cdk/pull/39581#issuecomment-6543247473) — Discussion

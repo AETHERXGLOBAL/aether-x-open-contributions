@@ -1,0 +1,64 @@
+{
+  "schema_version": "AX-PUBLIC-STATUS-UPDATE-v1",
+  "snapshot_date": "2026-11-04",
+  "publisher": "AETHER X GLOBAL",
+  "historical_catalog_snapshot": "2026-11-03",
+  "scope": "Additive evidence-only status updates; not a rewrite of the 43-link historical curated baseline or the 242-link discovery register.",
+  "records": [
+    {
+      "id": "APACHE-BALLISTA-2775",
+      "kind": "authored_pull_request",
+      "project": "apache/datafusion-ballista",
+      "source_url": "https://github.com/apache/datafusion-ballista/pull/2775",
+      "status": "OPEN_UNMERGED_AUTHORED_PR",
+      "as_of": "2026-11-04",
+      "evidence_urls": [
+        "https://github.com/apache/datafusion-ballista/issues/2767",
+        "https://github.com/AETHERXGLOBAL/datafusion-ballista/commit/62543d90754a0e77e3d8a765ed82d8ccde9306ce"
+      ],
+      "submitter_account": "aetherxeg-source",
+      "organization": "AETHER X GLOBAL",
+      "head_repository": "AETHERXGLOBAL/datafusion-ballista",
+      "head_commit": "62543d90754a0e77e3d8a765ed82d8ccde9306ce",
+      "changed_files": 12,
+      "merged": false,
+      "review_state": "UPSTREAM_REVIEW_PENDING",
+      "ci_boundary": "Only Process success observed; six upstream workflows required maintainer approval at the 2026-11-04 checkpoint; internal targeted 13/13 tests are not upstream CI.",
+      "description": "AETHER-authored Rust workdir/shuffle lifetime fix published as Apache upstream PR #2775. Open and unmerged; no Apache approval, merge or production adoption established."
+    },
+    {
+      "id": "EXECSURFACE-WATCHLIST-133",
+      "kind": "third_party_watchlist_inclusion",
+      "project": "scadastrangelove/awesome-ai-security-tools",
+      "source_url": "https://github.com/scadastrangelove/awesome-ai-security-tools/issues/133",
+      "status": "THIRD_PARTY_WATCHLIST_LISTED",
+      "as_of": "2026-11-04",
+      "evidence_urls": [
+        "https://github.com/scadastrangelove/awesome-ai-security-tools/issues/133#issuecomment-5857686313",
+        "https://github.com/scadastrangelove/awesome-ai-security-tools/commit/e0ec97f6f0b696d6a5ab0cb2158b8b4c1458c831",
+        "https://github.com/scadastrangelove/awesome-ai-security-tools/blob/e0ec97f6f0b696d6a5ab0cb2158b8b4c1458c831/WATCHLIST.md"
+      ],
+      "submitted_by": "aetherxeg-source",
+      "upstream_issue_closed_as": "completed",
+      "review_scope": "Static reviewer assessment only; no commands executed by upstream maintainer.",
+      "description": "ExecSurface was listed in the upstream WATCHLIST.md, with explicit limitations: early public alpha, Linux x86_64, ptrace observation after the inspected command runs, and possible sensitive evidence artifacts. This is watchlist visibility, not certification, verified runtime testing, security endorsement or broader adoption."
+    },
+    {
+      "id": "NODE-REDIS-3579",
+      "kind": "authored_issue_proposal",
+      "project": "redis/node-redis",
+      "source_url": "https://github.com/redis/node-redis/issues/3579",
+      "status": "CLOSED_NOT_PLANNED_NO_FOLLOWUP",
+      "as_of": "2026-11-04",
+      "evidence_urls": [
+        "https://github.com/redis/node-redis/issues/3579#issuecomment-6628131939",
+        "https://github.com/redis/node-redis/pull/3567"
+      ],
+      "submitter_account": "aetherxeg-source",
+      "issue_closed_at": "2026-11-04T10:10:31Z",
+      "upstream_state_reason": "not_planned",
+      "follow_up_disposition": "ARCHIVED_NO_REPOST_UNLESS_NEW_EXECUTABLE_REPRO",
+      "description": "Maintainer declined the proposed additional cached EVALSHA_RO/EVAL_RO ACL test as redundant with existing coverage and closed issue #3579 as not planned. The separately authored upstream fix #3567 was merged; the proposed additional test is not a merged AETHER contribution. No reply or re-submission planned absent new runnable evidence."
+    }
+  ]
+}
