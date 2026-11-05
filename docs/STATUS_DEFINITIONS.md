@@ -14,6 +14,7 @@
 | `OPEN_UNMERGED_AUTHORED_PR` | Our account opened a PR at a verifiable upstream head; merge/review/CI are separate unproven states. |
 | `THIRD_PARTY_WATCHLIST_LISTED` | Maintainer visibly listed a project in an external watchlist; not an endorsement, runtime test or certified adoption. |
 | `CLOSED_NOT_PLANNED_NO_FOLLOWUP` | Maintainer declined a proposal with an explicit reason; internal follow-up is archived absent materially new executable evidence. |
+| `UPSTREAM_RELATED_FIX_MERGED_THIRD_PARTY_AUTHORED` | A related upstream fix merged under a third party's authorship; our historical technical comment is retained without implying causation, merged AETHER code/tests, review acceptance, partnership or endorsement. |
 | `MERGED_AUTHORED_PR` | GitHub confirms our account authored and merged this PR. |
 | `CLOSED_UNMERGED_AUTHORED_PR` | Our authored PR closed without merge. |
 
