@@ -1,15 +1,15 @@
 # Unified institutional contribution register
 
-**AETHER X GLOBAL** · Baseline: 3 November 2026 · Dated additions: 4 November 2026.
+**AETHER X GLOBAL** · Baseline: 3 November 2026 · Dated additions: 4 and 5 November 2026.
 
 The canonical machine-readable index is [`data/institutional_register.json`](../data/institutional_register.json), reconciled without rewriting original sources by [`scripts/validate_institutional_register.py`](../scripts/validate_institutional_register.py).
 
 ## What is indexed
 
-- **262 unique participation permalinks** after deduplicating the 242 verified comment/review links, 10 verified authored discussions, 43 curated historical catalog links and three dated status records. The source groups overlap; their counts must **not** be added together.
+- **262 unique participation permalinks** after deduplicating the 242 verified comment/review links, 10 verified authored discussions, 43 curated historical catalog links and four dated status records. The source groups overlap; their counts must **not** be added together.
 - **233 discovered public discussion threads**, each linked to known participation permalinks and marked with its historical state observed on 3 November.
-- **43 originally curated records** retain their historical classification and ID; **3 dated status observations** link to their source records without changing the old snapshot.
-- **216 source-identity-only links** remain unqualified for editorial/engineering achievement claims; their existence does not imply implementation, acceptance, independent testing, endorsement or merging.
+- **43 originally curated records** retain their historical classification and ID; **4 dated status observations** link to their source records without changing the old snapshot.
+- **215 source-identity-only links** remain unqualified for editorial/engineering achievement claims; their existence does not imply implementation, acceptance, independent testing, endorsement or merging.
 
 The register contains `records[]` keyed by canonical `source_url` and `threads[]` keyed by `thread_url`. Every record links to its original discussion thread, records applicable identity evidence, optionally references a historical catalog ID and a latest dated status ID, and has an explicit `qualification_tier`. State observed during discovery is historical, **not a live GitHub state**.
 
@@ -41,3 +41,9 @@ Append the dated path and exact file SHA-256 to `data/updates/manifest.json`, so
 Run `python3 scripts/validate_institutional_register.py --write` on the review branch, inspect the derived-index diff, then run normal and optimized-mode CI. The resulting new links **always remain `SOURCE_IDENTITY_ONLY_UNQUALIFIED`** and cannot silently become merged, accepted or security-certified. A later qualified status requires a dedicated, separately reviewed, source-pinned dated status record and validator update. The original 2026-11-03/04 observations must never be rewritten.
 
 For current **zero additional snapshots**, rebuilding reconciles to the same complete source/record identities, although list iteration order can differ; counts are lower bounds (262 sources, 233 threads, three historical dated statuses), not permanent ceilings. No new public source URLs have been claimed or published as part of this engineering upgrade.
+
+## 5 November source-backed status
+
+[NVIDIA OpenShell issue #4111](https://github.com/NVIDIA/OpenShell/issues/4111) closed after [PR #4714](https://github.com/NVIDIA/OpenShell/pull/4714) was merged by upstream author `lunarwhite`. The existing [AETHER X technical comment](https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345) is now classified as `UPSTREAM_RELATED_FIX_MERGED_THIRD_PARTY_AUTHORED`. This is **one qualified dated status**, not a new participation permalink or AETHER-authored upstream merge. The resulting institutional register remains **262 sources**, **233 threads**, **four dated status records**, and **215 unqualified sources**. No evidence establishes causal use of AETHER's advice or endorsement by NVIDIA.
+
+The [dated report](STATUS_UPDATE_2026-11-05.md), [primary-source receipt](../data/evidence/2026-11-05-primary-receipts.json), [strict verifier](../scripts/verify_nvidia_2026_11_05.py), and independent negative tests supply the bounded release evidence. The source/receipt pair is not a cryptographic external attestation; simultaneous alteration of validator and records requires code review and Founder authorization.

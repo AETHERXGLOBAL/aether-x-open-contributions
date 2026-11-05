@@ -8,6 +8,12 @@ This is AETHER X GLOBAL's **public engineering portfolio** of contributions to i
 
 > **Snapshot as of 3 November 2026.** A curated historical baseline, not an exhaustive or live GitHub feed. References to external projects do not imply partnership, endorsement, sponsorship or affiliation.
 
+## Verified status update — 5 November 2026
+
+[Source-backed NVIDIA follow-up](docs/STATUS_UPDATE_2026-11-05.md) · [dated machine status](data/status-updates/2026-11-05.json) · [pinned fact receipt](data/evidence/2026-11-05-primary-receipts.json).
+
+[NVIDIA OpenShell #4111](https://github.com/NVIDIA/OpenShell/issues/4111) closed as completed after [PR #4714](https://github.com/NVIDIA/OpenShell/pull/4714) was **merged by upstream contributor `lunarwhite`** on 5 November. The prior [AETHER technical comment](https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345) is an existing source link. This is **not an AETHER-authored merged fix/test**, nor evidence of causal adoption or NVIDIA endorsement. Historical curated counts and 4 November statuses remain unchanged.
+
 ## Verified status updates — 4 November 2026
 
 These are **dated updates**, not revisions to the 3 November historical counts. [Detailed evidence and dispositions](docs/STATUS_UPDATE_2026-11-04.md) · [machine-readable status register](data/status-updates/2026-11-04.json).
@@ -24,7 +30,7 @@ The original 43-link portfolio, eight source-backed outcome cases and verified t
 
 [Unified source index](data/institutional_register.json) · [Classification and lineage guide](docs/INSTITUTIONAL_REGISTER.md) · [Evidence requalification](docs/EVIDENCE_REQUALIFICATION.md) · [Founder-controlled merge policy](data/founder-merge-policy.json) · [Legacy review proposal and present controls](docs/INDEPENDENT_REVIEW_GATE.md).
 
-The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and three dated observations. **216 identity-only links remain unqualified**; links are not achievements. The **Founder alone authorizes each final merge** on its exact PR/HEAD; the current GitHub ruleset cannot authenticate a chat approval. The previous mandatory second-reviewer proposal is historical, not an active merge prerequisite. New source links are admitted only through reviewed, append-only dated snapshots as **unqualified participation** until independently verified upstream.
+The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and four dated observations. **215 identity-only links remain unqualified**; links are not achievements. The **Founder alone authorizes each final merge** on its exact PR/HEAD; the current GitHub ruleset cannot authenticate a chat approval. The previous mandatory second-reviewer proposal is historical, not an active merge prerequisite. New source links are admitted only through reviewed, append-only dated snapshots as **unqualified participation** until independently verified upstream.
 
 ## Verified portfolio
 

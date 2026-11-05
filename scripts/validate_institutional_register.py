@@ -8,16 +8,23 @@ import re
 from integrity_runtime import require
 
 from verify_frozen_snapshots import check_all as assert_frozen_sources
-from append_only_updates import read_updates
+from append_only_updates import read_updates, read_bounded_json
+from verify_nvidia_2026_11_05 import check_new as check_nvidia_update
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+REGISTER_ROOT_FIELDS = frozenset({
+    "schema_version", "snapshot_generated_from", "source_files", "identity_rule",
+    "counts", "records", "threads",
+})
 CANONICAL = re.compile(
     r"https://github\.com/([^/]+/[^/]+)/(issues|pull)/(\d+)"
     r"(?:#(?:issuecomment-\d+|discussion_r\d+))?"
 )
 
 def read(path):
-    return json.loads((ROOT / path).read_text(encoding="utf-8"))
+    """Parse strict JSON from the active authorized repository root."""
+    return read_bounded_json(ROOT, path)
+
 
 def assert_valid_url(url, project):
     m = CANONICAL.fullmatch(url)
@@ -31,6 +38,8 @@ def build():
     discovery = read("data/discovery/2026-11-03-author-verified-links.json")
     threads_source = read("data/discovery/2026-11-03-public-threads.json")
     status = read("data/status-updates/2026-11-04.json")
+    check_nvidia_update(root=ROOT)
+    new_status = read("data/status-updates/2026-11-05.json")
     entries = {}
 
     def get(url, project):
@@ -72,6 +81,13 @@ def build():
         entry["latest_dated_status_id"] = item["id"]
         entry["latest_dated_status"] = item["status"]
 
+    # Later source-backed statuses may qualify existing links, never overwrite prior qualified statuses.
+    for item in new_status["records"]:
+        entry = get(item["source_url"], item["project"])
+        require(entry["latest_dated_status_id"] is None, ("unreviewed status overwrite", item["id"]))
+        entry["latest_dated_status_id"] = item["id"]
+        entry["latest_dated_status"] = item["status"]
+
     # New dated source links are always unqualified; authorship requires separate
     # live source review and a Founder-authorized PR.
     additions, added_paths, added_dates = read_updates(ROOT)
@@ -110,12 +126,13 @@ def build():
 
     result = {
         "schema_version": "AX-INSTITUTIONAL-CONTRIBUTION-REGISTER-v1",
-        "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 dated update",
+        "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 and 2026-11-05 dated updates",
         "source_files": [
             "data/contributions.json",
             "data/discovery/2026-11-03-author-verified-links.json",
             "data/discovery/2026-11-03-public-threads.json",
             "data/status-updates/2026-11-04.json",
+            "data/status-updates/2026-11-05.json",
         ],
         "identity_rule": (
             "Source identity only is not engineering qualification or upstream acceptance. "
@@ -126,7 +143,7 @@ def build():
             "identity_verified_comment_links": len(discovery["comments"]),
             "identity_verified_authored_discussions": len(discovery["authored_discussions"]),
             "curated_historical_links": len(history["records"]),
-            "dated_status_updates": len(status["records"]),
+            "dated_status_updates": len(status["records"]) + len(new_status["records"]),
             "discovered_threads": len(threads),
             "discovered_threads_without_matched_participation": sum(
                 not x["linked_participation_urls"] for x in threads
@@ -174,7 +191,15 @@ def build():
 
 def check_register(actual, expected=None):
     assert_frozen_sources(ROOT)
-    expected = expected or build()
+    require(
+        isinstance(actual, dict) and set(actual) == REGISTER_ROOT_FIELDS,
+        "unexpected or missing institutional register root fields",
+    )
+    expected = build() if expected is None else expected
+    require(
+        isinstance(expected, dict) and set(expected) == REGISTER_ROOT_FIELDS,
+        "invalid reconstructed institutional register schema",
+    )
     require(actual["schema_version"] == expected["schema_version"], "integrity assertion 8")
     require(actual["source_files"] == expected["source_files"], "integrity assertion 9")
     require(actual["identity_rule"] == expected["identity_rule"], "integrity assertion 10")
@@ -196,7 +221,7 @@ def check_register(actual, expected=None):
         require(actual_threads[url] == item, ("thread evidence link drift", url))
     require(actual["counts"]["unique_participation_sources"] >= 262, "original source baseline lost")
     require(actual["counts"]["discovered_threads"] >= 233, "original thread baseline lost")
-    require(actual["counts"]["dated_status_updates"] == 3, "integrity assertion 23")
+    require(actual["counts"]["dated_status_updates"] == 4, "integrity assertion 23")
     return True
 
 if __name__ == "__main__":

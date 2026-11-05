@@ -1,11 +1,12 @@
 {
   "schema_version": "AX-INSTITUTIONAL-CONTRIBUTION-REGISTER-v1",
-  "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 dated update",
+  "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 and 2026-11-05 dated updates",
   "source_files": [
     "data/contributions.json",
     "data/discovery/2026-11-03-author-verified-links.json",
     "data/discovery/2026-11-03-public-threads.json",
-    "data/status-updates/2026-11-04.json"
+    "data/status-updates/2026-11-04.json",
+    "data/status-updates/2026-11-05.json"
   ],
   "identity_rule": "Source identity only is not engineering qualification or upstream acceptance. Dated statuses do not rewrite original observations.",
   "counts": {
@@ -13,7 +14,7 @@
     "identity_verified_comment_links": 242,
     "identity_verified_authored_discussions": 10,
     "curated_historical_links": 43,
-    "dated_status_updates": 3,
+    "dated_status_updates": 4,
     "discovered_threads": 233,
     "discovered_threads_without_matched_participation": 0
   },
@@ -1712,9 +1713,9 @@
       ],
       "historical_catalog_id": null,
       "historical_catalog_status": null,
-      "latest_dated_status_id": null,
-      "latest_dated_status": null,
-      "qualification_tier": "SOURCE_IDENTITY_ONLY_UNQUALIFIED"
+      "latest_dated_status_id": "NVIDIA-OPENSHELL-4111",
+      "latest_dated_status": "UPSTREAM_RELATED_FIX_MERGED_THIRD_PARTY_AUTHORED",
+      "qualification_tier": "DATED_STATUS_WITH_PUBLIC_EVIDENCE"
     },
     {
       "source_url": "https://github.com/NVIDIA/OpenShell/issues/4115#issuecomment-5955269212",
