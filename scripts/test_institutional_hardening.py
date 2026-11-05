@@ -74,6 +74,12 @@ class InstitutionalHardeningTests(unittest.TestCase):
         target = self.root / "data/updates/manifest.json"
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / "data/updates/manifest.json", target)
+        # The 2026-11-05 source/receipt is new, not part of frozen 03/04 inputs.
+        for path in ("data/status-updates/2026-11-05.json",
+                     "data/evidence/2026-11-05-primary-receipts.json"):
+            target = self.root / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / path, target)
 
     def test_runtime_require_rejects_optimized_python(self):
         script = "from integrity_runtime import require; require(False, 'optimized rejected')"
@@ -112,7 +118,7 @@ class InstitutionalHardeningTests(unittest.TestCase):
         self.assertEqual(candidate["counts"]["unique_participation_sources"], 264)
         self.assertEqual(candidate["counts"]["discovered_threads"], 234)
         self.assertEqual(candidate["counts"]["append_only_unqualified_participations"], 2)
-        self.assertEqual(candidate["counts"]["dated_status_updates"], 3)
+        self.assertEqual(candidate["counts"]["dated_status_updates"], 4)
         for url in (NEW_LINK, EXISTING_THREAD_NEW_LINK):
             record = next(x for x in candidate["records"] if x["source_url"] == url)
             self.assertEqual(record["qualification_tier"], "SOURCE_IDENTITY_ONLY_UNQUALIFIED")
@@ -120,6 +126,20 @@ class InstitutionalHardeningTests(unittest.TestCase):
         old_thread = next(x for x in candidate["threads"] if x["thread_url"] ==
                           "https://github.com/Adyen/adyen-flutter/issues/756")
         self.assertEqual(old_thread["linked_participation_urls"].count(EXISTING_THREAD_NEW_LINK), 1)
+
+    def test_new_status_and_receipt_joint_forgery_rejected(self):
+        # A temp-root rebuild must validate its OWN dated fact receipt,
+        # not silently substitute the production working tree as its root.
+        for path in ("data/status-updates/2026-11-05.json",
+                     "data/evidence/2026-11-05-primary-receipts.json"):
+            target = self.root / path
+            obj = json.loads(target.read_text(encoding="utf-8"))
+            key = "records" if "status-updates" in path else "expected_records"
+            obj[key][0]["aether_authored_upstream_fix"] = True
+            target.write_text(json.dumps(obj), encoding="utf-8")
+        with mock.patch.object(register_module, "ROOT", self.root):
+            with self.assertRaises(AssertionError):
+                register_module.build()
 
     def test_bad_digest_rejected(self):
         write_snapshot(self.root, [sample()], corrupt_digest=True)
