@@ -60,7 +60,8 @@ def read_bounded_bytes(root, name):
                 require(stat.S_ISDIR(os.fstat(parent).st_mode), "unsafe JSON root")
                 for index, part in enumerate(relative.parts):
                     last = index == len(relative.parts) - 1
-                    fd = os.open(part, flags if last else flags | directory_only,
+                    # Open the leaf nonblocking so a FIFO cannot hang before fstat.
+                    fd = os.open(part, flags | (os.O_NONBLOCK if last else directory_only),
                                  dir_fd=parent)
                     opened.callback(os.close, fd)
                     mode = os.fstat(fd).st_mode
