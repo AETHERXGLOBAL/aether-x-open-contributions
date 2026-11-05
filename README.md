@@ -8,6 +8,12 @@ This is AETHER X GLOBAL's **public engineering portfolio** of contributions to i
 
 > **Snapshot as of 3 November 2026.** A curated historical baseline, not an exhaustive or live GitHub feed. References to external projects do not imply partnership, endorsement, sponsorship or affiliation.
 
+## Verified status update — 5 November 2026
+
+[Source-backed NVIDIA follow-up](docs/STATUS_UPDATE_2026-11-05.md) · [dated machine status](data/status-updates/2026-11-05.json) · [pinned fact receipt](data/evidence/2026-11-05-primary-receipts.json).
+
+[NVIDIA OpenShell #4111](https://github.com/NVIDIA/OpenShell/issues/4111) closed as completed after [PR #4714](https://github.com/NVIDIA/OpenShell/pull/4714) was **merged by upstream contributor `lunarwhite`** on 5 November. The prior [AETHER technical comment](https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345) is an existing source link. This is **not an AETHER-authored merged fix/test**, nor evidence of causal adoption or NVIDIA endorsement. Historical curated counts and 4 November statuses remain unchanged.
+
 ## Verified status updates — 4 November 2026
 
 These are **dated updates**, not revisions to the 3 November historical counts. [Detailed evidence and dispositions](docs/STATUS_UPDATE_2026-11-04.md) · [machine-readable status register](data/status-updates/2026-11-04.json).
