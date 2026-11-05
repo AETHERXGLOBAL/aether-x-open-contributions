@@ -1,18 +1,24 @@
-# AETHER X GLOBAL / OPEN CONTRIBUTIONS
+# AETHER X GLOBAL — Open Source Contributions
 
-**Public engineering contributions · Reproducible regression tests · Evidence-led collaboration**
+**Verified engineering outcomes · Reproducible regression tests · Responsible upstream collaboration**
 
-[Corporate website](https://aetherxglobal.com) · [Contributor account](https://github.com/aetherxeg-source) · [All projects](contributions/README.md) · [العربية](docs/README_AR.md)
+[Corporate website](https://aetherxglobal.com) · [Contributor account](https://github.com/aetherxeg-source) · [Curated project index](contributions/README.md) · [Current participation watch](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md) · [العربية](docs/README_AR.md)
 
 This is AETHER X GLOBAL's **public engineering portfolio** of contributions to independent open-source projects. It presents original source, date-stamped GitHub receipts, and verifiable testing boundaries. It never treats an idea, comment, or upstream author's code as an AETHER-authored merged change.
 
-> **Snapshot as of 3 November 2026.** A curated historical baseline, not an exhaustive or live GitHub feed. References to external projects do not imply partnership, endorsement, sponsorship or affiliation.
+> **Historical baseline: 3 November 2026.** The 43 curated entries are evidence-qualified source references, distinct from the broader 262-link institutional participation register. Neither figure is a live count of accepted patches. External project references imply no partnership, endorsement, sponsorship or affiliation.
+
+## Current participation watch — 6 November 2026
+
+[Pydantic #14230](https://github.com/pydantic/pydantic/issues/14230) remains **open and unassigned** after our [request for maintainer assignment](https://github.com/pydantic/pydantic/issues/14230#issuecomment-6668703035). A local candidate and tests are not an upstream PR or accepted fix. [Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) remains an **open AETHER-authored PR**, not a merge.
+
+[Source-linked, dated watch and next actions](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md). These pointers **do not change** frozen historical source counts, the institutional register, or achievement tiers.
 
 ## Verified status update — 5 November 2026
 
 [Source-backed NVIDIA follow-up](docs/STATUS_UPDATE_2026-11-05.md) · [dated machine status](data/status-updates/2026-11-05.json) · [pinned fact receipt](data/evidence/2026-11-05-primary-receipts.json).
 
-[NVIDIA OpenShell #4111](https://github.com/NVIDIA/OpenShell/issues/4111) closed as completed after [PR #4714](https://github.com/NVIDIA/OpenShell/pull/4714) was **merged by upstream contributor `lunarwhite`** on 5 November. The prior [AETHER technical comment](https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345) is an existing source link. This is **not an AETHER-authored merged fix/test**, nor evidence of causal adoption or NVIDIA endorsement. Historical curated counts and 4 November statuses remain unchanged.
+[NVIDIA OpenShell #4111](https://github.com/NVIDIA/OpenShell/issues/4111) closed as completed after [PR #4714](https://github.com/NVIDIA/OpenShell/pull/4714) was **merged by upstream contributor `lunarwhite`** on 5 November. The prior [AETHER technical comment](https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345) is an existing source link. This is **not an AETHER-authored merged fix/test**, nor evidence of causal adoption or NVIDIA endorsement. Historical curated counts and 4 November statuses remain unchanged. The corresponding [internal evidence PR #11](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/pull/11) was subsequently merged on 5 November; its dated draft-stage source text is retained as historical evidence.
 
 ## Verified status updates — 4 November 2026
 
@@ -32,7 +38,7 @@ The original 43-link portfolio, eight source-backed outcome cases and verified t
 
 The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and four dated observations. **215 identity-only links remain unqualified**; links are not achievements. The **Founder alone authorizes each final merge** on its exact PR/HEAD; the current GitHub ruleset cannot authenticate a chat approval. The previous mandatory second-reviewer proposal is historical, not an active merge prerequisite. New source links are admitted only through reviewed, append-only dated snapshots as **unqualified participation** until independently verified upstream.
 
-## Verified portfolio
+## Verified portfolio — historical curated baseline
 
 | Public source links | Technical comment links | AETHER-authored merged PRs | Original executable test candidates |
 |:---:|:---:|:---:|:---:|
