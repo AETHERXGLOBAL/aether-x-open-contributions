@@ -32,7 +32,7 @@ def build():
     discovery = read("data/discovery/2026-11-03-author-verified-links.json")
     threads_source = read("data/discovery/2026-11-03-public-threads.json")
     status = read("data/status-updates/2026-11-04.json")
-    check_nvidia_update()
+    check_nvidia_update(root=ROOT)
     new_status = read("data/status-updates/2026-11-05.json")
     entries = {}
 
