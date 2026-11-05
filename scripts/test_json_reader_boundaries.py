@@ -2,7 +2,10 @@
 
 RED/GREEN adversarial fixtures; all writes remain in temporary roots.
 """
+import os
 import pathlib
+import subprocess
+import sys
 import tempfile
 import unittest
 from unittest import mock
@@ -104,6 +107,34 @@ class JsonReaderBoundaryTests(unittest.TestCase):
         with self.assertRaises(AssertionError):
             nvidia_module.read(str(self.external), root=self.root)
 
+
+    @unittest.skipUnless(os.name == "posix" and hasattr(os, "mkfifo"),
+                         "FIFO regression requires POSIX")
+    def test_fifo_is_rejected_without_blocking_in_subprocess(self):
+        """A special file must fail closed before a blocking read; bound the probe."""
+        fifo = self.root / "pipe.json"
+        os.mkfifo(fifo)
+        script = (
+            "import pathlib, sys\\n"
+            "sys.path.insert(0, sys.argv[1])\\n"
+            "from append_only_updates import read_bounded_json\\n"
+            "try:\\n"
+            "    read_bounded_json(pathlib.Path(sys.argv[2]), 'pipe.json')\\n"
+            "except AssertionError:\\n"
+            "    print('FIFO_REJECTED')\\n"
+            "else:\\n"
+            "    raise AssertionError('FIFO_WAS_ACCEPTED')\\n"
+        )
+        try:
+            result = subprocess.run(
+                [sys.executable, "-c", script,
+                 str(pathlib.Path(__file__).resolve().parent), str(self.root)],
+                capture_output=True, text=True, check=False, timeout=2,
+            )
+        except subprocess.TimeoutExpired:
+            self.fail("FIFO read blocked longer than 2 seconds")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("FIFO_REJECTED", result.stdout)
 
 if __name__ == "__main__":
     unittest.main()
