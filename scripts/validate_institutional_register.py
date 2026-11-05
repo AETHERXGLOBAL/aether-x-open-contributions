@@ -8,7 +8,7 @@ import re
 from integrity_runtime import require
 
 from verify_frozen_snapshots import check_all as assert_frozen_sources
-from append_only_updates import read_updates, read_unique_json
+from append_only_updates import read_updates, read_bounded_json
 from verify_nvidia_2026_11_05 import check_new as check_nvidia_update
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -22,23 +22,9 @@ CANONICAL = re.compile(
 )
 
 def read(path):
-    """Parse original JSON bytes, rejecting duplicate keys and linked/escaped inputs."""
-    require(isinstance(path, str), "non-string JSON input path")
-    relative = pathlib.PurePosixPath(path)
-    require(
-        bool(relative.parts) and not relative.is_absolute()
-        and ".." not in relative.parts and relative.as_posix() == path,
-        ("unsafe JSON input path", path),
-    )
-    target = ROOT
-    for part in relative.parts:
-        target = target / part
-        require(not target.is_symlink(), ("linked JSON input path", path))
-    require(
-        target.is_file() and target.resolve().is_relative_to(ROOT.resolve()),
-        ("missing or escaped JSON input", path),
-    )
-    return read_unique_json(target.read_bytes())
+    """Parse strict JSON from the active authorized repository root."""
+    return read_bounded_json(ROOT, path)
+
 
 def assert_valid_url(url, project):
     m = CANONICAL.fullmatch(url)

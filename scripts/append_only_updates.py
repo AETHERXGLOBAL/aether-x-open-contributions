@@ -29,6 +29,74 @@ def read_unique_json(raw):
         return result
     return json.loads(raw, object_pairs_hook=unique)
 
+def read_bounded_bytes(root, name):
+    """Read a regular file inside an explicitly authorized root; never follow symlinks.
+
+    POSIX uses descriptor-relative O_NOFOLLOW walks to resist path-swap races.
+    Other platforms use a checked path fallback; see the documented TOCTOU limit.
+    """
+    import contextlib
+    import os
+    import stat
+
+    require(isinstance(name, str) and bool(name) and "\x00" not in name
+            and "\\" not in name, "unsafe JSON input path")
+    relative = pathlib.PurePosixPath(name)
+    require(bool(relative.parts) and not relative.is_absolute()
+            and ".." not in relative.parts and relative.as_posix() == name
+            and not pathlib.PureWindowsPath(name).drive,
+            "unsafe JSON input path")
+    root = pathlib.Path(root)
+    require(root.is_dir() and not root.is_symlink(), "unsafe JSON root")
+
+    nofollow = getattr(os, "O_NOFOLLOW", 0)
+    directory_only = getattr(os, "O_DIRECTORY", 0)
+    if nofollow and directory_only and os.open in getattr(os, "supports_dir_fd", ()):
+        flags = os.O_RDONLY | nofollow | getattr(os, "O_CLOEXEC", 0)
+        try:
+            with contextlib.ExitStack() as opened:
+                parent = os.open(root, flags | directory_only)
+                opened.callback(os.close, parent)
+                require(stat.S_ISDIR(os.fstat(parent).st_mode), "unsafe JSON root")
+                for index, part in enumerate(relative.parts):
+                    last = index == len(relative.parts) - 1
+                    fd = os.open(part, flags if last else flags | directory_only,
+                                 dir_fd=parent)
+                    opened.callback(os.close, fd)
+                    mode = os.fstat(fd).st_mode
+                    require(stat.S_ISREG(mode) if last else stat.S_ISDIR(mode),
+                            "non-regular JSON input or directory")
+                    parent = fd
+                with os.fdopen(os.dup(parent), "rb") as stream:
+                    return stream.read()
+        except (OSError, ValueError) as exc:
+            raise AssertionError("unsafe or unavailable JSON input path") from exc
+
+    # Windows/other fallback: reject links and junctions on every component,
+    # verify confinement and type before opening. Not atomic against a hostile
+    # concurrent path swap; use immutable, trusted checkouts on such platforms.
+    current = root
+    for index, part in enumerate(relative.parts):
+        current = current / part
+        linked = current.is_symlink() or (
+            hasattr(current, "is_junction") and current.is_junction()
+        )
+        require(not linked, "linked JSON input path")
+        require(current.is_file() if index == len(relative.parts) - 1
+                else current.is_dir(), "missing or non-regular JSON input")
+    require(current.resolve().is_relative_to(root.resolve()),
+            "JSON input escaped authorized root")
+    try:
+        return current.read_bytes()
+    except (OSError, ValueError) as exc:
+        raise AssertionError("unsafe or unavailable JSON input path") from exc
+
+
+def read_bounded_json(root, name):
+    """Apply strict duplicate-key rejection to confined original JSON bytes."""
+    return read_unique_json(read_bounded_bytes(root, name))
+
+
 def verify_date(value):
     require(isinstance(value, str) and re.fullmatch(r"\d{4}-\d{2}-\d{2}", value), "invalid date")
     require(datetime.date.fromisoformat(value) > datetime.date(2026, 11, 4),
@@ -37,7 +105,7 @@ def verify_date(value):
 
 def read_updates(root=None):
     root = pathlib.Path(root or ROOT)
-    manifest = read_unique_json((root / MANIFEST).read_bytes())
+    manifest = read_bounded_json(root, MANIFEST)
     require(set(manifest) == {"schema_version", "baseline_as_of", "snapshots", "notice"},
             "manifest schema drift")
     require(manifest["schema_version"] == "AX-APPEND-ONLY-PARTICIPATION-MANIFEST-v1")
@@ -55,7 +123,7 @@ def read_updates(root=None):
         require(not dates or date > dates[-1], "snapshot dates must increase")
         file = root / path
         require(file.is_file() and not file.is_symlink(), "missing or linked snapshot")
-        raw = file.read_bytes()
+        raw = read_bounded_bytes(root, path)
         require(hashlib.sha256(raw).hexdigest() == item["sha256"],
                 ("snapshot SHA-256 differs", date))
         snapshot = read_unique_json(raw)

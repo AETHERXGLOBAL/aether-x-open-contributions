@@ -5,7 +5,7 @@ This is an offline evidence-gate, not a substitute for querying upstream live st
 import json
 import pathlib
 from integrity_runtime import require
-from append_only_updates import read_unique_json
+from append_only_updates import read_bounded_json
 
 from verify_frozen_snapshots import check_all as assert_frozen_sources
 
@@ -63,7 +63,7 @@ SOURCES = {
 }
 
 def read(path):
-    return read_unique_json((ROOT / path).read_bytes())
+    return read_bounded_json(ROOT, path)
 
 def check_status(records, receipt):
     assert_frozen_sources(ROOT)
