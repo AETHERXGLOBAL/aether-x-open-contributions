@@ -9,6 +9,7 @@ from integrity_runtime import require
 
 from verify_frozen_snapshots import check_all as assert_frozen_sources
 from append_only_updates import read_updates
+from verify_nvidia_2026_11_05 import check_new as check_nvidia_update
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CANONICAL = re.compile(
@@ -31,6 +32,8 @@ def build():
     discovery = read("data/discovery/2026-11-03-author-verified-links.json")
     threads_source = read("data/discovery/2026-11-03-public-threads.json")
     status = read("data/status-updates/2026-11-04.json")
+    check_nvidia_update()
+    new_status = read("data/status-updates/2026-11-05.json")
     entries = {}
 
     def get(url, project):
@@ -72,6 +75,13 @@ def build():
         entry["latest_dated_status_id"] = item["id"]
         entry["latest_dated_status"] = item["status"]
 
+    # Later source-backed statuses may qualify existing links, never overwrite prior qualified statuses.
+    for item in new_status["records"]:
+        entry = get(item["source_url"], item["project"])
+        require(entry["latest_dated_status_id"] is None, ("unreviewed status overwrite", item["id"]))
+        entry["latest_dated_status_id"] = item["id"]
+        entry["latest_dated_status"] = item["status"]
+
     # New dated source links are always unqualified; authorship requires separate
     # live source review and a Founder-authorized PR.
     additions, added_paths, added_dates = read_updates(ROOT)
@@ -110,12 +120,13 @@ def build():
 
     result = {
         "schema_version": "AX-INSTITUTIONAL-CONTRIBUTION-REGISTER-v1",
-        "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 dated update",
+        "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 and 2026-11-05 dated updates",
         "source_files": [
             "data/contributions.json",
             "data/discovery/2026-11-03-author-verified-links.json",
             "data/discovery/2026-11-03-public-threads.json",
             "data/status-updates/2026-11-04.json",
+            "data/status-updates/2026-11-05.json",
         ],
         "identity_rule": (
             "Source identity only is not engineering qualification or upstream acceptance. "
@@ -126,7 +137,7 @@ def build():
             "identity_verified_comment_links": len(discovery["comments"]),
             "identity_verified_authored_discussions": len(discovery["authored_discussions"]),
             "curated_historical_links": len(history["records"]),
-            "dated_status_updates": len(status["records"]),
+            "dated_status_updates": len(status["records"]) + len(new_status["records"]),
             "discovered_threads": len(threads),
             "discovered_threads_without_matched_participation": sum(
                 not x["linked_participation_urls"] for x in threads
@@ -196,7 +207,7 @@ def check_register(actual, expected=None):
         require(actual_threads[url] == item, ("thread evidence link drift", url))
     require(actual["counts"]["unique_participation_sources"] >= 262, "original source baseline lost")
     require(actual["counts"]["discovered_threads"] >= 233, "original thread baseline lost")
-    require(actual["counts"]["dated_status_updates"] == 3, "integrity assertion 23")
+    require(actual["counts"]["dated_status_updates"] == 4, "integrity assertion 23")
     return True
 
 if __name__ == "__main__":
