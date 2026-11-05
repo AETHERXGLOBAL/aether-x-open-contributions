@@ -115,15 +115,15 @@ class JsonReaderBoundaryTests(unittest.TestCase):
         fifo = self.root / "pipe.json"
         os.mkfifo(fifo)
         script = (
-            "import pathlib, sys\\n"
-            "sys.path.insert(0, sys.argv[1])\\n"
-            "from append_only_updates import read_bounded_json\\n"
-            "try:\\n"
-            "    read_bounded_json(pathlib.Path(sys.argv[2]), 'pipe.json')\\n"
-            "except AssertionError:\\n"
-            "    print('FIFO_REJECTED')\\n"
-            "else:\\n"
-            "    raise AssertionError('FIFO_WAS_ACCEPTED')\\n"
+            "import pathlib, sys\n"
+            "sys.path.insert(0, sys.argv[1])\n"
+            "from append_only_updates import read_bounded_json\n"
+            "try:\n"
+            "    read_bounded_json(pathlib.Path(sys.argv[2]), 'pipe.json')\n"
+            "except AssertionError:\n"
+            "    print('FIFO_REJECTED')\n"
+            "else:\n"
+            "    raise AssertionError('FIFO_WAS_ACCEPTED')\n"
         )
         try:
             result = subprocess.run(
