@@ -8,17 +8,37 @@ import re
 from integrity_runtime import require
 
 from verify_frozen_snapshots import check_all as assert_frozen_sources
-from append_only_updates import read_updates
+from append_only_updates import read_updates, read_unique_json
 from verify_nvidia_2026_11_05 import check_new as check_nvidia_update
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+REGISTER_ROOT_FIELDS = frozenset({
+    "schema_version", "snapshot_generated_from", "source_files", "identity_rule",
+    "counts", "records", "threads",
+})
 CANONICAL = re.compile(
     r"https://github\.com/([^/]+/[^/]+)/(issues|pull)/(\d+)"
     r"(?:#(?:issuecomment-\d+|discussion_r\d+))?"
 )
 
 def read(path):
-    return json.loads((ROOT / path).read_text(encoding="utf-8"))
+    """Parse original JSON bytes, rejecting duplicate keys and linked/escaped inputs."""
+    require(isinstance(path, str), "non-string JSON input path")
+    relative = pathlib.PurePosixPath(path)
+    require(
+        bool(relative.parts) and not relative.is_absolute()
+        and ".." not in relative.parts and relative.as_posix() == path,
+        ("unsafe JSON input path", path),
+    )
+    target = ROOT
+    for part in relative.parts:
+        target = target / part
+        require(not target.is_symlink(), ("linked JSON input path", path))
+    require(
+        target.is_file() and target.resolve().is_relative_to(ROOT.resolve()),
+        ("missing or escaped JSON input", path),
+    )
+    return read_unique_json(target.read_bytes())
 
 def assert_valid_url(url, project):
     m = CANONICAL.fullmatch(url)
@@ -185,7 +205,15 @@ def build():
 
 def check_register(actual, expected=None):
     assert_frozen_sources(ROOT)
-    expected = expected or build()
+    require(
+        isinstance(actual, dict) and set(actual) == REGISTER_ROOT_FIELDS,
+        "unexpected or missing institutional register root fields",
+    )
+    expected = build() if expected is None else expected
+    require(
+        isinstance(expected, dict) and set(expected) == REGISTER_ROOT_FIELDS,
+        "invalid reconstructed institutional register schema",
+    )
     require(actual["schema_version"] == expected["schema_version"], "integrity assertion 8")
     require(actual["source_files"] == expected["source_files"], "integrity assertion 9")
     require(actual["identity_rule"] == expected["identity_rule"], "integrity assertion 10")

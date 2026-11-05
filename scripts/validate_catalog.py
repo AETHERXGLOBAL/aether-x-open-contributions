@@ -3,9 +3,9 @@
 import csv, hashlib, json, pathlib, re
 from urllib.parse import urlparse
 from integrity_runtime import require, scan_public_secrets
-from append_only_updates import read_updates
+from append_only_updates import read_updates, read_unique_json
 root=pathlib.Path(__file__).resolve().parents[1]
-data=json.loads((root/"data/contributions.json").read_text(encoding="utf8"))
+data=read_unique_json((root/"data/contributions.json").read_bytes())
 rows=data["records"]
 require(data["snapshot_date"]=="2026-11-03", "integrity assertion 1")
 require(len(rows)==43, "integrity assertion 2")
@@ -26,7 +26,7 @@ for file, sha in {"tests/opentelemetry/otel15966_graph_build_test.go":"45221c859
 scan_public_secrets(root)
 
 # The historical search census is a discovery tier, not an achievement count.
-threads=json.loads((root/"data/discovery/2026-11-03-public-threads.json").read_text(encoding="utf8"))
+threads=read_unique_json((root/"data/discovery/2026-11-03-public-threads.json").read_bytes())
 require(len(threads["threads"])==233, "integrity assertion 14")
 require(len({(x["repo"],x["number"]) for x in threads["threads"]})==233, "integrity assertion 15")
 require(sum(x["kind"]=="issue" for x in threads["threads"])==217, "integrity assertion 16")
@@ -35,7 +35,7 @@ require(threads["totals"]["discovered_not_in_2026_11_03_verified_thread_set"]==2
 require(all(x["comment_permalink_verification"]=="PENDING" for x in threads["threads"]), "integrity assertion 19")
 
 # Original public permalink identity proof from the successful GitHub-native discovery job.
-evidence=json.loads((root/"data/discovery/2026-11-03-author-verified-links.json").read_text(encoding="utf8"))
+evidence=read_unique_json((root/"data/discovery/2026-11-03-author-verified-links.json").read_bytes())
 require(evidence["account"]=="aetherxeg-source", "integrity assertion 20")
 require(evidence["source_artifact_sha256"]=="8a163906a86ec7eafad3d4c2776a388c421dc11e004e57a7a40418f157c3c9f4", "integrity assertion 21")
 comments=evidence["comments"]
@@ -59,7 +59,7 @@ print("PUBLIC_CATALOG=PASS entries=43 technical_comments=40 authored_prs=3 merge
 
 # The 2026-11-04 supplement is additive. Historical counts and original
 # source byte digests above must continue to pass without relaxation.
-delta=json.loads((root/"data/status-updates/2026-11-04.json").read_text(encoding="utf8"))
+delta=read_unique_json((root/"data/status-updates/2026-11-04.json").read_bytes())
 require(delta["schema_version"]=="AX-PUBLIC-STATUS-UPDATE-v1", "integrity assertion 31")
 require(delta["snapshot_date"]=="2026-11-04", "integrity assertion 32")
 require(delta["historical_catalog_snapshot"]==data["snapshot_date"], "integrity assertion 33")
