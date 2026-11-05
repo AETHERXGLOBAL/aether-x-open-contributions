@@ -102,3 +102,8 @@ check_status(
     read_status_evidence("data/evidence/2026-11-04-primary-receipts.json"),
 )
 print("EVIDENCE_PINNING=PASS status_records=3 primary_source_anchors=strict")
+
+# Pinned 2026-11-05 third-party outcome; never a company-authored merge.
+from verify_nvidia_2026_11_05 import check_new as check_nvidia_update
+check_nvidia_update()
+print('PUBLIC_STATUS_2026_11_05=PASS records=1 third_party_authored=true')
