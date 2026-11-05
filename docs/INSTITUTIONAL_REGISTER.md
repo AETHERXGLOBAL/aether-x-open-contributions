@@ -6,7 +6,7 @@ The canonical machine-readable index is [`data/institutional_register.json`](../
 
 ## What is indexed
 
-- **262 unique participation permalinks** after deduplicating the 242 verified comment/review links, 10 verified authored discussions, 43 curated historical catalog links and three dated status records. The source groups overlap; their counts must **not** be added together.
+- **262 unique participation permalinks** after deduplicating the 242 verified comment/review links, 10 verified authored discussions, 43 curated historical catalog links and four dated status records. The source groups overlap; their counts must **not** be added together.
 - **233 discovered public discussion threads**, each linked to known participation permalinks and marked with its historical state observed on 3 November.
 - **43 originally curated records** retain their historical classification and ID; **4 dated status observations** link to their source records without changing the old snapshot.
 - **215 source-identity-only links** remain unqualified for editorial/engineering achievement claims; their existence does not imply implementation, acceptance, independent testing, endorsement or merging.
