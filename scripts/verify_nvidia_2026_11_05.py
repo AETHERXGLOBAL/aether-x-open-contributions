@@ -12,13 +12,14 @@ from verify_frozen_snapshots import check_all as check_frozen
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 PINNED_RECORD = json.loads("{\"id\":\"NVIDIA-OPENSHELL-4111\",\"kind\":\"technical_comment\",\"project\":\"NVIDIA/OpenShell\",\"source_url\":\"https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345\",\"status\":\"UPSTREAM_RELATED_FIX_MERGED_THIRD_PARTY_AUTHORED\",\"as_of\":\"2026-11-05\",\"evidence_urls\":[\"https://github.com/NVIDIA/OpenShell/issues/4111\",\"https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345\",\"https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-6631499484\",\"https://github.com/NVIDIA/OpenShell/pull/4714\"],\"submitter_account\":\"aetherxeg-source\",\"issue_closed_at\":\"2026-11-05T08:21:03Z\",\"issue_state_reason\":\"completed\",\"related_pr_url\":\"https://github.com/NVIDIA/OpenShell/pull/4714\",\"related_pr_author\":\"lunarwhite\",\"related_pr_merged_at\":\"2026-11-05T08:21:01Z\",\"related_pr_head\":\"4422f21196316d720f4d4a64e079ada49c3ee44f\",\"aether_authored_upstream_fix\":false,\"aether_test_merged\":false,\"causal_adoption_proven\":false,\"description\":\"AETHER X GLOBAL supplied a security-focused comment about managed-volume ownership evidence. NVIDIA OpenShell issue #4111 was later closed as completed after upstream contributor lunarwhite authored and merged PR #4714. This observation does not establish use of AETHER code/tests, causal adoption of AETHER advice, review approval, certification, partnership, or vendor endorsement.\"}")
 
-def read(path):
-    return read_unique_json((ROOT / path).read_bytes())
+def read(path, *, root=None):
+    return read_unique_json(((root or ROOT) / path).read_bytes())
 
-def check_new(status=None, receipt=None):
-    check_frozen(ROOT)
-    status = status if status is not None else read("data/status-updates/2026-11-05.json")
-    receipt = receipt if receipt is not None else read("data/evidence/2026-11-05-primary-receipts.json")
+def check_new(status=None, receipt=None, *, root=None):
+    root = root or ROOT
+    check_frozen(root)
+    status = status if status is not None else read("data/status-updates/2026-11-05.json", root=root)
+    receipt = receipt if receipt is not None else read("data/evidence/2026-11-05-primary-receipts.json", root=root)
     require(isinstance(status, dict) and set(status) ==
             {"schema_version", "snapshot_date", "publisher", "historical_catalog_snapshot", "scope", "records"},
             "unexpected 2026-11-05 status schema")
