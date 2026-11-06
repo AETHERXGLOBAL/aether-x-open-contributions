@@ -32,7 +32,7 @@ jobs:
           set -euo pipefail
           python3 -m venv .qualification-venv
           .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input -e ./upstream-pydantic
-          .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input pytest pytest-benchmark 'pytest-run-parallel>=0.3.1'
+          .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input pytest pytest-benchmark 'pytest-run-parallel>=0.3.1' jsonschema
       - name: Check source identity and run both outcomes
         shell: bash
         run: |
