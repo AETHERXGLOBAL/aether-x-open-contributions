@@ -12,7 +12,7 @@ This is AETHER X GLOBAL's **public engineering portfolio** of contributions to i
 
 [Pydantic #14230](https://github.com/pydantic/pydantic/issues/14230) remains **open and unassigned** after our [request for maintainer assignment](https://github.com/pydantic/pydantic/issues/14230#issuecomment-6668703035). A local candidate and tests are not an upstream PR or accepted fix. [Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) remains an **open AETHER-authored PR**, not a merge.
 
-[Source-linked, dated watch and next actions](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md). These pointers **do not change** frozen historical source counts, the institutional register, or achievement tiers.
+[Latest source-linked contribution watch — 7 November 2026](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-07.md) · [Previous watch — 6 November](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md). The active priority is Apache Ballista; the Pydantic contribution is founder-closed without merge. These pointers **do not change** frozen historical source counts, the institutional register, or achievement tiers.
 
 ## Verified status update — 5 November 2026
 
