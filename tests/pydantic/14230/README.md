@@ -6,7 +6,7 @@
 - Observation: **2026-11-06**, Python **3.13.5**, installed Pydantic **2.13.5**. Python package distribution tested, **not a pinned checkout of upstream `main`**.
 - Upstream `main` HEAD observed separately on 2026-11-06: `c9b92900dc74802a04cc20519b753a7d8f3d2844` — **not executed**.
 - Current upstream status at observation: issue open and **unassigned**. The [Pydantic contributing policy](https://github.com/pydantic/pydantic/blob/main/CONTRIBUTING.md) says nontrivial issue-fix PRs opened without assignment are automatically closed.
-- Script: [`reproducer.py`](reproducer.py); SHA-256 of tested bytes: `dbefac0ce5a7bc655f44809bc5550e20b5d41beb338006869e8a6e22751cdad3`.
+- Script: [`reproducer.py`](reproducer.py); SHA-256 of tested bytes: `e4cb62ecd0ad086600202845998568f8ccb92cdf68431ff51ddbd25d45745ade`.
 
 ## What the test proves
 
@@ -47,3 +47,7 @@ The local environment already had Pydantic 2.13.5 installed; the `pip install` l
 4. Preserve this failed `--require-fix` result honestly; never promote this artifact to merged-test or accepted-fix status.
 
 **Attribution:** Pydantic issue problem statement belongs to its original reporter. This bounded regression oracle and local experiment were prepared by AETHER X GLOBAL for independent review. No secrets, private logs, or company-specific machine identifiers are included.
+
+## Source-pinned qualification (separate CI run)
+
+The [read-only workflow](../../../.github/workflows/pydantic-14230-source-qualification.yml) checks out Pydantic at exact official `main` commit `dabcc6461dafa4337c52faf3e9941431ea41ce4a`, installs the official source into an isolated venv, validates that the import comes from that checkout, and runs both oracle modes. **The outcome is pending the actual workflow run and cannot be inferred from the existing Pydantic 2.13.5 result.** The runner does not submit code to the upstream project.
