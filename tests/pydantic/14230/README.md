@@ -42,12 +42,41 @@ The local environment already had Pydantic 2.13.5 installed; the `pip install` l
 ## Next allowed steps
 
 1. Await explicit assignment / owner approval from Pydantic maintainers; **do not submit an upstream PR before assignment**.
-2. If permission is obtained, qualify a minimal correction against a **pinned Pydantic main checkout**, using this oracle, repo-native test tooling and negative cases.
+2. Source-pinned qualification has now run; see the dated section below. If permission is obtained, refresh and review the exact candidate against the then-current upstream source.
 3. Submit outward content only following applicable upstream policy, meaningful human review, and explicit target-specific authorization.
 4. Preserve this failed `--require-fix` result honestly; never promote this artifact to merged-test or accepted-fix status.
 
 **Attribution:** Pydantic issue problem statement belongs to its original reporter. This bounded regression oracle and local experiment were prepared by AETHER X GLOBAL for independent review. No secrets, private logs, or company-specific machine identifiers are included.
 
-## Source-pinned qualification (separate CI run)
+## Source-pinned engineering qualification — 2026-11-06
 
-The [read-only workflow](../../../.github/workflows/pydantic-14230-source-qualification.yml) checks out Pydantic at exact official `main` commit `dabcc6461dafa4337c52faf3e9941431ea41ce4a`, installs the official source into an isolated venv, validates that the import comes from that checkout, and runs both oracle modes. **The outcome is pending the actual workflow run and cannot be inferred from the existing Pydantic 2.13.5 result.** The runner does not submit code to the upstream project.
+**Source:** Official `pydantic/pydantic` at exact `main` commit
+`dabcc6461dafa4337c52faf3e9941431ea41ce4a` (observed 6 November 2026).
+This is a **fixed source snapshot**, not a claim that a moving `main` will remain unchanged.
+GitHub Actions fetched the original repository and independently checked the Git HEAD **and actual imported `pydantic.__file__` path** from that isolated checkout.
+The run used Python **3.14.4** and upstream development version **2.15.0a0+dev**. No modification or PR was sent to Pydantic.
+
+**Evidence:** [Source-pinned qualification workflow and logs](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/actions/runs/42301621727).
+
+| Gate | Official unmodified source | Internally patched source |
+|---|---|---|
+| Defined two-order bug signature | reproduced; `--expect-bug` exit 0 | not reproduced; `--expect-bug` exit 1 |
+| Correct inherited-config behavior | `--require-fix` exit 1 (RED) | `--require-fix` exit 0 (GREEN) |
+| Additional alternation/explicit-child/recursive cases | expected negative-control failures, explicit-child positive control PASS | all three checks PASS |
+| Native Pydantic `tests/test_types_typeddict.py` (89 cases) | 86 PASS, **3 FAIL** | 86 PASS, **3 FAIL** |
+| Differential native test identities | 89 source cases | same 89 case identities |
+| Newly failing or newly skipped cases | — | **0 new failures; 0 new skips** |
+| GitHub job result | source qualification executed | **PASS_NO_NEW_FAILURES** |
+
+The native-suite result is **NOT** a clean full-suite pass. Its three baseline failures existed on the unmodified exact source under the tested runner and remain after the candidate patch. No claim is made about other upstream test modules, architectures or Python versions.
+
+**Falsification retained:** A first minimal candidate that appended live `ConfigWrapper` object IDs directly to every unconfigured `TypedDict` reference was **rejected**: in the native suite it changed failure count from **3 baseline** to **19 patched**, and earlier did not solve the keying collision until lifetime retention was added. The improved candidate keeps original reference names for the first/equivalent inherited config, and assigns variant references only for genuinely different inherited config dictionaries. The existing [`candidate.patch`](candidate.patch) is the current bounded proposal, *not* an upstream-approved fix.
+
+The complete comparison is performed by [`compare_native.py`](compare_native.py); [`extended_cases.py`](extended_cases.py) supplies additional adversarial cases. Neither script counts upstream author code or Pydantic release acceptance as an AETHER-authored merge.
+
+## Remaining engineering and publication gates
+
+1. Obtain **maintainer issue assignment** under [Pydantic CONTRIBUTING](https://github.com/pydantic/pydantic/blob/main/CONTRIBUTING.md). Until then **do not open an upstream PR**; the issue is still open and unassigned at the last verified check.
+2. Conduct source review of the candidate's configuration-identity semantics and type/format checks on the exact patched source. Extend native tests to other relevant modules when warranted.
+3. If assigned, rebase against a freshly pinned official head, follow the upstream contribution and GenAI rules, and seek separate explicit authority for an outward submission.
+4. Keep the internal [Draft PR #14](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/pull/14) under review; do not merge or claim external acceptance without the applicable exact-HEAD approval.
