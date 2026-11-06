@@ -87,6 +87,13 @@ jobs:
           .qualification-venv/bin/python tests/pydantic/14230/stress_cases.py --expect-bug
           echo "ADDITIONAL_SOURCE_FALSIFIERS_RED_CONFIRMED"
 
+      - name: Verify F01/F02 integration controls on pristine official source
+        shell: bash
+        run: |
+          set -euo pipefail
+          .qualification-venv/bin/python tests/pydantic/14230/independent_f01_f02.py
+          echo "F01_F02_PRISTINE_SOURCE_CONTROLS=PASS"
+
       - name: Verify native upstream regression test patch fails on unmodified source
         shell: bash
         run: |
@@ -137,6 +144,11 @@ jobs:
           echo "CANDIDATE_PATCH_TARGETED_GREEN=PASS"
           .qualification-venv/bin/python tests/pydantic/14230/extended_cases.py
           echo "CANDIDATE_ADVERSARIAL_CASES_GREEN=PASS"
+          # The following independent adversarial oracle must PASS before
+          # the candidate may be considered ready for upstream submission.
+          # Existing known F01/F02 are intentionally not waived or expected-failed.
+          .qualification-venv/bin/python tests/pydantic/14230/independent_f01_f02.py
+          echo "CANDIDATE_F01_F02_INTEGRATION_GATE=PASS"
           .qualification-venv/bin/python tests/pydantic/14230/stress_cases.py --require-fix
           echo "ADDITIONAL_CANDIDATE_FALSIFIERS_GREEN=PASS"
           .qualification-venv/bin/ruff check upstream-pydantic/pydantic/_internal/_generate_schema.py --output-format concise
