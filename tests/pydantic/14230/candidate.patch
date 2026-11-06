@@ -1,0 +1,35 @@
+diff --git a/pydantic/_internal/_generate_schema.py b/pydantic/_internal/_generate_schema.py
+--- a/pydantic/_internal/_generate_schema.py
++++ b/pydantic/_internal/_generate_schema.py
+@@ -1421,7 +1421,17 @@
+         """
+         FieldInfo = import_cached_field_info()
+ 
+-        typed_dict_ref = _type_refs.class_type_ref(typed_dict_cls, origin)
++        # An unconfigured TypedDict inherits the parent's active configuration.
++        # Its definition reference must therefore account for that configuration.
++        config_source = origin if origin is not None else typed_dict_cls
++        try:
++            config: ConfigDict | None = get_attribute_from_bases(config_source, '__pydantic_config__')
++        except AttributeError:
++            config = None
++
++        typed_dict_ref = _type_refs.class_type_ref(typed_dict_cls, origin)
++        if config is None:
++            typed_dict_ref = f'{typed_dict_ref}:parent-config={id(self._config_wrapper)}'
+         with (
+             self.model_type_stack.push(typed_dict_cls),
+             self.defs.get_definition_ref_schema(ref=typed_dict_ref) as maybe_schema,
+@@ -1439,12 +1449,6 @@
+                     code='typed-dict-version',
+                 )
+ 
+-            try:
+-                # if a typed dictionary class doesn't have config, we use the parent's config, hence a default of `None`
+-                # see https://github.com/pydantic/pydantic/issues/10917
+-                config: ConfigDict | None = get_attribute_from_bases(typed_dict_cls, '__pydantic_config__')
+-            except AttributeError:
+-                config = None
+ 
+             with self._config_wrapper_stack.push(config):
+                 core_config = self._config_wrapper.core_config(title=typed_dict_cls.__name__)
