@@ -1,0 +1,63 @@
+# Temporary, bounded source-qualification workflow for internal evidence PR #14.
+# No PR, comment, tag, workflow secret or upstream write permission is granted.
+name: Pydantic 14230 pinned-main regression qualification
+on:
+  pull_request:
+    paths:
+      - 'tests/pydantic/14230/**'
+      - '.github/workflows/pydantic-14230-source-qualification.yml'
+permissions:
+  contents: read
+jobs:
+  pinned-main-14230:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      EXPECTED_UPSTREAM_SHA: dabcc6461dafa4337c52faf3e9941431ea41ce4a
+    steps:
+      - name: Checkout company test evidence
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Checkout exact official Pydantic main commit (public, read-only)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          repository: pydantic/pydantic
+          ref: ${{ env.EXPECTED_UPSTREAM_SHA }}
+          path: upstream-pydantic
+          persist-credentials: false
+      - name: Install isolated Python source checkout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv .qualification-venv
+          .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input -e ./upstream-pydantic
+      - name: Check source identity and run both outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual_sha="$(git -C upstream-pydantic rev-parse HEAD)"
+          test "$actual_sha" = "$EXPECTED_UPSTREAM_SHA"
+          .qualification-venv/bin/python - <<'PY'
+          import pathlib
+          import pydantic
+          source_root = pathlib.Path('upstream-pydantic').resolve()
+          imported = pathlib.Path(pydantic.__file__).resolve()
+          assert imported.is_relative_to(source_root), f'Not importing upstream source: {imported}'
+          print(f'PINNED_SOURCE_IMPORT_OK upstream={source_root} imported={imported} version={pydantic.__version__}')
+          PY
+          set +e
+          .qualification-venv/bin/python tests/pydantic/14230/reproducer.py --expect-bug | tee /tmp/pydantic-14230-bug.json
+          bug_rc=${PIPESTATUS[0]}
+          .qualification-venv/bin/python tests/pydantic/14230/reproducer.py --require-fix | tee /tmp/pydantic-14230-fixed.json
+          fix_rc=${PIPESTATUS[0]}
+          set -e
+          echo "Pinned upstream HEAD: $actual_sha; bug_rc=$bug_rc; fix_rc=$fix_rc"
+          if [[ "$bug_rc" == 0 && "$fix_rc" == 1 ]]; then
+            echo "SOURCE_PINNED_OUTCOME=BUG_REPRODUCED"
+          elif [[ "$bug_rc" == 1 && "$fix_rc" == 0 ]]; then
+            echo "SOURCE_PINNED_OUTCOME=ALREADY_FIXED"
+          else
+            echo "SOURCE_PINNED_OUTCOME=UNCLASSIFIED; requires independent inspection" >&2
+            exit 1
+          fi
