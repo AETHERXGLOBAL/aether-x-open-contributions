@@ -8,11 +8,11 @@ This is AETHER X GLOBAL's **public engineering portfolio** of contributions to i
 
 > **Historical baseline: 3 November 2026.** The 43 curated entries are evidence-qualified source references, distinct from the broader 262-link institutional participation register. Neither figure is a live count of accepted patches. External project references imply no partnership, endorsement, sponsorship or affiliation.
 
-## Current participation watch — 6 November 2026
+## Current participation watch — 7 November 2026
 
-[Pydantic #14230](https://github.com/pydantic/pydantic/issues/14230) remains **open and unassigned** after our [request for maintainer assignment](https://github.com/pydantic/pydantic/issues/14230#issuecomment-6668703035). A local candidate and tests are not an upstream PR or accepted fix. [Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) remains an **open AETHER-authored PR**, not a merge.
+[Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) remains the **priority AETHER-authored PR**, open and unmerged. The maintainer has not yet responded to the latest revised candidate; upstream Rust CI remains `action_required`. The [Pydantic #14230 internal candidate](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/pull/14) is **closed without merge** by Founder decision; the related upstream issue is no longer an active AETHER engagement.
 
-[Source-linked, dated watch and next actions](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md). These pointers **do not change** frozen historical source counts, the institutional register, or achievement tiers.
+[Latest source-linked contribution watch — 7 November 2026](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-07.md) · [Previous watch — 6 November](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md). The active priority is Apache Ballista; the Pydantic contribution is founder-closed without merge. These pointers **do not change** frozen historical source counts, the institutional register, or achievement tiers.
 
 ## Verified status update — 5 November 2026
 
