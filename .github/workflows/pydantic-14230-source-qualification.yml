@@ -62,6 +62,20 @@ jobs:
             exit 1
           fi
 
+      - name: Falsification baseline for alternate parents and recursion
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          .qualification-venv/bin/python tests/pydantic/14230/extended_cases.py | tee /tmp/pydantic-14230-extended-baseline.json
+          baseline_rc=${PIPESTATUS[0]}
+          set -e
+          if [[ "$baseline_rc" != 1 ]]; then
+            echo "EXPECTED_EXTENDED_RED_NOT_FOUND; inspect source before attributing defect" >&2
+            exit 1
+          fi
+          echo "EXTENDED_SOURCE_BASELINE_RED_CONFIRMED"
+
       - name: Apply isolated candidate patch and test for expected GREEN
         shell: bash
         run: |
@@ -81,3 +95,5 @@ jobs:
             exit 1
           fi
           echo "CANDIDATE_PATCH_TARGETED_GREEN=PASS"
+          .qualification-venv/bin/python tests/pydantic/14230/extended_cases.py
+          echo "CANDIDATE_ADVERSARIAL_CASES_GREEN=PASS"
