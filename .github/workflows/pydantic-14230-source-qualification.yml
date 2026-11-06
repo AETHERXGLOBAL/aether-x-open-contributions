@@ -32,6 +32,7 @@ jobs:
           set -euo pipefail
           python3 -m venv .qualification-venv
           .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input -e ./upstream-pydantic
+          .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input pytest
       - name: Check source identity and run both outcomes
         shell: bash
         run: |
@@ -76,6 +77,12 @@ jobs:
           fi
           echo "EXTENDED_SOURCE_BASELINE_RED_CONFIRMED"
 
+      - name: Run upstream native TypedDict suite on unmodified pinned source
+        shell: bash
+        run: |
+          set -euo pipefail
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
+
       - name: Apply isolated candidate patch and test for expected GREEN
         shell: bash
         run: |
@@ -97,3 +104,5 @@ jobs:
           echo "CANDIDATE_PATCH_TARGETED_GREEN=PASS"
           .qualification-venv/bin/python tests/pydantic/14230/extended_cases.py
           echo "CANDIDATE_ADVERSARIAL_CASES_GREEN=PASS"
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
+          echo "UPSTREAM_TYPEDDICT_SUITE_POST_PATCH=PASS"
