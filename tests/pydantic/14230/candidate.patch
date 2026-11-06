@@ -1,40 +1,45 @@
 diff --git a/pydantic/_internal/_generate_schema.py b/pydantic/_internal/_generate_schema.py
 --- a/pydantic/_internal/_generate_schema.py
 +++ b/pydantic/_internal/_generate_schema.py
-@@ -1421,7 +1421,31 @@
+@@ -78,7 +78,7 @@
+     UnsupportedFieldAttributeWarning,
+ )
+ from . import _decorators, _discriminated_union, _known_annotated_metadata, _repr, _type_refs, _typing_extra
+-from ._config import ConfigWrapper, ConfigWrapperStack
++from ._config import ConfigWrapper, ConfigWrapperStack, config_defaults
+ from ._contextlib import contextmanager
+ from ._core_metadata import CoreMetadata, update_core_metadata
+ from ._core_utils import get_ref
+@@ -1421,7 +1421,27 @@
          """
          FieldInfo = import_cached_field_info()
  
 -        typed_dict_ref = _type_refs.class_type_ref(typed_dict_cls, origin)
++        # Explicitly configured TypedDicts own their reference; unconfigured
++        # children inherit the active parent context (Pydantic #14230).
 +        config_source = origin if origin is not None else typed_dict_cls
 +        try:
-+            # Without explicit config, a TypedDict inherits the active parent config.
 +            config: ConfigDict | None = get_attribute_from_bases(config_source, '__pydantic_config__')
 +        except AttributeError:
 +            config = None
 +
 +        typed_dict_ref = _type_refs.class_type_ref(typed_dict_cls, origin)
 +        if config is None:
-+            contexts = self.defs._inherited_td_contexts.setdefault(typed_dict_ref, [])
++            contexts = self.defs._inherited_td_contexts.setdefault(typed_dict_ref, {})
 +            wrapper = self._config_wrapper
-+            for seen_wrapper, seen_ref in contexts:
-+                try:
-+                    same_config = seen_wrapper.config_dict == wrapper.config_dict
-+                except (TypeError, ValueError):
-+                    # Avoid duplicating recursive schemas if config values are not comparable.
-+                    same_config = seen_wrapper is wrapper
-+                if same_config:
-+                    typed_dict_ref = seen_ref
-+                    break
++            key = self.defs._inherited_td_config_key(wrapper.effective_config)
++            existing = contexts.get(key)
++            if existing is not None:
++                typed_dict_ref = existing[1]
 +            else:
 +                if contexts:
-+                    # Keep stable reference names if only one inherited config exists.
 +                    typed_dict_ref = f'{typed_dict_ref}:parent-config-{len(contexts)}'
-+                contexts.append((wrapper, typed_dict_ref))
++                # Retain wrappers so identity-only keys cannot be reused after GC.
++                contexts[key] = (wrapper, typed_dict_ref)
          with (
              self.model_type_stack.push(typed_dict_cls),
              self.defs.get_definition_ref_schema(ref=typed_dict_ref) as maybe_schema,
-@@ -1439,13 +1463,6 @@
+@@ -1439,13 +1459,6 @@
                      code='typed-dict-version',
                  )
  
@@ -48,13 +53,58 @@ diff --git a/pydantic/_internal/_generate_schema.py b/pydantic/_internal/_genera
              with self._config_wrapper_stack.push(config):
                  core_config = self._config_wrapper.core_config(title=typed_dict_cls.__name__)
  
-@@ -2718,7 +2735,8 @@
+@@ -2718,7 +2731,53 @@
  
      def __init__(self) -> None:
          self._recursively_seen = set()
 -        self._definitions = {}
 +        self._definitions = {}
-+        self._inherited_td_contexts: dict[str, list[tuple[ConfigWrapper, str]]] = {}
++        self._inherited_td_contexts: dict[
++            str, dict[frozenset[tuple[tuple[Any, ...], tuple[Any, ...]]], tuple[ConfigWrapper, str]]
++        ] = {}
++
++    @staticmethod
++    def _inherited_td_config_key(config: ConfigDict) -> frozenset[tuple[tuple[Any, ...], tuple[Any, ...]]]:
++        """Hashable effective config without invoking equality or hashing on user objects.
++
++        Exact builtins are compared structurally. Unknown objects are compared by
++        identity, and the owning wrappers remain alive for this schema build.
++        """
++
++        def freeze(value: Any, active: set[int]) -> tuple[Any, ...]:
++            kind = type(value)
++            if kind is float:
++                return ('float', value.hex())
++            if kind is str or kind is int or kind is bool or kind is bytes or value is None:
++                return (kind.__name__, value)
++            if kind is tuple or kind is list or kind is dict or kind is set or kind is frozenset:
++                marker = id(value)
++                if marker in active:
++                    return ('cycle', marker)
++                active.add(marker)
++                try:
++                    if kind is dict:
++                        return ('dict', frozenset((freeze(k, active), freeze(v, active)) for k, v in value.items()))
++                    if kind is set or kind is frozenset:
++                        return (kind.__name__, frozenset(freeze(item, active) for item in value))
++                    return (kind.__name__, tuple(freeze(item, active) for item in value))
++                finally:
++                    active.remove(marker)
++            return ('identity', id(value))
++
++        sentinel = object()
++        entries: set[tuple[tuple[Any, ...], tuple[Any, ...]]] = set()
++        for name, value in config.items():
++            if type(name) is str:
++                # For an inherited TypedDict, default extra=None and
++                # extra='ignore' have the same validation and schema effect.
++                if name == 'extra' and (value is None or (type(value) is str and value == 'ignore')):
++                    continue
++                default = config_defaults.get(name, sentinel)
++                if default is not sentinel and freeze(value, set()) == freeze(default, set()):
++                    continue
++            entries.add((freeze(name, set()), freeze(value, set())))
++        return frozenset(entries)
  
      @contextmanager
      def get_definition_ref_schema(self, *, ref: str) -> Generator[core_schema.DefinitionReferenceSchema | None]:

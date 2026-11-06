@@ -168,3 +168,16 @@ jobs:
           fi
           .qualification-venv/bin/python tests/pydantic/14230/compare_native.py /tmp/typed-baseline.xml /tmp/typed-patched.xml
           echo "UPSTREAM_TYPEDDICT_SUITE_NO_NEW_REGRESSIONS=PASS; existing baseline failures are not suppressed"
+
+      - name: R2 unusual config, strict context and Generic TypedDict checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          .qualification-venv/bin/python tests/pydantic/14230/r2_regressions.py
+          echo "R2_ADVERSARIAL_INVARIANTS=PASS"
+      - name: F03 actual source-pinned runtime and peak memory measurements
+        shell: bash
+        run: |
+          set -euo pipefail
+          .qualification-venv/bin/python tests/pydantic/14230/perf_f03.py | tee /tmp/pydantic-14230-f03.json
+          echo "F03_MEASUREMENT_RECORDED_NOT_PERFORMANCE_APPROVAL"
