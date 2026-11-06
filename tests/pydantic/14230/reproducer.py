@@ -7,7 +7,7 @@ Modes:
                   demonstrate shared-child configuration leakage.
   --require-fix : PASS only if independent controls and BOTH root orderings
                   preserve the inherited configuration per occurrence.
-Not an upstream acceptance test, patch, or evidence against current main.
+Not an upstream acceptance test or patch. Qualification of main requires a separately verified pinned source checkout.
 """
 import argparse
 import json
@@ -70,7 +70,7 @@ def run(mode: str) -> tuple[int, dict]:
     )
     report = {
         "issue": "pydantic/pydantic#14230",
-        "test_context": "installed_distribution_only; not upstream main qualification",
+        "test_context": "runtime_import_only; verify source revision and import origin separately",
         "python_version": sys.version.split()[0],
         "pydantic_version": pydantic_version,
         "mode": mode,
