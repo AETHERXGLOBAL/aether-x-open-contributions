@@ -2,7 +2,7 @@
 
 **Verified engineering outcomes · Reproducible regression tests · Responsible upstream collaboration**
 
-[Corporate website](https://aetherxglobal.com) · [Contributor account](https://github.com/aetherxeg-source) · [Curated project index](contributions/README.md) · [Current participation watch](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md) · [العربية](docs/README_AR.md)
+[Corporate website](https://aetherxglobal.com) · [Contributor account](https://github.com/aetherxeg-source) · [Curated project index](contributions/README.md) · [Outcome-gated engineering impact program](docs/ENGINEERING_IMPACT_PROGRAM.md) · [Current participation watch](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md) · [العربية](docs/README_AR.md)
 
 This is AETHER X GLOBAL's **public engineering portfolio** of contributions to independent open-source projects. It presents original source, date-stamped GitHub receipts, and verifiable testing boundaries. It never treats an idea, comment, or upstream author's code as an AETHER-authored merged change.
 
