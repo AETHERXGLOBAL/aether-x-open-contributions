@@ -1,7 +1,7 @@
 diff --git a/tests/test_types_typeddict.py b/tests/test_types_typeddict.py
 --- a/tests/test_types_typeddict.py
 +++ b/tests/test_types_typeddict.py
-@@ -1239,5 +1239,65 @@
+@@ -1239,5 +1239,69 @@
              'loc': ('field_a', 2),
              'msg': 'Input should be a valid integer, unable to parse string as an integer',
              'input': 'wrong',
@@ -32,10 +32,12 @@ diff --git a/tests/test_types_typeddict.py b/tests/test_types_typeddict.py
 +
 +    root = IgnoreFirst if reverse_order else AllowFirst
 +    value = {'name': 'value', 'extra': 7}
-+    result = TypeAdapter(root).validate_python({
-+        'allow': {'child': value},
-+        'ignore': {'child': value},
-+    })
++    result = TypeAdapter(root).validate_python(
++        {
++            'allow': {'child': value},
++            'ignore': {'child': value},
++        }
++    )
 +    assert result == {
 +        'allow': {'child': {'name': 'value', 'extra': 7}},
 +        'ignore': {'child': {'name': 'value'}},
@@ -59,10 +61,12 @@ diff --git a/tests/test_types_typeddict.py b/tests/test_types_typeddict.py
 +        ignore: IgnoreParent
 +
 +    value = {'name': 'value', 'extra': 7}
-+    result = TypeAdapter(Root).validate_python({
-+        'allow': {'children': [value]},
-+        'ignore': {'children': [value]},
-+    })
++    result = TypeAdapter(Root).validate_python(
++        {
++            'allow': {'children': [value]},
++            'ignore': {'children': [value]},
++        }
++    )
 +    assert result == {
 +        'allow': {'children': [{'name': 'value', 'extra': 7}]},
 +        'ignore': {'children': [{'name': 'value'}]},
