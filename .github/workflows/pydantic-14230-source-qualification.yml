@@ -32,7 +32,7 @@ jobs:
           set -euo pipefail
           python3 -m venv .qualification-venv
           .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input -e ./upstream-pydantic
-          .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input pytest pytest-benchmark 'pytest-run-parallel>=0.3.1' jsonschema
+          .qualification-venv/bin/python -m pip install --disable-pip-version-check --no-input pytest pytest-benchmark 'pytest-run-parallel>=0.3.1' jsonschema dirty-equals pytest-mock pytest-examples faker pytest-pretty packaging time-machine ruff
       - name: Check source identity and run both outcomes
         shell: bash
         run: |
@@ -76,13 +76,15 @@ jobs:
             exit 1
           fi
           echo "EXTENDED_SOURCE_BASELINE_RED_CONFIRMED"
+          .qualification-venv/bin/python tests/pydantic/14230/stress_cases.py --expect-bug
+          echo "ADDITIONAL_SOURCE_FALSIFIERS_RED_CONFIRMED"
 
       - name: Record complete native TypedDict baseline on unmodified source
         shell: bash
         run: |
           set -euo pipefail
           set +e
-          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --tb=line --junitxml=/tmp/typed-baseline.xml
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py upstream-pydantic/tests/test_type_adapter.py upstream-pydantic/tests/test_config.py upstream-pydantic/tests/test_json_schema.py upstream-pydantic/tests/test_schema_gather.py upstream-pydantic/tests/test_dataclasses.py --tb=line --junitxml=/tmp/typed-baseline.xml
           baseline_rc=$?
           set -e
           if [[ "$baseline_rc" != 0 && "$baseline_rc" != 1 ]]; then
@@ -112,8 +114,13 @@ jobs:
           echo "CANDIDATE_PATCH_TARGETED_GREEN=PASS"
           .qualification-venv/bin/python tests/pydantic/14230/extended_cases.py
           echo "CANDIDATE_ADVERSARIAL_CASES_GREEN=PASS"
+          .qualification-venv/bin/python tests/pydantic/14230/stress_cases.py --require-fix
+          echo "ADDITIONAL_CANDIDATE_FALSIFIERS_GREEN=PASS"
+          .qualification-venv/bin/ruff check upstream-pydantic/pydantic/_internal/_generate_schema.py --output-format concise
+          .qualification-venv/bin/ruff format --check upstream-pydantic/pydantic/_internal/_generate_schema.py
+          echo "CANDIDATE_RUFF_CHECK_AND_FORMAT=PASS"
           set +e
-          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --tb=line --junitxml=/tmp/typed-patched.xml
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py upstream-pydantic/tests/test_type_adapter.py upstream-pydantic/tests/test_config.py upstream-pydantic/tests/test_json_schema.py upstream-pydantic/tests/test_schema_gather.py upstream-pydantic/tests/test_dataclasses.py --tb=line --junitxml=/tmp/typed-patched.xml
           patched_rc=$?
           set -e
           if [[ "$patched_rc" != 0 && "$patched_rc" != 1 ]]; then
