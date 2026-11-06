@@ -81,7 +81,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          .qualification-venv/bin/python -m pytest -q -o addopts='' upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
+          .qualification-venv/bin/python -m pytest -q -o addopts='' -o strict_markers=false upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
 
       - name: Apply isolated candidate patch and test for expected GREEN
         shell: bash
@@ -104,5 +104,5 @@ jobs:
           echo "CANDIDATE_PATCH_TARGETED_GREEN=PASS"
           .qualification-venv/bin/python tests/pydantic/14230/extended_cases.py
           echo "CANDIDATE_ADVERSARIAL_CASES_GREEN=PASS"
-          .qualification-venv/bin/python -m pytest -q -o addopts='' upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
+          .qualification-venv/bin/python -m pytest -q -o addopts='' -o strict_markers=false upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
           echo "UPSTREAM_TYPEDDICT_SUITE_POST_PATCH=PASS"
