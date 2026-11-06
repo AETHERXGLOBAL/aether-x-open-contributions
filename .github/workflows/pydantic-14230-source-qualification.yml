@@ -61,3 +61,23 @@ jobs:
             echo "SOURCE_PINNED_OUTCOME=UNCLASSIFIED; requires independent inspection" >&2
             exit 1
           fi
+
+      - name: Apply isolated candidate patch and test for expected GREEN
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C upstream-pydantic apply --check ../tests/pydantic/14230/candidate.patch
+          git -C upstream-pydantic apply ../tests/pydantic/14230/candidate.patch
+          .qualification-venv/bin/python -m compileall -q upstream-pydantic/pydantic/_internal/_generate_schema.py
+          set +e
+          .qualification-venv/bin/python tests/pydantic/14230/reproducer.py --require-fix | tee /tmp/pydantic-14230-patched.json
+          fixed_rc=${PIPESTATUS[0]}
+          .qualification-venv/bin/python tests/pydantic/14230/reproducer.py --expect-bug | tee /tmp/pydantic-14230-patch-reverse.json
+          bug_rc=${PIPESTATUS[0]}
+          set -e
+          echo "CANDIDATE_AFTER_PATCH required-fix=$fixed_rc known-bug=$bug_rc"
+          if [[ "$fixed_rc" != 0 || "$bug_rc" != 1 ]]; then
+            echo "CANDIDATE_PATCH_NOT_QUALIFIED" >&2
+            exit 1
+          fi
+          echo "CANDIDATE_PATCH_TARGETED_GREEN=PASS"
