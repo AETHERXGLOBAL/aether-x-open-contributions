@@ -1,7 +1,7 @@
 diff --git a/pydantic/_internal/_generate_schema.py b/pydantic/_internal/_generate_schema.py
 --- a/pydantic/_internal/_generate_schema.py
 +++ b/pydantic/_internal/_generate_schema.py
-@@ -1421,7 +1421,30 @@
+@@ -1421,7 +1421,31 @@
          """
          FieldInfo = import_cached_field_info()
  
@@ -16,24 +16,25 @@ diff --git a/pydantic/_internal/_generate_schema.py b/pydantic/_internal/_genera
 +        typed_dict_ref = _type_refs.class_type_ref(typed_dict_cls, origin)
 +        if config is None:
 +            contexts = self.defs._inherited_td_contexts.setdefault(typed_dict_ref, [])
-+            inherited = self._config_wrapper.config_dict
-+            for seen_config, seen_ref in contexts:
++            wrapper = self._config_wrapper
++            for seen_wrapper, seen_ref in contexts:
 +                try:
-+                    same_config = seen_config == inherited
++                    same_config = seen_wrapper.config_dict == wrapper.config_dict
 +                except (TypeError, ValueError):
-+                    same_config = seen_config is inherited
++                    # Avoid duplicating recursive schemas if config values are not comparable.
++                    same_config = seen_wrapper is wrapper
 +                if same_config:
 +                    typed_dict_ref = seen_ref
 +                    break
 +            else:
 +                if contexts:
-+                    # Preserve the original reference in the common single-config case.
++                    # Keep stable reference names if only one inherited config exists.
 +                    typed_dict_ref = f'{typed_dict_ref}:parent-config-{len(contexts)}'
-+                contexts.append((dict(inherited), typed_dict_ref))
++                contexts.append((wrapper, typed_dict_ref))
          with (
              self.model_type_stack.push(typed_dict_cls),
              self.defs.get_definition_ref_schema(ref=typed_dict_ref) as maybe_schema,
-@@ -1439,12 +1462,6 @@
+@@ -1439,13 +1463,6 @@
                      code='typed-dict-version',
                  )
  
@@ -43,16 +44,17 @@ diff --git a/pydantic/_internal/_generate_schema.py b/pydantic/_internal/_genera
 -                config: ConfigDict | None = get_attribute_from_bases(typed_dict_cls, '__pydantic_config__')
 -            except AttributeError:
 -                config = None
- 
+-
              with self._config_wrapper_stack.push(config):
                  core_config = self._config_wrapper.core_config(title=typed_dict_cls.__name__)
+ 
 @@ -2718,7 +2735,8 @@
  
      def __init__(self) -> None:
          self._recursively_seen = set()
 -        self._definitions = {}
 +        self._definitions = {}
-+        self._inherited_td_contexts: dict[str, list[tuple[dict[str, Any], str]]] = {}
++        self._inherited_td_contexts: dict[str, list[tuple[ConfigWrapper, str]]] = {}
  
      @contextmanager
      def get_definition_ref_schema(self, *, ref: str) -> Generator[core_schema.DefinitionReferenceSchema | None]:
