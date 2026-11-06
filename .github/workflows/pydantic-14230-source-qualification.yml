@@ -77,11 +77,19 @@ jobs:
           fi
           echo "EXTENDED_SOURCE_BASELINE_RED_CONFIRMED"
 
-      - name: Run upstream native TypedDict suite on unmodified pinned source
+      - name: Record complete native TypedDict baseline on unmodified source
         shell: bash
         run: |
           set -euo pipefail
-          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
+          set +e
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --tb=line --junitxml=/tmp/typed-baseline.xml
+          baseline_rc=$?
+          set -e
+          if [[ "$baseline_rc" != 0 && "$baseline_rc" != 1 ]]; then
+            echo "UPSTREAM_NATIVE_BASELINE_SETUP_FAILURE=$baseline_rc" >&2
+            exit "$baseline_rc"
+          fi
+          echo "UPSTREAM_NATIVE_BASELINE_EXIT=$baseline_rc"
 
       - name: Apply isolated candidate patch and test for expected GREEN
         shell: bash
@@ -104,5 +112,13 @@ jobs:
           echo "CANDIDATE_PATCH_TARGETED_GREEN=PASS"
           .qualification-venv/bin/python tests/pydantic/14230/extended_cases.py
           echo "CANDIDATE_ADVERSARIAL_CASES_GREEN=PASS"
-          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --maxfail=1 --tb=short
-          echo "UPSTREAM_TYPEDDICT_SUITE_POST_PATCH=PASS"
+          set +e
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py --tb=line --junitxml=/tmp/typed-patched.xml
+          patched_rc=$?
+          set -e
+          if [[ "$patched_rc" != 0 && "$patched_rc" != 1 ]]; then
+            echo "UPSTREAM_NATIVE_PATCHED_SETUP_FAILURE=$patched_rc" >&2
+            exit "$patched_rc"
+          fi
+          .qualification-venv/bin/python tests/pydantic/14230/compare_native.py /tmp/typed-baseline.xml /tmp/typed-patched.xml
+          echo "UPSTREAM_TYPEDDICT_SUITE_NO_NEW_REGRESSIONS=PASS; existing baseline failures are not suppressed"
