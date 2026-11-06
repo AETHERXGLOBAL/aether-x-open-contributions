@@ -1,0 +1,69 @@
+diff --git a/tests/test_types_typeddict.py b/tests/test_types_typeddict.py
+--- a/tests/test_types_typeddict.py
++++ b/tests/test_types_typeddict.py
+@@ -1239,5 +1239,65 @@
+             'loc': ('field_a', 2),
+             'msg': 'Input should be a valid integer, unable to parse string as an integer',
+             'input': 'wrong',
+         }
+     ]
++
++
++@pytest.mark.parametrize('reverse_order', [False, True])
++def test_typeddict_inherited_config_shared_child_across_parents(reverse_order: bool) -> None:
++    class Shared(TypedDict):
++        name: str
++
++    class AllowParent(TypedDict):
++        __pydantic_config__ = ConfigDict(extra='allow')
++        child: Shared
++
++    class IgnoreParent(TypedDict):
++        __pydantic_config__ = ConfigDict(extra='ignore')
++        child: Shared
++
++    class AllowFirst(TypedDict):
++        allow: AllowParent
++        ignore: IgnoreParent
++
++    class IgnoreFirst(TypedDict):
++        ignore: IgnoreParent
++        allow: AllowParent
++
++    root = IgnoreFirst if reverse_order else AllowFirst
++    value = {'name': 'value', 'extra': 7}
++    result = TypeAdapter(root).validate_python({
++        'allow': {'child': value},
++        'ignore': {'child': value},
++    })
++    assert result == {
++        'allow': {'child': {'name': 'value', 'extra': 7}},
++        'ignore': {'child': {'name': 'value'}},
++    }
++
++
++def test_typeddict_inherited_config_shared_child_inside_list() -> None:
++    class Shared(TypedDict):
++        name: str
++
++    class AllowParent(TypedDict):
++        __pydantic_config__ = ConfigDict(extra='allow')
++        children: list[Shared]
++
++    class IgnoreParent(TypedDict):
++        __pydantic_config__ = ConfigDict(extra='ignore')
++        children: list[Shared]
++
++    class Root(TypedDict):
++        allow: AllowParent
++        ignore: IgnoreParent
++
++    value = {'name': 'value', 'extra': 7}
++    result = TypeAdapter(Root).validate_python({
++        'allow': {'children': [value]},
++        'ignore': {'children': [value]},
++    })
++    assert result == {
++        'allow': {'children': [{'name': 'value', 'extra': 7}]},
++        'ignore': {'children': [{'name': 'value'}]},
++    }
