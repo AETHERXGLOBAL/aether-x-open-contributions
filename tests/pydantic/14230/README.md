@@ -80,3 +80,31 @@ The complete comparison is performed by [`compare_native.py`](compare_native.py)
 2. Conduct source review of the candidate's configuration-identity semantics and type/format checks on the exact patched source. Extend native tests to other relevant modules when warranted.
 3. If assigned, rebase against a freshly pinned official head, follow the upstream contribution and GenAI rules, and seek separate explicit authority for an outward submission.
 4. Keep the internal [Draft PR #14](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/pull/14) under review; do not merge or claim external acceptance without the applicable exact-HEAD approval.
+
+
+## Expanded pre-submission technical qualification — 7 November 2026
+
+**Exact upstream source:** `pydantic/pydantic@dabcc6461dafa4337c52faf3e9941431ea41ce4a`. This was the current verified `main` at qualification time; a new upstream HEAD must be checked before any outward PR. No original upstream commit was modified. The comparison uses a temporary checkout on AETHER GitHub Actions runners.
+
+**Public source of execution evidence:** [Five-version matrix run #42305831466](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/actions/runs/42305831466), on GitHub-hosted Linux with Python **3.10, 3.11, 3.12, 3.13, and 3.14**. The workflow pins setup-python and the source revision, verifies import provenance, applies the candidate only to the isolated checkout, runs candidate tests and Ruff, and compares native pytest/JUnit identities.
+
+| Python | Native cases, each side | Before candidate | After candidate | New fails/skips | Check |
+|---|---:|---:|---:|---:|---|
+| 3.10 | 1,381 | 9 FAIL | 6 FAIL | 0 / 0 | PASS |
+| 3.11 | 1,381 | 9 FAIL | 6 FAIL | 0 / 0 | PASS |
+| 3.12 | 1,381 | 9 FAIL | 6 FAIL | 0 / 0 | PASS |
+| 3.13 | 1,381 | 9 FAIL | 6 FAIL | 0 / 0 | PASS |
+| 3.14 | 1,381 | 9 FAIL | 6 FAIL | 0 / 0 | PASS |
+
+**Meaning:** Three deliberately added, previously failing *native* Pydantic regression cases now pass: both parent declaration orders and nested list inheritance. The other six failures were already present with unmodified production code in the tested source/environment and remain unchanged. Original six-suite coverage consists of `test_types_typeddict.py`, `test_type_adapter.py`, `test_config.py`, `test_json_schema.py`, `test_schema_gather.py`, and `test_dataclasses.py`. The exact native testcase identities match before/after. All five runs passed candidate-focused, additional nested list/map/forbid/equivalent-context tests, recursive and explicit-child controls, Ruff lint and format checks. **These are 5 executions of the same 1,381-case suite, not 6,905 distinct cases.**
+
+**Submission package:** [`candidate.patch`](candidate.patch) is the production-code change; [`upstream_regression.patch`](upstream_regression.patch) adds three original Pydantic-native regression cases. Evidence oracles [`reproducer.py`](reproducer.py), [`extended_cases.py`](extended_cases.py), [`stress_cases.py`](stress_cases.py), and [`compare_native.py`](compare_native.py) are AETHER test harnesses and are **not** proposed wholesale for upstream inclusion.
+
+### Explicit limitations and remaining gates
+
+- **Bounded technical green, not a complete Pydantic release green.** Six existing native test failures on each runner remain. The full Pydantic test suite, Python 3.15, alternative OS and exceptional configuration value semantics were not fully qualified.
+- **Critical code-review question:** `_Definitions._inherited_td_contexts` stores per-type reference variants based on equality of inherited `ConfigWrapper.config_dict`. A cold-start reviewer should challenge nonstandard equality / cyclic configuration objects, recursion, reference naming, schema growth, and behavior under unusual generic/forward-ref contexts. Existing tests do not mathematically prove these properties.
+- **Review separation:** This is a source-linked executable engineering qualification, **not** an AETHER TEST ARCHITECT plugin execution, an independent AETHER ASSURANCE sign-off, or a human-maintainer approval. Require an actual separate reviewer to inspect the exact patch and trace; no self-certification.
+- **Contributor policy:** Pydantic [requires assignment before an issue-fix PR](https://github.com/pydantic/pydantic/blob/main/CONTRIBUTING.md). As of this review, [issue #14230](https://github.com/pydantic/pydantic/issues/14230) remains open and unassigned; no external PR or new issue comment was sent in this mission.
+- **Outward communication:** Human comprehension and upstream AI-policy compliance are mandatory. A request for assignment / issue discussion and eventual upstream PR each require distinct content-specific approval; this internal Draft PR does **not** grant either.
+- **Decisions:** Internal, narrow engineering tests = `PASS_SCOPED`. External submission = `BLOCKED_PENDING_ASSIGNMENT_AND_INDEPENDENT_REVIEW`. PR #14 remains Draft, unmerged.
