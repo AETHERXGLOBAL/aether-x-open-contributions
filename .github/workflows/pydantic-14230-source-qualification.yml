@@ -87,7 +87,22 @@ jobs:
           .qualification-venv/bin/python tests/pydantic/14230/stress_cases.py --expect-bug
           echo "ADDITIONAL_SOURCE_FALSIFIERS_RED_CONFIRMED"
 
-      - name: Record complete native TypedDict baseline on unmodified source
+      - name: Verify native upstream regression test patch fails on unmodified source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C upstream-pydantic apply --check ../tests/pydantic/14230/upstream_regression.patch
+          git -C upstream-pydantic apply ../tests/pydantic/14230/upstream_regression.patch
+          set +e
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py -k 'test_typeddict_inherited_config_shared_child' --tb=line
+          native_red_rc=$?
+          set -e
+          if [[ "$native_red_rc" != 1 ]]; then
+            echo "UPSTREAM_NATIVE_REGRESSION_RED_MISSING=$native_red_rc" >&2
+            exit 1
+          fi
+          echo "UPSTREAM_NATIVE_REGRESSION_RED_CONFIRMED"
+      - name: Record complete native regression baseline on unmodified production source
         shell: bash
         run: |
           set -euo pipefail
@@ -127,6 +142,10 @@ jobs:
           .qualification-venv/bin/ruff check upstream-pydantic/pydantic/_internal/_generate_schema.py --output-format concise
           .qualification-venv/bin/ruff format --check upstream-pydantic/pydantic/_internal/_generate_schema.py
           echo "CANDIDATE_RUFF_CHECK_AND_FORMAT=PASS"
+          .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py -k 'test_typeddict_inherited_config_shared_child' --tb=line
+          .qualification-venv/bin/ruff check upstream-pydantic/tests/test_types_typeddict.py --output-format concise
+          .qualification-venv/bin/ruff format --check upstream-pydantic/tests/test_types_typeddict.py
+          echo "NATIVE_UPSTREAM_REGRESSION_TESTS_GREEN=PASS"
           set +e
           .qualification-venv/bin/python -m pytest -q upstream-pydantic/tests/test_types_typeddict.py upstream-pydantic/tests/test_type_adapter.py upstream-pydantic/tests/test_config.py upstream-pydantic/tests/test_json_schema.py upstream-pydantic/tests/test_schema_gather.py upstream-pydantic/tests/test_dataclasses.py --tb=line --junitxml=/tmp/typed-patched.xml
           patched_rc=$?
