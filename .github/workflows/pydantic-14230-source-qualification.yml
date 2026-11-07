@@ -1,11 +1,11 @@
 # Temporary, bounded source-qualification workflow for internal evidence PR #14.
 # No PR, comment, tag, workflow secret or upstream write permission is granted.
 name: Pydantic 14230 pinned-main regression qualification
+# ARCHIVED 2026-11-07: PR #14 closed / not planned; tests remain as historical
+# reproducibility evidence. No automatic PR, push, or schedule triggers.
+# Manual invocation requires a separate, conscious maintainer decision.
 on:
-  pull_request:
-    paths:
-      - 'tests/pydantic/14230/**'
-      - '.github/workflows/pydantic-14230-source-qualification.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
