@@ -8,6 +8,10 @@ This is AETHER X GLOBAL's **public engineering portfolio** of contributions to i
 
 > **Historical baseline: 3 November 2026.** The 43 curated entries are evidence-qualified source references, distinct from the broader 262-link institutional participation register. Neither figure is a live count of accepted patches. External project references imply no partnership, endorsement, sponsorship or affiliation.
 
+## Verified external outcome changes — 9 November 2026
+
+[Source-verified 9 November update](docs/STATUS_UPDATE_2026-11-09.md) records two **new outcomes in existing external engagements**: Cloudflare merged its own browser-environment safety fix after a prior AETHER review comment; Redis's PR author implemented a related AOF regression case and explicitly acknowledged the AETHER-reported test path. Neither constitutes an AETHER-authored merged patch, a partnership, or an endorsement. Historical curated entries and counts remain unchanged.
+
 ## Current participation watch — 7 November 2026
 
 [Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) remains the **priority AETHER-authored PR**, open and unmerged. The maintainer has not yet responded to the latest revised candidate; upstream Rust CI remains `action_required`. The [Pydantic #14230 internal candidate](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/pull/14) is **closed without merge** by Founder decision; the related upstream issue is no longer an active AETHER engagement.
