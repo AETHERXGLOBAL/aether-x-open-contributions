@@ -1,0 +1,15 @@
+{
+  "schema_version": "AX-UNQUALIFIED-PARTICIPATION-v1",
+  "snapshot_date": "2026-11-10",
+  "source_account": "aetherxeg-source",
+  "participations": [
+    {
+      "source_url": "https://github.com/aws/aws-cdk/pull/39680",
+      "project": "aws/aws-cdk",
+      "author": "aetherxeg-source",
+      "kind": "authored_pull_request",
+      "thread_url": "https://github.com/aws/aws-cdk/pull/39680",
+      "observed_state": "open"
+    }
+  ]
+}
