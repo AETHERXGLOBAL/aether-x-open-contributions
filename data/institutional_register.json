@@ -1,22 +1,25 @@
 {
   "schema_version": "AX-INSTITUTIONAL-CONTRIBUTION-REGISTER-v1",
-  "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 and 2026-11-05 dated updates",
+  "snapshot_generated_from": "2026-11-03 base plus 2026-11-04 and 2026-11-05 dated updates plus dated append-only updates through 2026-11-10",
   "source_files": [
     "data/contributions.json",
     "data/discovery/2026-11-03-author-verified-links.json",
     "data/discovery/2026-11-03-public-threads.json",
     "data/status-updates/2026-11-04.json",
-    "data/status-updates/2026-11-05.json"
+    "data/status-updates/2026-11-05.json",
+    "data/updates/manifest.json",
+    "data/updates/2026-11-10.json"
   ],
   "identity_rule": "Source identity only is not engineering qualification or upstream acceptance. Dated statuses do not rewrite original observations.",
   "counts": {
-    "unique_participation_sources": 262,
+    "unique_participation_sources": 263,
     "identity_verified_comment_links": 242,
     "identity_verified_authored_discussions": 10,
     "curated_historical_links": 43,
     "dated_status_updates": 4,
-    "discovered_threads": 233,
-    "discovered_threads_without_matched_participation": 0
+    "discovered_threads": 234,
+    "discovered_threads_without_matched_participation": 0,
+    "append_only_unqualified_participations": 1
   },
   "records": [
     {
@@ -3404,6 +3407,19 @@
       "latest_dated_status_id": null,
       "latest_dated_status": null,
       "qualification_tier": "SOURCE_IDENTITY_ONLY_UNQUALIFIED"
+    },
+    {
+      "source_url": "https://github.com/aws/aws-cdk/pull/39680",
+      "project": "aws/aws-cdk",
+      "thread_url": "https://github.com/aws/aws-cdk/pull/39680",
+      "identity_evidence": [
+        "PUBLIC_SOURCE_LINK_DECLARED_UNQUALIFIED_2026_11_10"
+      ],
+      "historical_catalog_id": null,
+      "historical_catalog_status": null,
+      "latest_dated_status_id": null,
+      "latest_dated_status": null,
+      "qualification_tier": "SOURCE_IDENTITY_ONLY_UNQUALIFIED"
     }
   ],
   "threads": [
@@ -5754,6 +5770,17 @@
       "observed_state_2026_11_03": "closed",
       "linked_participation_urls": [
         "https://github.com/YRootLab/OnMaru-backend-ci-toolkit/issues/131#issuecomment-5952113278"
+      ]
+    },
+    {
+      "thread_url": "https://github.com/aws/aws-cdk/pull/39680",
+      "project": "aws/aws-cdk",
+      "discussion_number": 39680,
+      "kind": "pull_request",
+      "observed_state_date": "2026-11-10",
+      "observed_state": "open",
+      "linked_participation_urls": [
+        "https://github.com/aws/aws-cdk/pull/39680"
       ]
     }
   ]

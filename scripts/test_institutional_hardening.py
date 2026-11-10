@@ -73,7 +73,11 @@ class InstitutionalHardeningTests(unittest.TestCase):
             shutil.copyfile(ROOT / path, target)
         target = self.root / "data/updates/manifest.json"
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(ROOT / "data/updates/manifest.json", target)
+        # Isolate the historical zero-update baseline from live append-only additions.
+        # Negative fixtures must not inherit snapshot references absent from temp root.
+        original_manifest = json.loads((ROOT / "data/updates/manifest.json").read_text(encoding="utf-8"))
+        original_manifest["snapshots"] = []
+        target.write_text(json.dumps(original_manifest, indent=2) + "\n", encoding="utf-8")
         # The 2026-11-05 source/receipt is new, not part of frozen 03/04 inputs.
         for path in ("data/status-updates/2026-11-05.json",
                      "data/evidence/2026-11-05-primary-receipts.json"):
@@ -102,14 +106,30 @@ class InstitutionalHardeningTests(unittest.TestCase):
             scan_public_secrets(self.root)
 
     def test_no_new_updates_preserves_baseline(self):
+        # Explicitly reconstruct the empty-snapshot historical baseline, even
+        # after a real dated append-only contribution has been approved.
         self.assertEqual(read_updates(self.root)[0], [])
         with mock.patch.object(register_module, "ROOT", self.root):
             candidate = register_module.build()
+        self.assertEqual(candidate["counts"]["unique_participation_sources"], 262)
+        self.assertEqual(candidate["counts"]["discovered_threads"], 233)
+        self.assertNotIn("append_only_unqualified_participations", candidate["counts"])
         current = json.loads((ROOT / "data/institutional_register.json").read_text())
-        # Source order is not evidence identity: check the full stable URL/key mapping.
-        # The original generated index remains byte-identical on disk.
-        self.assertTrue(register_module.check_register(current, candidate))
-        self.assertEqual(candidate["counts"], current["counts"])
+        # Check current source reconciliation independently, then prove that
+        # adding dated records did not mutate any historical record or thread.
+        self.assertTrue(register_module.check_register(current))
+        baseline_by_url = {row["source_url"]: row for row in candidate["records"]}
+        current_baseline = {
+            row["source_url"]: row for row in current["records"]
+            if row["source_url"] in baseline_by_url
+        }
+        self.assertEqual(current_baseline, baseline_by_url)
+        baseline_by_thread = {row["thread_url"]: row for row in candidate["threads"]}
+        current_threads = {
+            row["thread_url"]: row for row in current["threads"]
+            if row["thread_url"] in baseline_by_thread
+        }
+        self.assertEqual(current_threads, baseline_by_thread)
 
     def test_append_only_two_links_new_and_existing_threads(self):
         write_snapshot(self.root, [sample(), sample(EXISTING_THREAD_NEW_LINK, "Adyen/adyen-flutter")])
