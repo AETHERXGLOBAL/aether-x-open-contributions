@@ -1,92 +1,49 @@
-# AETHER X GLOBAL — Open Source Contributions
+# AETHER X GLOBAL — Open Source Engineering Contributions
 
-**Verified engineering outcomes · Reproducible regression tests · Responsible upstream collaboration**
+**Source-linked engineering work · Reproducible tests · Accurate attribution**
 
-[Corporate website](https://aetherxglobal.com) · [Contributor account](https://github.com/aetherxeg-source) · [Curated project index](contributions/README.md) · [Outcome-gated engineering impact program](docs/ENGINEERING_IMPACT_PROGRAM.md) · [Current participation watch](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md) · [العربية](docs/README_AR.md)
+[Company](https://aetherxglobal.com) · [Contributor account](https://github.com/aetherxeg-source) · [Engineering priorities (10 Nov 2026)](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-10.md) · [Evidence taxonomy](docs/STATUS_DEFINITIONS.md) · [العربية](docs/README_AR.md)
 
-This is AETHER X GLOBAL's **public engineering portfolio** of contributions to independent open-source projects. It presents original source, date-stamped GitHub receipts, and verifiable testing boundaries. It never treats an idea, comment, or upstream author's code as an AETHER-authored merged change.
+We publish the outcomes and limits of our participation in independent open-source projects. Each example links to its original upstream record. **Participation is not the same as an accepted patch, product adoption, commercial relationship, or vendor endorsement.**
 
-> **Historical baseline: 3 November 2026.** The 43 curated entries are evidence-qualified source references, distinct from the broader 262-link institutional participation register. Neither figure is a live count of accepted patches. External project references imply no partnership, endorsement, sponsorship or affiliation.
+## Engineering highlights — verified 10 November 2026
 
-## Verified external outcome changes — 9 November 2026
-
-[Source-verified 9 November update](docs/STATUS_UPDATE_2026-11-09.md) records two **new outcomes in existing external engagements**: Cloudflare merged its own browser-environment safety fix after a prior AETHER review comment; Redis's PR author implemented a related AOF regression case and explicitly acknowledged the AETHER-reported test path. Neither constitutes an AETHER-authored merged patch, a partnership, or an endorsement. Historical curated entries and counts remain unchanged.
-
-## Current participation watch — 7 November 2026
-
-[Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) remains the **priority AETHER-authored PR**, open and unmerged. The maintainer has not yet responded to the latest revised candidate; upstream Rust CI remains `action_required`. The [Pydantic #14230 internal candidate](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/pull/14) is **closed without merge** by Founder decision; the related upstream issue is no longer an active AETHER engagement.
-
-[Latest source-linked contribution watch — 7 November 2026](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-07.md) · [Previous watch — 6 November](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-06.md). The active priority is Apache Ballista; the Pydantic contribution is founder-closed without merge. These pointers **do not change** frozen historical source counts, the institutional register, or achievement tiers.
-
-## Verified status update — 5 November 2026
-
-[Source-backed NVIDIA follow-up](docs/STATUS_UPDATE_2026-11-05.md) · [dated machine status](data/status-updates/2026-11-05.json) · [pinned fact receipt](data/evidence/2026-11-05-primary-receipts.json).
-
-[NVIDIA OpenShell #4111](https://github.com/NVIDIA/OpenShell/issues/4111) closed as completed after [PR #4714](https://github.com/NVIDIA/OpenShell/pull/4714) was **merged by upstream contributor `lunarwhite`** on 5 November. The prior [AETHER technical comment](https://github.com/NVIDIA/OpenShell/issues/4111#issuecomment-5955273345) is an existing source link. This is **not an AETHER-authored merged fix/test**, nor evidence of causal adoption or NVIDIA endorsement. Historical curated counts and 4 November statuses remain unchanged. The corresponding [internal evidence PR #11](https://github.com/AETHERXGLOBAL/aether-x-open-contributions/pull/11) was subsequently merged on 5 November; its dated draft-stage source text is retained as historical evidence.
-
-## Verified status updates — 4 November 2026
-
-These are **dated updates**, not revisions to the 3 November historical counts. [Detailed evidence and dispositions](docs/STATUS_UPDATE_2026-11-04.md) · [machine-readable status register](data/status-updates/2026-11-04.json).
-
-| External project | Verified status as of 4 November | What it does **not** establish |
+| Work and primary record | Verified outcome | Attribution / remaining gate |
 |---|---|---|
-| [Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) | **AETHER-authored PR open**; 12 Rust files; maintainer review/CI authorization pending | No upstream merge or acceptance |
-| [ExecSurface Watchlist #133](https://github.com/scadastrangelove/awesome-ai-security-tools/issues/133) | **Listed by the upstream maintainer** in [WATCHLIST.md](https://github.com/scadastrangelove/awesome-ai-security-tools/blob/e0ec97f6f0b696d6a5ab0cb2158b8b4c1458c831/WATCHLIST.md) | No independent runtime validation, certification or endorsement |
-| [node-redis #3579](https://github.com/redis/node-redis/issues/3579) | **Closed / not planned**; proposal archived after specific maintainer reasoning | No accepted additional test or AETHER-authored merge |
+| **[AWS CDK #39680](https://github.com/aws/aws-cdk/pull/39680)** — scope implicit VPC Flow Logs role trust | **AETHER-authored Draft PR, open and unmerged**; seven-file source patch and targeted earlier-baseline test receipts ([dated record](docs/STATUS_UPDATE_2026-11-10_AWS_CDK_39680.md)) | AWS maintainer approval is needed before upstream CI runs; upstream PR linter also requests an official integration-test snapshot. Full JSII build and integration qualification remain open. |
+| **[Apache Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775)** — retain executor's private TempDir | **AETHER-authored PR, open and unmerged**; source was reduced to one file after maintainer review | Latest revision and [author-reported targeted checks](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-07.md) are not upstream CI approval or a merge. |
+| **[useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534)** — ExecSurface GitHub Action listing | **AETHER-authored PR merged** on 28 Sep 2026 | A directory listing / example, not a claim of product certification. |
+| **[useful-actions #1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536)** — ExecSurface Action version update | **AETHER-authored PR merged** on 29 Sep 2026 | A version update, not a major upstream framework change. |
+| **[Redis #15930](https://github.com/redis/redis/pull/15930)** — AOF consumer regression | **Third-party-authored PR merged on 10 Nov 2026**, with the author explicitly [crediting the AETHER-reported AOF test path](https://github.com/redis/redis/pull/15930#issuecomment-6663086469) | The implementation and included test are the upstream author's work; this does not prove our exact test file was merged or caused the change. |
 
-The original 43-link portfolio, eight source-backed outcome cases and verified test artifacts remain unchanged.
+Other source-linked cases include an [OpenTelemetry native regression candidate](tests/opentelemetry/README.md), a [Redis native RED/GREEN test candidate](tests/redis/15930/README.md), and an [earlier Cloudflare review](docs/STATUS_UPDATE_2026-11-09.md) preceding a third-party-authored merged fix. The strongest supported outcome and original author are stated separately for each case.
 
-## Unified institutional register — merged and governed
+## Current status: outcomes before activity totals
 
-[Unified source index](data/institutional_register.json) · [Classification and lineage guide](docs/INSTITUTIONAL_REGISTER.md) · [Evidence requalification](docs/EVIDENCE_REQUALIFICATION.md) · [Founder-controlled merge policy](data/founder-merge-policy.json) · [Legacy review proposal and present controls](docs/INDEPENDENT_REVIEW_GATE.md).
-
-The register reconciles **262 unique public participation URLs** and **233 discovered threads** across historical source files and four dated observations. **215 identity-only links remain unqualified**; links are not achievements. The **Founder alone authorizes each final merge** on its exact PR/HEAD; the current GitHub ruleset cannot authenticate a chat approval. The previous mandatory second-reviewer proposal is historical, not an active merge prerequisite. New source links are admitted only through reviewed, append-only dated snapshots as **unqualified participation** until independently verified upstream.
-
-## Verified portfolio — historical curated baseline
-
-| Public source links | Technical comment links | AETHER-authored merged PRs | Original executable test candidates |
-|:---:|:---:|:---:|:---:|
-| **43** | **40** | **2** | **2** |
-
-43 unique references = 40 public comments + 3 AETHER-authored pull requests (2 merged, 1 closed unmerged). Counts are not impact scores.
-
-## Code merged upstream — authored by our GitHub account
-
-- **[ExecSurface Action listing, useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534)** — merged 28 September 2026.
-- **[ExecSurface Action version, useful-actions #1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536)** — merged 29 September 2026.
-
-## Original tests with reproducible evidence — not merged upstream
-
-- **[OpenTelemetry / warning integration](tests/opentelemetry/README.md):** target-revision Go Graph.Build PASS and a primary mutation oracle that failed when the warning invocation was removed, then passed after restoration. [Results shared with maintainers](https://github.com/open-telemetry/opentelemetry-collector/pull/15966#issuecomment-6607382404). Not full Collector startup.
-- **[Redis / Streams AOF replay](tests/redis/15930/README.md):** targeted native Tcl baseline RED versus candidate GREEN on pinned revisions. [Original public evidence discussion](https://github.com/redis/redis/pull/15930#issuecomment-6605978538). Not upstream accepted or merged.
-
-## Evidence of upstream technical engagement
-
-- **[PyTorch](https://github.com/pytorch/pytorch/pull/202881#issuecomment-6552016471):** the upstream author implemented a proposed deterministic GIL regression.
-- **[AWS CDK](https://github.com/aws/aws-cdk/pull/39581#issuecomment-6543447817):** upstream author applied a fail-closed shell correction after a technical finding.
-- **[Redis design](https://github.com/redis/redis/issues/16130#issuecomment-6568601668):** upstream author acknowledged a protocol-safety refinement.
-- **[NVIDIA AICR](https://github.com/NVIDIA/aicr/pull/3539):** upstream author's attestation read/verify/copy fix was [merged on 1 November 2026](https://github.com/NVIDIA/aicr/commit/3013757e14742640032148fb84c42e745ea00399). An [upstream reviewer independently noted the extra bundler-level test gap](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760) raised by AETHER; the AETHER-proposed regression was **not included** in the merged change.
-
-These are **upstream-authored outcomes**, not AETHER-owned merged code, and are not claims of vendor endorsement. A [dated portfolio evidence audit](docs/PORTFOLIO_AUDIT_2026-11-03.md) records the NVIDIA closure and an upstream correction to a separate PyTorch discussion.
-
-## Explore
-
-| Section | Contents |
+| Measure | Verified scope |
 |---|---|
-| [Evidence-backed outcomes](achievements/README.md) | Eight distinct selected cases with exact source links and attribution |
-| [Contributions by project](contributions/README.md) | Every public comment/PR, grouped by upstream repository |
-| [Timeline](history/2026-11-03.md) | Historical catalog composition and provenance |
-| [Machine catalog](data/contributions.json) · [CSV](data/contributions.csv) | Deduplicated entries for research and review |
-| [Original test sources](tests/README.md) | Source hashes, exact tested revisions, replay safety |
-| [Evidence taxonomy](docs/STATUS_DEFINITIONS.md) | Distinction between comment, executed test, adoption, merge and release |
-| [Publications policy](docs/PUBLICATION_POLICY.md) | Privacy, licensing, disclosure, correction and publication controls |
+| **2** | AETHER-authored external PRs merged, in the historical curated portfolio (useful-actions #1534 and #1536) |
+| **2** | Highlighted AETHER-authored upstream PRs still **open, not merged** (AWS CDK #39680 and Ballista #2775) |
+| **263** | Distinct public participation links in the **institutional register as of 10 Nov 2026**, including source-identity-only entries |
+| **43** | Frozen, evidence-curated historical source links from **3 Nov 2026** (40 technical comments, 3 authored PRs) |
 
-## Historical discovery and controlled updates
+**These categories must not be added together.** The 263 source links are not 263 fixes. The historical 43-link snapshot and its 2 merged authored PRs are unchanged; the new 10 November participation was appended without rewriting historical evidence. The institutional register also tracks **234 threads**, which are discussions, not completed engineering outcomes.
 
-An expanded GitHub Search census found **233 distinct public external discussion threads** and a completed native GitHub Actions replay verified **242 original comment/review URLs** by the contributor account, including **210 URLs outside the original curated 43-reference portfolio**. These are verified public participation records, **not 242 engineering achievements or accepted fixes**. See the [public historical register](data/discovery/README.md), [original source permalinks](data/discovery/2026-11-03-author-verified-links.json), and [governed weekly review process](docs/GOVERNED_UPDATES.md). The 43 carefully classified sources above remain the initial curated engineering baseline.
+## Engineering priorities
 
-## Integrity and reuse
+1. **Qualify AWS CDK #39680:** resolve the integration snapshot lint requirement, capture the full JSII error before diagnosing resource failure, and test both trust/permissions feature flags on the exact published candidate. No AWS deployment or unsupported test claim.
+2. **Respond only to real Ballista #2775 review/CI evidence:** its narrower candidate already addresses the maintainers' earlier feedback; do not repost requests without a new actionable signal.
+3. **Preserve Redis and Cloudflare authorship accurately:** record third-party outcomes with exact source links, not as AETHER-authored merges.
 
-Every factual highlight links to the public original GitHub record. A user-executed native test with independently checked archive bytes is **not** described as a second independently run test. Historical source bytes and their SHA-256 digests are preserved. No private company audit logs, local host identities, cloud account IDs, credentials or private-repository content are mirrored.
+[Decision gates, latest observations and accountable next actions](docs/CURRENT_ENGAGEMENT_WATCH_2026-11-10.md). Current statuses may change after this dated review; the upstream PR pages are authoritative.
 
-Maintainers can reuse or adapt the test candidates according to upstream policies and licenses. See [CONTRIBUTING.md](CONTRIBUTING.md), [LICENSE](LICENSE), [THIRD_PARTY_NOTICES.md](docs/THIRD_PARTY_NOTICES.md) and [SECURITY.md](SECURITY.md).
+## Reproducible evidence and archive
+
+- **[Selected evidence-backed outcomes](achievements/README.md):** original links, implementation authors and qualification limits.
+- **[Original test candidates](tests/README.md):** scope-bound sources and reproducibility information.
+- **[Historical curated contributions (3 Nov)](contributions/README.md):** frozen project-by-project index; not a live count.
+- **[Institutional participation register](data/institutional_register.json)** · [append-only updates](data/updates/manifest.json) · [lineage and validation rules](docs/INSTITUTIONAL_REGISTER.md).
+- **[Dated status notes](docs/STATUS_UPDATE_2026-11-10_AWS_CDK_39680.md)** · [earlier 9 Nov update](docs/STATUS_UPDATE_2026-11-09.md) · [historical timeline](history/2026-11-03.md).
+- **[Publication policy](docs/PUBLICATION_POLICY.md)** · [governed updates](docs/GOVERNED_UPDATES.md) · [founder-controlled merge policy](data/founder-merge-policy.json).
+
+Our public records distinguish **author-reported tests**, independently inspected evidence bytes, native execution at a pinned revision, upstream CI, maintainer acceptance and upstream merge. They are not interchangeable. We retain corrections, preserve third-party credits and do not mirror confidential internal logs or credentials into this repository.
