@@ -20,7 +20,7 @@
 
 ## P2 — Preserve accurately attributed third-party outcomes
 
-- **[Redis PR #15930](https://github.com/redis/redis/pull/15930):** **MERGED 10 Nov 2026**, authored by `namespaceMarcello`. The author [explicitly credited the AETHER-reported AOF regression path](https://github.com/redis/redis/pull/15930#issuecomment-6663086469), but the merged source and tests are upstream-author-owned; exact byte-for-byte adoption and causality are unproven. Existing AETHER [pinned RED/GREEN source evidence](tests/redis/15930/README.md) must remain separately attributed. No new third-party outreach.
+- **[Redis PR #15930](https://github.com/redis/redis/pull/15930):** **MERGED 10 Nov 2026**, authored by `namespaceMarcello`. The author [explicitly credited the AETHER-reported AOF regression path](https://github.com/redis/redis/pull/15930#issuecomment-6663086469), but the merged source and tests are upstream-author-owned; exact byte-for-byte adoption and causality are unproven. Existing AETHER [pinned RED/GREEN source evidence](../tests/redis/15930/README.md) must remain separately attributed. No new third-party outreach.
 - **[Cloudflare workers-sdk #16612](https://github.com/cloudflare/workers-sdk/pull/16612):** **MERGED 9 Nov 2026**, authored by `petebacondarwin`. Earlier AETHER review identified environmental forwarding risk; merged authorship and causal influence remain distinct. See [dated source evidence](STATUS_UPDATE_2026-11-09.md).
 
 ## Operating gates and measurement
