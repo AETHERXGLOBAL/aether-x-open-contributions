@@ -1,0 +1,13 @@
+{
+  "direct_id_assignment": true,
+  "pipeline_or_instance_override_in_exporterSettings": false,
+  "scope": "source-only structural check; no persistence test or runtime reproduction",
+  "signals_using_exporterSettings": {
+    "newLogsProcessor": true,
+    "newMetricsProcessor": true,
+    "newProfilesProcessor": true,
+    "newTracesProcessor": true
+  },
+  "source_sha256": "e6ba727ed0ae6b366202ca7bb0ea78d716c8217676c9c5e6d9ecadc15f41f3fd",
+  "verdict": "SOURCE_STATIC_MATCH"
+}
