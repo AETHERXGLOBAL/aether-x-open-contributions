@@ -466,9 +466,12 @@ func (pq *persistentQueue[T]) enqueueNotDispatchedReqs(ctx context.Context, disp
 		if len(raw) == 0 {
 			return fmt.Errorf("in-flight item %d missing: %w", index, errValueNotSet)
 		}
-		// The on-disk encoding remains unchanged by recovery.
+		// Preserve historical corruption semantics: irrecoverably malformed
+		// payloads are dropped with a warning, without losing other entries.
+		valid := true
 		if _, _, err = pq.encoding.Unmarshal(raw); err != nil {
-			return fmt.Errorf("decode in-flight item %d: %w", index, err)
+			pq.logger.Warn("Failed unmarshalling item", zap.String(zapKey, oldKey), zap.Error(err))
+			valid = false
 		}
 
 		updated := proto.Clone(&pq.metadata).(*PersistentMetadata)
@@ -488,8 +491,11 @@ func (pq *persistentQueue[T]) enqueueNotDispatchedReqs(ctx context.Context, disp
 			return fmt.Errorf("in-flight item %d missing from recovery metadata", index)
 		}
 		updated.CurrentlyDispatchedItems = pending
-		newKey := getItemKey(updated.WriteIndex)
-		updated.WriteIndex++
+		var newKey string
+		if valid {
+			newKey = getItemKey(updated.WriteIndex)
+			updated.WriteIndex++
+		}
 		metadataBytes, err := proto.Marshal(updated)
 		if err != nil {
 			return fmt.Errorf("marshal recovered metadata: %w", err)
@@ -498,11 +504,14 @@ func (pq *persistentQueue[T]) enqueueNotDispatchedReqs(ctx context.Context, disp
 		// The storage backend's Batch must be transactional for crash atomicity.
 		// An ambiguous Batch error is fatal to initialization: re-open and
 		// inspect durable metadata instead of mutating it and continuing.
-		if err = pq.client.Batch(ctx,
-			storage.SetOperation(newKey, raw),
+		ops := []*storage.Operation{
 			storage.SetOperation(metadataKey, metadataBytes),
 			storage.DeleteOperation(oldKey),
-		); err != nil {
+		}
+		if valid {
+			ops = append(ops, storage.SetOperation(newKey, raw))
+		}
+		if err = pq.client.Batch(ctx, ops...); err != nil {
 			return fmt.Errorf("atomically move in-flight item %d: %w", index, err)
 		}
 		pq.metadata = *updated
