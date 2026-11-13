@@ -11,6 +11,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/extension/xextension/storage"
+	"go.opentelemetry.io/collector/exporter/exporterhelper/internal/request"
 )
 
 func axgLegacyFixture(t *testing.T, store *axgCommittedStore) {
@@ -88,7 +89,7 @@ func TestAXGRecoveryRejectsUncommittedBatchFailure(t *testing.T) {
 	base := newAXGCommittedStore()
 	axgCreateInflightFixture(t, base)
 	store := &axgRejectFirstMoveStore{axgCommittedStore: base, reject: true}
-	pq := newPersistentQueue[intRequest](newSettingsWithStorage(0, 1000)).(*persistentQueue[intRequest])
+	pq := newPersistentQueue[intRequest](newSettingsWithStorage(request.SizerTypeRequests, 1000)).(*persistentQueue[intRequest])
 	err := pq.initClient(context.Background(), store)
 	require.ErrorContains(t, err, "AXG_INJECTED_COMMIT_REJECTION")
 	require.Equal(t, []intRequest{11, 22, 33}, axgDurableInventory(t, createTestPersistentQueueWithClient(base)))
