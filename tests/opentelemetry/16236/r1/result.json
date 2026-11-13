@@ -1,0 +1,11 @@
+{
+  "actual_log_loss_marker": true,
+  "adversarial_exit": "1",
+  "control_exit": "0",
+  "mission": "AXG-OTEL-PERSISTENT-RECOVERY-R1-20261113",
+  "test_patch": "NONE (original upstream baseline only)",
+  "test_scope": "actual upstream Go queue code + synthetic transactional memory Client crash-after-commit, not real bbolt/process kill",
+  "upstream_head_expected": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "upstream_head_observed": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "RED_REPRODUCED_SCOPED"
+}
