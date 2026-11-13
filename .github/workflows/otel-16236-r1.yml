@@ -1,0 +1,126 @@
+name: OTel 16236 R1 interrupted recovery RED qualification
+on:
+  pull_request:
+    paths:
+      - 'tests/opentelemetry/16236/axg_recovery_contract_test.go'
+      - '.github/workflows/otel-16236-r1.yml'
+permissions:
+  contents: read
+jobs:
+  recovery-cut:
+    if: github.event.pull_request.head.ref == 'evidence/otel-queue-recovery-16236-r1-20261113'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout unprivileged internal evidence with no stored token
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Isolate exact unmodified upstream source
+        run: |
+          set -euo pipefail
+          mkdir -p tests/opentelemetry/16236/r1_evidence
+          git init -q /tmp/otel-16236-baseline
+          git -C /tmp/otel-16236-baseline remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-16236-baseline fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-16236-baseline checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-16236-baseline rev-parse HEAD)" = '572057cde7e9bbe3aed6e5e3e8f16290d487f7d0'
+          git -C /tmp/otel-16236-baseline rev-parse HEAD | tee tests/opentelemetry/16236/r1_evidence/source_head.txt
+          sha256sum /tmp/otel-16236-baseline/exporter/exporterhelper/internal/queue/persistent_queue.go | tee tests/opentelemetry/16236/r1_evidence/persistent_queue_source_sha256.txt
+          cp tests/opentelemetry/16236/axg_recovery_contract_test.go /tmp/otel-16236-baseline/exporter/exporterhelper/internal/queue/axg_recovery_contract_test.go
+          sha256sum tests/opentelemetry/16236/axg_recovery_contract_test.go | tee tests/opentelemetry/16236/r1_evidence/axg_fixture_sha256.txt
+          sha256sum /tmp/otel-16236-baseline/exporter/exporterhelper/internal/queue/axg_recovery_contract_test.go | tee tests/opentelemetry/16236/r1_evidence/copied_fixture_sha256.txt
+          test "$(sha256sum tests/opentelemetry/16236/axg_recovery_contract_test.go | cut -d' ' -f1)" = "$(sha256sum /tmp/otel-16236-baseline/exporter/exporterhelper/internal/queue/axg_recovery_contract_test.go | cut -d' ' -f1)"
+      - name: Exact upstream module toolchain
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Run uninterrupted recovery positive control
+        run: |
+          set -uo pipefail
+          mkdir -p tests/opentelemetry/16236/r1_evidence
+          go version | tee tests/opentelemetry/16236/r1_evidence/go_version.txt
+          set +e
+          timeout 420s go -C /tmp/otel-16236-baseline/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGRecoveryUninterruptedControl$' ./internal/queue > tests/opentelemetry/16236/r1_evidence/control.log 2>&1
+          rc=$?
+          set -e
+          echo "$rc" > tests/opentelemetry/16236/r1_evidence/control_exit.txt
+          tail -75 tests/opentelemetry/16236/r1_evidence/control.log
+      - name: Run adversarial committed-delete restart test on unpatched upstream
+        run: |
+          set -uo pipefail
+          set +e
+          timeout 420s go -C /tmp/otel-16236-baseline/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGRecoveryCutAfterCommittedRetirement$' ./internal/queue > tests/opentelemetry/16236/r1_evidence/recovery_cut.log 2>&1
+          rc=$?
+          set -e
+          echo "$rc" > tests/opentelemetry/16236/r1_evidence/recovery_cut_exit.txt
+          tail -100 tests/opentelemetry/16236/r1_evidence/recovery_cut.log
+      - name: Determine result from actual exits and exact RED marker
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r1_evidence
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          def s(n):
+              p=Path(n)
+              return p.read_text().strip() if p.exists() else None
+          control,red=s("control_exit.txt"),s("recovery_cut_exit.txt")
+          control_log=s("control.log") or ""
+          red_log=s("recovery_cut.log") or ""
+          result={
+              "mission":"AXG-OTEL-PERSISTENT-RECOVERY-R1-20261113",
+              "upstream_head_expected":"572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+              "upstream_head_observed":s("source_head.txt"),
+              "test_scope":"actual upstream Go queue code + synthetic transactional memory Client crash-after-commit, not real bbolt/process kill",
+              "control_exit":control,
+              "adversarial_exit":red,
+              "actual_log_loss_marker":"AXG_LOSS_CONFIRMED" in red_log,
+              "test_patch":"NONE (original upstream baseline only)",
+          }
+          result["verdict"]=(
+              "RED_REPRODUCED_SCOPED"
+              if result["upstream_head_expected"]==result["upstream_head_observed"]
+              and control=="0"
+              and "AXG_CONTROL_OK" in control_log
+              and red=="1"
+              and "AXG_LOSS_CONFIRMED" in red_log
+              and "--- FAIL: TestAXGRecoveryCutAfterCommittedRetirement" in red_log
+              else "INCONCLUSIVE_OR_HARNESS_FAILURE"
+          )
+          Path("result.json").write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
+          print(json.dumps(result,sort_keys=True))
+          PY
+      - name: Seal logs, exits and source fingerprint
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r1_evidence
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          files=sorted(p for p in Path(".").iterdir() if p.is_file() and p.name!="SHA256SUMS.txt")
+          Path("SHA256SUMS.txt").write_text("".join(hashlib.sha256(p.read_bytes()).hexdigest()+"  "+p.name+"\n" for p in files))
+          PY
+      - name: Upload exact 16236 R1 raw evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r1-fault-injection
+          path: tests/opentelemetry/16236/r1_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce that inconclusive is never PASS
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("tests/opentelemetry/16236/r1_evidence/result.json")
+          if not p.exists() or json.loads(p.read_text()).get("verdict")!="RED_REPRODUCED_SCOPED":
+              raise SystemExit("R1 was NOT qualified as expected RED. Inspect artifact and failures.")
+          print("R1 RED_REPRODUCED_SCOPED. Fix and independent GREEN NOT RUN.")
+          PY
