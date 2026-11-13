@@ -1,0 +1,91 @@
+name: OTel 16398 R3 third-party PR16404 targeted cold review
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/otel-16398-r3.yml'
+permissions:
+  contents: read
+jobs:
+  cold-review:
+    if: github.event.pull_request.number == 20
+    runs-on: ubuntu-24.04
+    timeout-minutes: 18
+    steps:
+      - name: Checkout internal review without persistent credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Fetch and attest upstream author-owned PR16404 exact HEAD
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/otel-pr16404
+          git -C /tmp/otel-pr16404 init -q
+          git -C /tmp/otel-pr16404 remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-pr16404 fetch --depth 1 origin f5fda3c98612c41e9a505aaeaefdcdecb460dc82
+          git -C /tmp/otel-pr16404 checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-pr16404 rev-parse HEAD)" = "f5fda3c98612c41e9a505aaeaefdcdecb460dc82"
+          git -C /tmp/otel-pr16404 rev-parse HEAD | tee r3_source_commit.txt
+          sha256sum /tmp/otel-pr16404/service/internal/graph/graph.go /tmp/otel-pr16404/service/internal/graph/processor.go /tmp/otel-pr16404/service/internal/graph/persistent_queue_test.go /tmp/otel-pr16404/exporter/exporterhelper/internal/base_exporter.go | tee r3_upstream_source_sha256.txt
+          grep -n 'shared_with_storage\|separate_instances_with_storage\|single_pipeline_with_storage\|shared_without_storage\|shared_with_storage_opaque_wrapper' /tmp/otel-pr16404/service/internal/graph/persistent_queue_test.go | tee r3_upstream_test_matrix.txt
+      - name: Install exact matching Go version
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Independently execute upstream PR16404 graph regression and exporterhelper tests
+        run: |
+          set -uo pipefail
+          go version | tee r3_go_version.txt
+          set +e
+          timeout 540s go -C /tmp/otel-pr16404/service test -count=1 -timeout=8m -run '^TestProcessorPersistentQueueSharedByPipelines$' ./internal/graph > r3_graph_tests.log 2>&1
+          rc_graph=$?
+          timeout 420s go -C /tmp/otel-pr16404/exporter/exporterhelper test -count=1 -timeout=6m -run '^TestBaseExporterPersistentQueueEnabled$' ./internal > r3_exporter_tests.log 2>&1
+          rc_exporter=$?
+          set -e
+          printf '%s\n' "$rc_graph" > r3_graph_exit.txt
+          printf '%s\n' "$rc_exporter" > r3_exporter_exit.txt
+          cat r3_graph_tests.log r3_exporter_tests.log
+          if [ "$rc_graph" -ne 0 ] || [ "$rc_exporter" -ne 0 ]; then
+            echo 'R3_TARGETED_TEST_FAILURE: preserve original logs, not a passing verdict'
+          else
+            echo 'R3_TARGETED_TESTS_PASS: upstream author-owned tests only; not AETHER patch acceptance'
+          fi
+      - name: Preserve machine-verifiable evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p r3_evidence
+          for f in r3_source_commit.txt r3_upstream_source_sha256.txt r3_upstream_test_matrix.txt r3_go_version.txt r3_graph_tests.log r3_exporter_tests.log r3_graph_exit.txt r3_exporter_exit.txt; do
+            if [ -f "$f" ]; then cp "$f" "r3_evidence/$f"; fi
+          done
+          python3 - <<'PY'
+          import hashlib, json, pathlib
+          d = pathlib.Path("r3_evidence")
+          def read(name):
+              p=d/name
+              return p.read_text().strip() if p.exists() else None
+          data={
+              "upstream_pr":16404,
+              "upstream_author":"iblancasa",
+              "upstream_head":"f5fda3c98612c41e9a505aaeaefdcdecb460dc82",
+              "source_head_observed":read("r3_source_commit.txt"),
+              "graph_test_exit":read("r3_graph_exit.txt"),
+              "exporter_test_exit":read("r3_exporter_exit.txt"),
+              "scope":"third-party PR targeted upstream Go tests; no AETHER implementation",
+              "wrapper_false_negative_test_present": bool("shared_with_storage_opaque_wrapper" in (read("r3_upstream_test_matrix.txt") or "")),
+          }
+          data["verdict"]="TARGETED_PASS_SCOPED" if (data["source_head_observed"]==data["upstream_head"] and data["graph_test_exit"]=="0" and data["exporter_test_exit"]=="0") else "NOT_PASS"
+          (d/"r3_result.json").write_text(json.dumps(data,indent=2,sort_keys=True)+"\n")
+          lines=[]
+          for p in sorted(d.iterdir()):
+              if p.is_file(): lines.append(hashlib.sha256(p.read_bytes()).hexdigest()+"  "+p.name)
+          (d/"SHA256SUMS.txt").write_text("\n".join(lines)+"\n")
+          PY
+      - name: Upload raw bounded third-party PR review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16398-r3-third-party-pr-16404
+          path: r3_evidence/
+          retention-days: 30
+          if-no-files-found: error
