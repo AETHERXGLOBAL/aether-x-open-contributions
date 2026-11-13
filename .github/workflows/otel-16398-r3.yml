@@ -7,7 +7,7 @@ permissions:
   contents: read
 jobs:
   cold-review:
-    if: github.event.pull_request.number == 20
+    if: github.event.pull_request.number == 20 && github.event.pull_request.head.sha == 'd65bfa19928fbf2c8a04a916ad94f5cdd48d7880'
     runs-on: ubuntu-24.04
     timeout-minutes: 18
     steps:
