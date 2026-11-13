@@ -2,8 +2,9 @@ name: OTel 16398 R2 isolated runtime characterization
 on:
   pull_request:
     paths:
-      - 'tests/opentelemetry/16398/**'
-      - '.github/workflows/otel-16398-r2.yml'
+      - 'tests/opentelemetry/16398/runtime_probe.py'
+      - 'tests/opentelemetry/16398/test_runtime_probe.py'
+      - 'tests/opentelemetry/16398/source_contract_check.py'
 permissions:
   contents: read
 jobs:
