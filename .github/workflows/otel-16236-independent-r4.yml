@@ -55,8 +55,9 @@ jobs:
           q="/tmp/axg-otel-independent/exporter/exporterhelper/internal/queue"
           cp tests/opentelemetry/16236/axg_recovery_contract_test.go "$q/axg_recovery_contract_test.go"
           cp "$native" "$q/axg_bbolt_sigkill_linux_test.go"
-          cp "$independent" "$q/axg_independent_bbolt_linux_test.go"
-          gofmt -w "$q/axg_bbolt_sigkill_linux_test.go" "$q/axg_independent_bbolt_linux_test.go"
+          # The independent tests use candidate-only initClient(error) semantics.
+          # Keep them out of the original baseline compilation.
+          gofmt -w "$q/axg_bbolt_sigkill_linux_test.go"
           go -C /tmp/axg-otel-independent/exporter/exporterhelper get go.etcd.io/bbolt@v1.5.0 > "$out/pin_bbolt.log" 2>&1
           go -C /tmp/axg-otel-independent/exporter/exporterhelper list -m go.etcd.io/bbolt | tee "$out/pinned_bbolt.txt"
           grep -qx 'go.etcd.io/bbolt v1.5.0' "$out/pinned_bbolt.txt"
@@ -66,6 +67,8 @@ jobs:
           set -e
           printf '%s\n' "$baseline_exit" > "$out/baseline_exit.txt"
           cp "$candidate" "$q/persistent_queue.go"
+          cp "$independent" "$q/axg_independent_bbolt_linux_test.go"
+          gofmt -w "$q/axg_independent_bbolt_linux_test.go"
           cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"
           set +e
           timeout 360s go -C /tmp/axg-otel-independent/exporter/exporterhelper test -count=1 -v -timeout=5m -run '^TestAXG(Independent|BboltSIGKILLRecovery)' ./internal/queue > "$out/independent_native.log" 2>&1
