@@ -1,0 +1,11 @@
+{
+  "exporter_test_exit": "0",
+  "graph_test_exit": "0",
+  "scope": "third-party PR targeted upstream Go tests; no AETHER implementation",
+  "source_head_observed": "f5fda3c98612c41e9a505aaeaefdcdecb460dc82",
+  "upstream_author": "iblancasa",
+  "upstream_head": "f5fda3c98612c41e9a505aaeaefdcdecb460dc82",
+  "upstream_pr": 16404,
+  "verdict": "TARGETED_PASS_SCOPED",
+  "wrapper_false_negative_test_present": true
+}

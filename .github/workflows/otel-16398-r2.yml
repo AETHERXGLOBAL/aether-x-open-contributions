@@ -1,0 +1,108 @@
+name: OTel 16398 R2 isolated runtime characterization
+on:
+  pull_request:
+    paths:
+      - 'tests/opentelemetry/16398/runtime_probe.py'
+      - 'tests/opentelemetry/16398/test_runtime_probe.py'
+      - 'tests/opentelemetry/16398/source_contract_check.py'
+permissions:
+  contents: read
+jobs:
+  native-probe:
+    if: github.event.pull_request.number == 20 && github.event.pull_request.head.sha == 'c6957d5e25a89e197ae70c32ec982edb89735ffa'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout internal PR source (no stored GitHub token)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: R2 local fixture qualification
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16398
+          mkdir -p runtime_evidence
+          python3 -m unittest -v test_runtime_probe.py 2>&1 | tee runtime_evidence/harness_tests.log
+      - name: Fetch exact upstream source and verify SHA256
+        run: |
+          set -euo pipefail
+          mkdir -p tests/opentelemetry/16398/runtime_evidence
+          git init -q /tmp/otel-upstream
+          git -C /tmp/otel-upstream remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-upstream fetch --depth 1 origin 6d43df6a97f2806bbda92c6bce0e1b63440985dc
+          git -C /tmp/otel-upstream checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-upstream rev-parse HEAD)" = "6d43df6a97f2806bbda92c6bce0e1b63440985dc"
+          git -C /tmp/otel-upstream rev-parse HEAD | tee tests/opentelemetry/16398/runtime_evidence/upstream_head.txt
+          sha256sum /tmp/otel-upstream/processor/queuebatchprocessor/processor.go | tee tests/opentelemetry/16398/runtime_evidence/source_sha256.txt
+          python3 tests/opentelemetry/16398/source_contract_check.py /tmp/otel-upstream/processor/queuebatchprocessor/processor.go --expected-sha256 e6ba727ed0ae6b366202ca7bb0ea78d716c8217676c9c5e6d9ecadc15f41f3fd > tests/opentelemetry/16398/runtime_evidence/source_contract_check.json
+          cat tests/opentelemetry/16398/runtime_evidence/source_contract_check.json
+      - name: Setup upstream module Go version
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Run pinned source package test suite (record any failure)
+        run: |
+          set -uo pipefail
+          cd tests/opentelemetry/16398
+          go version | tee runtime_evidence/go_version.txt
+          set +e
+          timeout --signal=TERM 480s go -C /tmp/otel-upstream/processor/queuebatchprocessor test -count=1 -timeout=7m ./... >runtime_evidence/upstream_go_tests.log 2>&1
+          rc=$?
+          set -e
+          echo "$rc" > runtime_evidence/upstream_go_tests_exit.txt
+          tail -75 runtime_evidence/upstream_go_tests.log
+          if [ "$rc" != 0 ]; then echo "Go suite did not pass; do not claim success"; fi
+      - name: Reproduce release-image bug and negative controls
+        run: |
+          set -uo pipefail
+          cd tests/opentelemetry/16398
+          set +e
+          docker pull otel/opentelemetry-collector-contrib:0.165.0 > runtime_evidence/image_pull.log 2>&1
+          pull_code=$?
+          set -e
+          echo "$pull_code" > runtime_evidence/image_pull_exit.txt
+          if [ "$pull_code" = 0 ]; then
+            docker image inspect otel/opentelemetry-collector-contrib:0.165.0 --format '{{json .RepoDigests}}' > runtime_evidence/image_digest.json
+            docker image inspect otel/opentelemetry-collector-contrib:0.165.0 --format '{{json .Config.Labels}}' > runtime_evidence/image_labels.json
+            set +e
+            timeout --signal=TERM 155s python3 runtime_probe.py > runtime_evidence/runtime_harness.log 2>&1
+            rc=$?
+            set -e
+            echo "$rc" > runtime_evidence/runtime_probe_exit.txt
+            cat runtime_evidence/runtime_harness.log
+          else
+            echo "INFRA_BLOCKED: Docker pull failed, native repro NOT RUN" | tee runtime_evidence/runtime_harness.log
+            echo "99" > runtime_evidence/runtime_probe_exit.txt
+          fi
+      - name: Seal actual evidence and byte-level manifest
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16398
+          mkdir -p runtime_evidence
+          python3 - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+          base=Path("runtime_evidence")
+          (base/"execution_context.json").write_text(json.dumps({
+              "scope":"source Go tests + release-image runtime repro, no patch",
+              "upstream_head":"6d43df6a97f2806bbda92c6bce0e1b63440985dc",
+              "patch_tested":False,
+              "production_data":False,
+          },sort_keys=True,indent=2)+"\n")
+          lines=[]
+          for p in sorted(base.glob("*")):
+              if p.is_file() and p.name!="SHA256SUMS.txt":
+                  lines.append(hashlib.sha256(p.read_bytes()).hexdigest()+"  "+p.name)
+          (base/"SHA256SUMS.txt").write_text("\n".join(lines)+"\n")
+          PY
+      - name: Attach exact raw test evidence to this GitHub run
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16398-r2-raw-evidence
+          path: tests/opentelemetry/16398/runtime_evidence/
+          if-no-files-found: error
+          retention-days: 30
