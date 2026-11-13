@@ -1,0 +1,15 @@
+{
+  "baseline_native_exit": "1",
+  "baseline_observed_failure": true,
+  "baseline_real_sigkill": true,
+  "candidate_native_exit": "0",
+  "candidate_preserved_count": 3,
+  "candidate_real_sigkill_count": 3,
+  "crash_method": "os process SIGKILL after actual bbolt.DB.Update returns committed",
+  "full_package_exit": "0",
+  "mission": "AXG-OTEL-16236-R3-NATIVE-BBOLT-SIGKILL-20261114",
+  "native_storage": "go.etcd.io/bbolt v1.5.0; FSync true; same transactional Batch implementation as filestorage; NOT actual contrib extension",
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "upstream_head_expected": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "R3_NATIVE_BBOLT_PASS_SCOPED"
+}
