@@ -9,7 +9,7 @@ permissions:
   contents: read
 jobs:
   native-probe:
-    if: github.event.pull_request.number == 20
+    if: github.event.pull_request.number == 20 && github.event.pull_request.head.sha == 'c6957d5e25a89e197ae70c32ec982edb89735ffa'
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
