@@ -30,13 +30,13 @@ go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20260817212433-
 === RUN   TestAXGBboltSIGKILLRecovery
 === RUN   TestAXGBboltSIGKILLRecovery/qmv0_first_committed
     axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash
-    axg_bbolt_sigkill_linux_test.go:218:
+    axg_bbolt_sigkill_linux_test.go:218: 
         	Error Trace:	/tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go:201
         	            				/tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go:218
-        	Error:      	Not equal:
+        	Error:      	Not equal: 
         	            	expected: []queue.intRequest{11, 22, 33}
         	            	actual  : []queue.intRequest{33}
-        	            
+        	            	
         	            	Diff:
         	            	--- Expected
         	            	+++ Actual
@@ -46,7 +46,7 @@ go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20260817212433-
         	            	- (queue.intRequest) 22,
         	            	+([]queue.intRequest) (len=1) {
         	            	  (queue.intRequest) 33
-        	Test:        	TestAXGBboltSIGKILLRecovery/qmv0_first_committed
+        	Test:       	TestAXGBboltSIGKILLRecovery/qmv0_first_committed
 --- FAIL: TestAXGBboltSIGKILLRecovery (0.04s)
     --- FAIL: TestAXGBboltSIGKILLRecovery/qmv0_first_committed (0.04s)
 FAIL
