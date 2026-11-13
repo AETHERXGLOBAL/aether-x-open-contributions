@@ -3,10 +3,34 @@
   "mission": "AXG-OTEL-QUEUE-BATCH-PERSISTENCE-R2",
   "patch_tested": false,
   "scenarios": [
-    {"exit_code": 1, "outcome": "RED_REPRODUCED", "scenario": "shared_storage", "seconds": 1.27, "timed_out": false},
-    {"exit_code": -9, "outcome": "CONTROL_READY", "scenario": "single_storage", "seconds": 30.14, "timed_out": true},
-    {"exit_code": -9, "outcome": "CONTROL_READY", "scenario": "shared_memory", "seconds": 30.15, "timed_out": true},
-    {"exit_code": -9, "outcome": "CONTROL_READY", "scenario": "distinct_storage", "seconds": 30.2, "timed_out": true}
+    {
+      "exit_code": 1,
+      "outcome": "RED_REPRODUCED",
+      "scenario": "shared_storage",
+      "seconds": 1.27,
+      "timed_out": false
+    },
+    {
+      "exit_code": -9,
+      "outcome": "CONTROL_READY",
+      "scenario": "single_storage",
+      "seconds": 30.14,
+      "timed_out": true
+    },
+    {
+      "exit_code": -9,
+      "outcome": "CONTROL_READY",
+      "scenario": "shared_memory",
+      "seconds": 30.15,
+      "timed_out": true
+    },
+    {
+      "exit_code": -9,
+      "outcome": "CONTROL_READY",
+      "scenario": "distinct_storage",
+      "seconds": 30.2,
+      "timed_out": true
+    }
   ],
   "source_scope": "Docker release image 0.165.0; NOT pinned-HEAD source build"
 }
