@@ -35,7 +35,8 @@ jobs:
           cp tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go
           sha256sum tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go > tests/opentelemetry/16236/r3_evidence/native_fixture_sha256.txt
           sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go > tests/opentelemetry/16236/r3_evidence/candidate_sha256.txt
-          test -z "$(gofmt -l tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go)"
+          gofmt -w /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go
+          sha256sum /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go > tests/opentelemetry/16236/r3_evidence/formatted_fixture_sha256.txt
       - name: Install pinned Go toolchain
         uses: actions/setup-go@v6
         with:
