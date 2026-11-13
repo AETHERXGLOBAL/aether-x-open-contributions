@@ -163,8 +163,11 @@ func (pq *persistentQueue[T]) initClient(ctx context.Context, client storage.Cli
 			return err
 		}
 	case !errors.Is(err, errValueNotSet):
-		pq.logger.Error("Failed getting metadata, starting with new ones", zap.Error(err))
-		pq.metadata = PersistentMetadata{}
+		// Metadata that exists but cannot be read must not be mistaken for a
+		// never-initialized queue. Resetting indices here makes durable
+		// request payloads inaccessible and risks overwriting their keys.
+		pq.logger.Error("Refusing to reset unreadable persistent queue metadata", zap.Error(err))
+		return fmt.Errorf("persistent queue metadata unreadable; refusing index reset: %w", err)
 	default:
 		pq.logger.Info("New queue metadata key not found, attempting to load legacy format.")
 		if err = pq.loadLegacyMetadata(ctx); err != nil {
@@ -186,7 +189,13 @@ func (pq *persistentQueue[T]) loadQueueMetadata(ctx context.Context) error {
 	}
 
 	if err := proto.Unmarshal(buf, &pq.metadata); err != nil {
-		return err
+		return fmt.Errorf("invalid consolidated queue metadata encoding: %w", err)
+	}
+	// A successfully decoded protobuf can still contain impossible indices.
+	// Reject this before the first write rather than making unknown payloads
+	// unreachable or wrapping the queue length calculation.
+	if pq.metadata.ReadIndex > pq.metadata.WriteIndex {
+		return fmt.Errorf("invalid persistent queue metadata: read index %d exceeds write index %d", pq.metadata.ReadIndex, pq.metadata.WriteIndex)
 	}
 
 	pq.logger.Info("Loaded queue metadata",
