@@ -37,3 +37,7 @@ Original bug report and its reproducer belong to the upstream issue author. Sear
 ## Environment limitations
 
 The execution container had Go `1.23.2`, while the upstream guide states Go `1.25.x`, and it had no working DNS access to GitHub for a complete checkout. The present results therefore **must not** be described as a native OpenTelemetry execution or an integration fix. Do not patch upstream on an old/runtime-incompatible checkout. This mission's status is `SOURCE_STATIC_MATCH / RUNTIME_NOT_RUN / PATCH_NOT_PREPARED / UPSTREAM_NOT_CONTACTED`.
+
+## Subsequent evidence (R2; do not retroactively replace R1 finding)
+
+A separate native reproduction and controls were completed on 2026-11-13 after this R1 source-only record. See the [R2 scoped result and exact test provenance](r2/R2_RESULT.md), [actual 27-file raw-evidence SHA-256 manifest](r2/SHA256SUMS.txt), [permanent executed job log](r2/github_actions_run_43440549340_job_131936727684.log), and [original runtime results](r2/runtime_results.json). The R2 run reproduced the reported failure on the separately pinned contrib release image with three readiness-only controls. No code fix, GREEN-on-patch, restart migration test or independent assurance has been performed. R1 remains a source-only historical observation.
