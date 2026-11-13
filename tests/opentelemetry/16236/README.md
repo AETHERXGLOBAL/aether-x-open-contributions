@@ -29,3 +29,7 @@ GitHub Actions will archive **real** Go stdout/stderr, exact tested upstream SHA
 ### Upstream AI authorship and scope
 
 OpenTelemetry's `AGENTS.md` prohibits AI-authored upstream issue/PR comments and descriptions, and requires maintainer agreement on the proposed implementation approach before code is submitted. **No generated text may be copied as a purported human-authored upstream PR description.** This is an internal technical record; no external publication, attribution to the original reporter's work, or main merge is implied. `AGENTS.md` and AETHER governance remain authoritative.
+
+## Verified R1 follow-up (2026-11-13)
+
+The actual GitHub Go test run has now completed. The authoritative result is [R1_RESULT.md](r1/R1_RESULT.md), mutually linked to [permanent original SHA-256 evidence](r1/SHA256SUMS.txt) and the [raw original Go test output](r1/recovery_cut.log). **Verdict: `RED_REPRODUCED_SCOPED`**, not a patch or GREEN certification. Positive control 3/3 IDs survived; crash-cut test retained 1/3 IDs. The evidence is from synthetic transactional storage on actual Go baseline, not bbolt. No external PR/comment or independent Test Architect signoff has been performed.
