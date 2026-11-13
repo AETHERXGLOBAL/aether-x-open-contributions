@@ -21,6 +21,12 @@
 | NVIDIA/aicr | `UPSTREAM_REVIEWER_ACKNOWLEDGED_GAP` — upstream fix independently merged; our suggested extra test **not** merged | [Reviewer note](https://github.com/NVIDIA/aicr/pull/3539#issuecomment-6547084760) · [Merge commit](https://github.com/NVIDIA/aicr/commit/3013757e14742640032148fb84c42e745ea00399) |
 | redis/node-redis | `UPSTREAM_AUTHOR_IMPLEMENTED_TEST_ON_CLOSED_PR` | [View original](https://github.com/redis/node-redis/pull/3564#issuecomment-6544676687) |
 
+### Dated follow-up — google/gvisor #16723 (13 November 2026)
+
+The original [AETHER technical proposal, catalog ID C01-13](https://github.com/google/gvisor/issues/16723#issuecomment-6519314174), identified leader-only FD discovery as a testable boundary. [Upstream participant AlanFokCo executed the proposed controls](https://github.com/google/gvisor/issues/16723#issuecomment-6844027148) and reported that a private-FD CUDA-active thread group was missed, but that checkpoint save **failed closed** in the tested mapped-memory case. Their experimental per-task patch still met CUDA driver error 304; an unmapped-memory variant remains **untested**. AETHER [acknowledged the result](https://github.com/google/gvisor/issues/16723#issuecomment-6853086416).
+
+**Dated outcome:** `UPSTREAM_RELATED_TEST_REPORTED` (upstream participant-reported, not AETHER native test, adopted code, upstream merge, demonstrated silent corruption, Google endorsement or partnership). [Read exact evidence and scope](../docs/STATUS_UPDATE_2026-11-13_GVISOR_16723.md). This addition does not change the eight-case **3 November historical snapshot** or historical `C01-13` classification.
+
 ### NVIDIA #3539 — completed upstream outcome, no outstanding AETHER submission
 
 - **Upstream status:** [PR #3539](https://github.com/NVIDIA/aicr/pull/3539) merged and closed on **2026-11-01**; merge commit [`3013757e14742640032148fb84c42e745ea00399`](https://github.com/NVIDIA/aicr/commit/3013757e14742640032148fb84c42e745ea00399), authored upstream by `mohityadav8`.
