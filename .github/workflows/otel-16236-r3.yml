@@ -31,7 +31,6 @@ jobs:
           sha256sum /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/persistent_queue.go | tee tests/opentelemetry/16236/r3_evidence/upstream_source_sha256.txt
           test "$(sha256sum /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/persistent_queue.go | awk '{print $1}')" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
           cp tests/opentelemetry/16236/axg_recovery_contract_test.go /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_recovery_contract_test.go
-          cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_recovery_r2_test.go
           cp tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go
           sha256sum tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go > tests/opentelemetry/16236/r3_evidence/native_fixture_sha256.txt
           sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go > tests/opentelemetry/16236/r3_evidence/candidate_sha256.txt
@@ -65,6 +64,7 @@ jobs:
           out=tests/opentelemetry/16236/r3_evidence
           q=/tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue
           cp tests/opentelemetry/16236/r2/persistent_queue_candidate.go "$q/persistent_queue.go"
+          cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"
           sha256sum "$q/persistent_queue.go" > "$out/installed_candidate_sha256.txt"
           test "$(sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go | awk '{print $1}')" = "$(sha256sum "$q/persistent_queue.go" | awk '{print $1}')"
       - name: Native bbolt three-cut test with real SIGKILL and fresh reopen
