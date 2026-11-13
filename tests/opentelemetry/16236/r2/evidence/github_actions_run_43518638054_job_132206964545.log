@@ -1,0 +1,424 @@
+﻿2026-11-13T22:21:43.9714551Z Current runner version: '2.338.2'
+2026-11-13T22:21:43.9733867Z ##[group]Runner Image Provisioner
+2026-11-13T22:21:43.9734606Z Hosted Compute Agent
+2026-11-13T22:21:43.9735037Z Version: 20261103.629
+2026-11-13T22:21:43.9735520Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-13T22:21:43.9736094Z Build Date: 2026-11-03T17:26:59Z
+2026-11-13T22:21:43.9736585Z Worker ID: {3fa281c6-a789-46c4-bb08-508b0d7130ed}
+2026-11-13T22:21:43.9737156Z Region: us-east-1
+2026-11-13T22:21:43.9737860Z Cloud: AWS
+2026-11-13T22:21:43.9738254Z ##[endgroup]
+2026-11-13T22:21:43.9739412Z ##[group]Operating System
+2026-11-13T22:21:43.9739884Z Ubuntu
+2026-11-13T22:21:43.9740287Z 24.04.5
+2026-11-13T22:21:43.9740665Z LTS
+2026-11-13T22:21:43.9741035Z ##[endgroup]
+2026-11-13T22:21:43.9741501Z ##[group]Runner Image
+2026-11-13T22:21:43.9741948Z Image: ubuntu-24.04
+2026-11-13T22:21:43.9742370Z Version: 20261111.127.1
+2026-11-13T22:21:43.9743333Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-13T22:21:43.9744486Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+2026-11-13T22:21:43.9745221Z ##[endgroup]
+2026-11-13T22:21:43.9746045Z ##[group]GITHUB_TOKEN Permissions
+2026-11-13T22:21:43.9747980Z Contents: read
+2026-11-13T22:21:43.9748442Z Metadata: read
+2026-11-13T22:21:43.9748855Z ##[endgroup]
+2026-11-13T22:21:43.9750419Z Secret source: Actions
+2026-11-13T22:21:43.9751141Z Cache mode: write
+2026-11-13T22:21:43.9751688Z Prepare workflow directory
+2026-11-13T22:21:43.9982034Z Prepare all required actions
+2026-11-13T22:21:44.0018921Z Getting action download info
+2026-11-13T22:21:44.1563148Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-13T22:21:45.8565899Z Download action repository 'actions/setup-go@v6' (SHA:924ae3a1cded613372ab5595356fb5720e22ba16)
+2026-11-13T22:21:45.9953146Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-13T22:21:46.2880226Z Complete job name: recovery-spike
+2026-11-13T22:21:46.3488667Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-13T22:21:46.3489286Z with:
+2026-11-13T22:21:46.3489559Z   persist-credentials: false
+2026-11-13T22:21:46.3489984Z   repository: AETHERXGLOBAL/aether-x-open-contributions
+2026-11-13T22:21:46.3491860Z   token: ***
+2026-11-13T22:21:46.3492128Z   ssh-strict: true
+2026-11-13T22:21:46.3492401Z   ssh-user: git
+2026-11-13T22:21:46.3492669Z   clean: true
+2026-11-13T22:21:46.3492990Z   sparse-checkout-cone-mode: true
+2026-11-13T22:21:46.3493296Z   fetch-depth: 1
+2026-11-13T22:21:46.3493551Z   fetch-tags: false
+2026-11-13T22:21:46.3493886Z   show-progress: true
+2026-11-13T22:21:46.3494156Z   lfs: false
+2026-11-13T22:21:46.3494431Z   submodules: false
+2026-11-13T22:21:46.3494699Z   set-safe-directory: true
+2026-11-13T22:21:46.3494980Z   allow-unsafe-pr-checkout: false
+2026-11-13T22:21:46.3495391Z ##[endgroup]
+2026-11-13T22:21:48.8825311Z Syncing repository: AETHERXGLOBAL/aether-x-open-contributions
+2026-11-13T22:21:48.8826989Z ##[group]Getting Git version info
+2026-11-13T22:21:48.8827711Z Working directory is '/home/runner/work/aether-x-open-contributions/aether-x-open-contributions'
+2026-11-13T22:21:48.8828550Z [command]/usr/bin/git version
+2026-11-13T22:21:49.0056710Z git version 2.56.1
+2026-11-13T22:21:49.0071192Z ##[endgroup]
+2026-11-13T22:21:49.0083306Z Temporarily overriding HOME='/home/runner/work/_temp/3c9dfaf2-4e29-491f-a2d6-2deb6573cf27' before making global git config changes
+2026-11-13T22:21:49.0084385Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-13T22:21:49.0087756Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aether-x-open-contributions/aether-x-open-contributions
+2026-11-13T22:21:49.0528700Z Deleting the contents of '/home/runner/work/aether-x-open-contributions/aether-x-open-contributions'
+2026-11-13T22:21:49.0531265Z ##[group]Initializing the repository
+2026-11-13T22:21:49.0535577Z [command]/usr/bin/git init /home/runner/work/aether-x-open-contributions/aether-x-open-contributions
+2026-11-13T22:21:49.1061737Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-13T22:21:49.1062356Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-13T22:21:49.1062835Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-13T22:21:49.1063277Z hint: call:
+2026-11-13T22:21:49.1063558Z hint:
+2026-11-13T22:21:49.1063918Z hint: 	git config --global init.defaultBranch <name>
+2026-11-13T22:21:49.1064256Z hint:
+2026-11-13T22:21:49.1064590Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-13T22:21:49.1065063Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-13T22:21:49.1065485Z hint:
+2026-11-13T22:21:49.1065749Z hint: 	git branch -m <name>
+2026-11-13T22:21:49.1066037Z hint:
+2026-11-13T22:21:49.1066449Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-13T22:21:49.1076032Z Initialized empty Git repository in /home/runner/work/aether-x-open-contributions/aether-x-open-contributions/.git/
+2026-11-13T22:21:49.1083983Z [command]/usr/bin/git remote add origin https://github.com/AETHERXGLOBAL/aether-x-open-contributions
+2026-11-13T22:21:49.1127956Z ##[endgroup]
+2026-11-13T22:21:49.1128476Z ##[group]Disabling automatic garbage collection
+2026-11-13T22:21:49.1131396Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-13T22:21:49.1155123Z ##[endgroup]
+2026-11-13T22:21:49.1155713Z ##[group]Setting up auth
+2026-11-13T22:21:49.1160439Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T22:21:49.1190625Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T22:21:49.3276150Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-13T22:21:49.3304813Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T22:21:49.3455828Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T22:21:49.3480847Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T22:21:49.3630534Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-13T22:21:49.3654759Z ##[endgroup]
+2026-11-13T22:21:49.3655383Z ##[group]Fetching the repository
+2026-11-13T22:21:49.3664800Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +8a9715236aee3babbcea7bb464352ad56644d9e1:refs/remotes/pull/22/merge
+2026-11-13T22:21:49.6713181Z From https://github.com/AETHERXGLOBAL/aether-x-open-contributions
+2026-11-13T22:21:49.6713811Z  * [new ref]         8a9715236aee3babbcea7bb464352ad56644d9e1 -> pull/22/merge
+2026-11-13T22:21:49.6719034Z ##[endgroup]
+2026-11-13T22:21:49.6719564Z ##[group]Determining the checkout info
+2026-11-13T22:21:49.6720025Z ##[endgroup]
+2026-11-13T22:21:49.6733728Z [command]/usr/bin/git sparse-checkout disable
+2026-11-13T22:21:49.6798714Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-13T22:21:49.6811485Z ##[group]Checking out the ref
+2026-11-13T22:21:49.6815184Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/22/merge
+2026-11-13T22:21:49.6895236Z Note: switching to 'refs/remotes/pull/22/merge'.
+2026-11-13T22:21:49.6895617Z 
+2026-11-13T22:21:49.6895812Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-11-13T22:21:49.6896253Z changes and commit them, and you can discard any commits you make in this
+2026-11-13T22:21:49.6896821Z state without impacting any branches by switching back to a branch.
+2026-11-13T22:21:49.6897092Z 
+2026-11-13T22:21:49.6897556Z If you want to create a new branch to retain commits you create, you may
+2026-11-13T22:21:49.6897973Z do so (now or later) by using -c with the switch command. Example:
+2026-11-13T22:21:49.6898161Z 
+2026-11-13T22:21:49.6898463Z   git switch -c <new-branch-name>
+2026-11-13T22:21:49.6898656Z 
+2026-11-13T22:21:49.6898760Z Or undo this operation with:
+2026-11-13T22:21:49.6898926Z 
+2026-11-13T22:21:49.6899032Z   git switch -
+2026-11-13T22:21:49.6899200Z 
+2026-11-13T22:21:49.6899378Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-11-13T22:21:49.6899641Z 
+2026-11-13T22:21:49.6899927Z HEAD is now at 8a97152 Merge 7ef6689935c199e120ad1823d6ad652ce9f5b044 into e6f7262295ac707f39f1992da43581bab30d4e5a
+2026-11-13T22:21:49.6906992Z ##[endgroup]
+2026-11-13T22:21:49.6939715Z [command]/usr/bin/git log -1 --format=%H
+2026-11-13T22:21:49.6954753Z 8a9715236aee3babbcea7bb464352ad56644d9e1
+2026-11-13T22:21:49.6960952Z ##[group]Removing auth
+2026-11-13T22:21:49.6964637Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T22:21:49.6986816Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T22:21:49.7136396Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-13T22:21:49.7156939Z http.https://github.com/.extraheader
+2026-11-13T22:21:49.7161278Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-13T22:21:49.7182888Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T22:21:49.7328254Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T22:21:49.7349694Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T22:21:49.7489419Z ##[endgroup]
+2026-11-13T22:21:49.7637920Z ##[group]Run set -euo pipefail
+2026-11-13T22:21:49.7638363Z [36;1mset -euo pipefail[0m
+2026-11-13T22:21:49.7638716Z [36;1mmkdir -p tests/opentelemetry/16236/r2_evidence[0m
+2026-11-13T22:21:49.7639057Z [36;1mgit init -q /tmp/otel-16236-candidate[0m
+2026-11-13T22:21:49.7639552Z [36;1mgit -C /tmp/otel-16236-candidate remote add origin https://github.com/open-telemetry/opentelemetry-collector.git[0m
+2026-11-13T22:21:49.7640167Z [36;1mgit -C /tmp/otel-16236-candidate fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0[0m
+2026-11-13T22:21:49.7640656Z [36;1mgit -C /tmp/otel-16236-candidate checkout -q --detach FETCH_HEAD[0m
+2026-11-13T22:21:49.7641183Z [36;1mtest "$(git -C /tmp/otel-16236-candidate rev-parse HEAD)" = '572057cde7e9bbe3aed6e5e3e8f16290d487f7d0'[0m
+2026-11-13T22:21:49.7641762Z [36;1mgit -C /tmp/otel-16236-candidate rev-parse HEAD > tests/opentelemetry/16236/r2_evidence/upstream_head.txt[0m
+2026-11-13T22:21:49.7642613Z [36;1msha256sum /tmp/otel-16236-candidate/exporter/exporterhelper/internal/queue/persistent_queue.go > tests/opentelemetry/16236/r2_evidence/baseline_source_sha256.txt[0m
+2026-11-13T22:21:49.7643433Z [36;1mtest "$(cut -d' ' -f1 tests/opentelemetry/16236/r2_evidence/baseline_source_sha256.txt)" = 'c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4'[0m
+2026-11-13T22:21:49.9490888Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:21:49.9491231Z ##[endgroup]
+2026-11-13T22:21:50.6964447Z From https://github.com/open-telemetry/opentelemetry-collector
+2026-11-13T22:21:50.6964953Z  * branch            572057cde7e9bbe3aed6e5e3e8f16290d487f7d0 -> FETCH_HEAD
+2026-11-13T22:21:50.8157841Z ##[group]Run actions/setup-go@v6
+2026-11-13T22:21:50.8158202Z with:
+2026-11-13T22:21:50.8158372Z   go-version: 1.26.0
+2026-11-13T22:21:50.8158548Z   cache: false
+2026-11-13T22:21:50.8158713Z   check-latest: false
+2026-11-13T22:21:50.8160409Z   token: ***
+2026-11-13T22:21:50.8160573Z ##[endgroup]
+2026-11-13T22:21:50.9452131Z Setup go version spec 1.26.0
+2026-11-13T22:21:50.9461229Z Attempting to download 1.26.0...
+2026-11-13T22:21:51.5071083Z matching 1.26.0...
+2026-11-13T22:21:51.5101160Z Acquiring 1.26.0 from https://github.com/actions/go-versions/releases/download/1.26.0-21889650668/go-1.26.0-linux-x64.tar.gz
+2026-11-13T22:21:51.9402871Z Extracting Go...
+2026-11-13T22:21:51.9478793Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/eb10a3d3-db23-4fe5-9190-b8b1e05c7236 -f /home/runner/work/_temp/b20360e6-ff07-4af6-958f-8f554db00b85
+2026-11-13T22:21:53.2225623Z Successfully extracted go to /home/runner/work/_temp/eb10a3d3-db23-4fe5-9190-b8b1e05c7236
+2026-11-13T22:21:53.2226129Z Adding to the cache ...
+2026-11-13T22:21:55.6293806Z Successfully cached go to /opt/hostedtoolcache/go/1.26.0/x64
+2026-11-13T22:21:55.6294808Z Added go to the path
+2026-11-13T22:21:55.6296645Z Successfully set up Go version 1.26.0
+2026-11-13T22:21:55.6438960Z go version go1.26.0 linux/amd64
+2026-11-13T22:21:55.6439137Z 
+2026-11-13T22:21:55.6439391Z ##[group]go env
+2026-11-13T22:21:56.7001343Z AR='ar'
+2026-11-13T22:21:56.7001598Z CC='gcc'
+2026-11-13T22:21:56.7001819Z CGO_CFLAGS='-O2 -g'
+2026-11-13T22:21:56.7002013Z CGO_CPPFLAGS=''
+2026-11-13T22:21:56.7002192Z CGO_CXXFLAGS='-O2 -g'
+2026-11-13T22:21:56.7002373Z CGO_ENABLED='1'
+2026-11-13T22:21:56.7002537Z CGO_FFLAGS='-O2 -g'
+2026-11-13T22:21:56.7002703Z CGO_LDFLAGS='-O2 -g'
+2026-11-13T22:21:56.7002873Z CXX='g++'
+2026-11-13T22:21:56.7003031Z GCCGO='gccgo'
+2026-11-13T22:21:56.7003193Z GO111MODULE=''
+2026-11-13T22:21:56.7003361Z GOAMD64='v1'
+2026-11-13T22:21:56.7003518Z GOARCH='amd64'
+2026-11-13T22:21:56.7003709Z GOAUTH='netrc'
+2026-11-13T22:21:56.7003862Z GOBIN=''
+2026-11-13T22:21:56.7004040Z GOCACHE='/home/runner/.cache/go-build'
+2026-11-13T22:21:56.7004269Z GOCACHEPROG=''
+2026-11-13T22:21:56.7004428Z GODEBUG=''
+2026-11-13T22:21:56.7004599Z GOENV='/home/runner/.config/go/env'
+2026-11-13T22:21:56.7004799Z GOEXE=''
+2026-11-13T22:21:56.7004952Z GOEXPERIMENT=''
+2026-11-13T22:21:56.7005119Z GOFIPS140='off'
+2026-11-13T22:21:56.7005288Z GOFLAGS=''
+2026-11-13T22:21:56.7005783Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build449611524=/tmp/go-build -gno-record-gcc-switches'
+2026-11-13T22:21:56.7006259Z GOHOSTARCH='amd64'
+2026-11-13T22:21:56.7006426Z GOHOSTOS='linux'
+2026-11-13T22:21:56.7006591Z GOINSECURE=''
+2026-11-13T22:21:56.7006782Z GOMOD='/dev/null'
+2026-11-13T22:21:56.7006969Z GOMODCACHE='/home/runner/go/pkg/mod'
+2026-11-13T22:21:56.7007172Z GONOPROXY=''
+2026-11-13T22:21:56.7007479Z GONOSUMDB=''
+2026-11-13T22:21:56.7007638Z GOOS='linux'
+2026-11-13T22:21:56.7007839Z GOPATH='/home/runner/go'
+2026-11-13T22:21:56.7008183Z GOPRIVATE=''
+2026-11-13T22:21:56.7008445Z GOPROXY='https://proxy.golang.org,direct'
+2026-11-13T22:21:56.7008701Z GOROOT='/opt/hostedtoolcache/go/1.26.0/x64'
+2026-11-13T22:21:56.7008931Z GOSUMDB='sum.golang.org'
+2026-11-13T22:21:56.7009118Z GOTELEMETRY='local'
+2026-11-13T22:21:56.7009326Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+2026-11-13T22:21:56.7009559Z GOTMPDIR=''
+2026-11-13T22:21:56.7009716Z GOTOOLCHAIN='local'
+2026-11-13T22:21:56.7009966Z GOTOOLDIR='/opt/hostedtoolcache/go/1.26.0/x64/pkg/tool/linux_amd64'
+2026-11-13T22:21:56.7010223Z GOVCS=''
+2026-11-13T22:21:56.7010378Z GOVERSION='go1.26.0'
+2026-11-13T22:21:56.7010542Z GOWORK=''
+2026-11-13T22:21:56.7010707Z PKG_CONFIG='pkg-config'
+2026-11-13T22:21:56.7010818Z 
+2026-11-13T22:21:56.7011154Z ##[endgroup]
+2026-11-13T22:21:56.7121348Z ##[group]Run set -uo pipefail
+2026-11-13T22:21:56.7121652Z [36;1mset -uo pipefail[0m
+2026-11-13T22:21:56.7121874Z [36;1mout=tests/opentelemetry/16236/r2_evidence[0m
+2026-11-13T22:21:56.7122123Z [36;1mgo version > "$out/go_version.txt"[0m
+2026-11-13T22:21:56.7122702Z [36;1mcp tests/opentelemetry/16236/axg_recovery_contract_test.go /tmp/otel-16236-candidate/exporter/exporterhelper/internal/queue/axg_recovery_contract_test.go[0m
+2026-11-13T22:21:56.7123177Z [36;1mset +e[0m
+2026-11-13T22:21:56.7123719Z [36;1mtimeout 420s go -C /tmp/otel-16236-candidate/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGRecoveryCutAfterCommittedRetirement$' ./internal/queue > "$out/baseline_red.log" 2>&1[0m
+2026-11-13T22:21:56.7124294Z [36;1mcode=$?[0m
+2026-11-13T22:21:56.7124458Z [36;1mset -e[0m
+2026-11-13T22:21:56.7124643Z [36;1mecho "$code" > "$out/baseline_red_exit.txt"[0m
+2026-11-13T22:21:56.7124881Z [36;1mtail -24 "$out/baseline_red.log"[0m
+2026-11-13T22:21:56.7153825Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:21:56.7154061Z env:
+2026-11-13T22:21:56.7154231Z   GOTOOLCHAIN: local
+2026-11-13T22:21:56.7154417Z ##[endgroup]
+2026-11-13T22:22:17.2050819Z go: downloading github.com/hashicorp/go-version v1.9.0
+2026-11-13T22:22:17.2051354Z go: downloading github.com/cespare/xxhash/v2 v2.3.0
+2026-11-13T22:22:17.2051738Z go: downloading github.com/go-viper/mapstructure/v2 v2.5.0
+2026-11-13T22:22:17.2052325Z go: downloading github.com/gobwas/glob v0.2.3
+2026-11-13T22:22:17.2052745Z go: downloading github.com/knadh/koanf/maps v0.1.3
+2026-11-13T22:22:17.2053111Z go: downloading github.com/knadh/koanf/providers/confmap v1.0.1
+2026-11-13T22:22:17.2053399Z go: downloading github.com/knadh/koanf/v2 v2.4.1
+2026-11-13T22:22:17.2053644Z go: downloading golang.org/x/sys v0.48.0
+2026-11-13T22:22:17.2053879Z go: downloading github.com/go-logr/logr v1.4.4
+2026-11-13T22:22:17.2054145Z go: downloading go.opentelemetry.io/otel/log v1.47.0
+2026-11-13T22:22:17.2054417Z go: downloading github.com/go-logr/stdr v1.2.2
+2026-11-13T22:22:17.2054669Z go: downloading go.opentelemetry.io/auto/sdk v1.2.1
+2026-11-13T22:22:17.2054935Z go: downloading github.com/json-iterator/go v1.1.12
+2026-11-13T22:22:17.2055208Z go: downloading github.com/mitchellh/copystructure v1.2.0
+2026-11-13T22:22:17.2055557Z go: downloading github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
+2026-11-13T22:22:17.2055941Z go: downloading github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee
+2026-11-13T22:22:17.2056268Z go: downloading github.com/mitchellh/reflectwalk v1.0.2
+2026-11-13T22:22:17.2056646Z go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20260817212433-ac3dfec99bb1
+2026-11-13T22:22:17.2057014Z === RUN   TestAXGRecoveryCutAfterCommittedRetirement
+2026-11-13T22:22:17.2057799Z     axg_recovery_contract_test.go:155: AXG_LOSS_CONFIRMED after committed retirement and restart: want=[11 22 33] got=[33]
+2026-11-13T22:22:17.2058265Z --- FAIL: TestAXGRecoveryCutAfterCommittedRetirement (0.00s)
+2026-11-13T22:22:17.2058527Z FAIL
+2026-11-13T22:22:17.2058803Z FAIL	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.003s
+2026-11-13T22:22:17.2059092Z FAIL
+2026-11-13T22:22:17.2084178Z ##[group]Run set -euo pipefail
+2026-11-13T22:22:17.2084440Z [36;1mset -euo pipefail[0m
+2026-11-13T22:22:17.2084671Z [36;1mout=tests/opentelemetry/16236/r2_evidence[0m
+2026-11-13T22:22:17.2084984Z [36;1mq=/tmp/otel-16236-candidate/exporter/exporterhelper/internal/queue[0m
+2026-11-13T22:22:17.2085382Z [36;1mtest -z "$(gofmt -l tests/opentelemetry/16236/r2/persistent_queue_candidate.go)"[0m
+2026-11-13T22:22:17.2085809Z [36;1mcp tests/opentelemetry/16236/r2/persistent_queue_candidate.go "$q/persistent_queue.go"[0m
+2026-11-13T22:22:17.2086240Z [36;1mcp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"[0m
+2026-11-13T22:22:17.2086633Z [36;1msha256sum "$q/persistent_queue.go" > "$out/candidate_source_sha256.txt"[0m
+2026-11-13T22:22:17.2086980Z [36;1msha256sum "$q/axg_recovery_r2_test.go" > "$out/r2_test_sha256.txt"[0m
+2026-11-13T22:22:17.2087730Z [36;1mgit -C /tmp/otel-16236-candidate diff -- exporter/exporterhelper/internal/queue/persistent_queue.go > "$out/candidate_source.diff"[0m
+2026-11-13T22:22:17.2088190Z [36;1mtest -s "$out/candidate_source.diff"[0m
+2026-11-13T22:22:17.2114064Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:22:17.2114286Z env:
+2026-11-13T22:22:17.2114451Z   GOTOOLCHAIN: local
+2026-11-13T22:22:17.2114622Z ##[endgroup]
+2026-11-13T22:22:17.2275975Z ##[group]Run set -uo pipefail
+2026-11-13T22:22:17.2276206Z [36;1mset -uo pipefail[0m
+2026-11-13T22:22:17.2276481Z [36;1mout=tests/opentelemetry/16236/r2_evidence[0m
+2026-11-13T22:22:17.2276708Z [36;1mset +e[0m
+2026-11-13T22:22:17.2277210Z [36;1mtimeout 420s go -C /tmp/otel-16236-candidate/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGRecovery' ./internal/queue > "$out/candidate_focused_green.log" 2>&1[0m
+2026-11-13T22:22:17.2278231Z [36;1mcode=$?[0m
+2026-11-13T22:22:17.2278419Z [36;1mset -e[0m
+2026-11-13T22:22:17.2278631Z [36;1mecho "$code" > "$out/candidate_focused_exit.txt"[0m
+2026-11-13T22:22:17.2278912Z [36;1mtail -95 "$out/candidate_focused_green.log"[0m
+2026-11-13T22:22:17.2299643Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:22:17.2299869Z env:
+2026-11-13T22:22:17.2300036Z   GOTOOLCHAIN: local
+2026-11-13T22:22:17.2300211Z ##[endgroup]
+2026-11-13T22:22:18.4490670Z === RUN   TestAXGRecoveryUninterruptedControl
+2026-11-13T22:22:18.4491513Z     axg_recovery_contract_test.go:133: AXG_CONTROL_OK observed_ids=[11 22 33]
+2026-11-13T22:22:18.4491978Z --- PASS: TestAXGRecoveryUninterruptedControl (0.00s)
+2026-11-13T22:22:18.4492408Z === RUN   TestAXGRecoveryCutAfterCommittedRetirement
+2026-11-13T22:22:18.4492889Z     axg_recovery_contract_test.go:157: AXG_CRASH_RECOVERY_SAFE ids=[11 22 33]
+2026-11-13T22:22:18.4493387Z --- PASS: TestAXGRecoveryCutAfterCommittedRetirement (0.00s)
+2026-11-13T22:22:18.4493779Z === RUN   TestAXGRecoveryTwoInterruptedCommits
+2026-11-13T22:22:18.4494174Z     axg_recovery_r2_test.go:47: AXG_CUT_1_COMMITTED
+2026-11-13T22:22:18.4494543Z     axg_recovery_r2_test.go:47: AXG_CUT_2_COMMITTED
+2026-11-13T22:22:18.4494978Z     axg_recovery_r2_test.go:50: AXG_REPEATED_CRASH_SAFE
+2026-11-13T22:22:18.4495276Z --- PASS: TestAXGRecoveryTwoInterruptedCommits (0.00s)
+2026-11-13T22:22:18.4495579Z === RUN   TestAXGRecoveryLegacyCommittedCut
+2026-11-13T22:22:18.4495885Z     axg_recovery_r2_test.go:66: AXG_LEGACY_CRASH_SAFE
+2026-11-13T22:22:18.4496171Z --- PASS: TestAXGRecoveryLegacyCommittedCut (0.00s)
+2026-11-13T22:22:18.4496468Z === RUN   TestAXGRecoveryRejectsUncommittedBatchFailure
+2026-11-13T22:22:18.4496791Z     axg_recovery_r2_test.go:96: AXG_ERROR_FAIL_CLOSED
+2026-11-13T22:22:18.4497121Z --- PASS: TestAXGRecoveryRejectsUncommittedBatchFailure (0.00s)
+2026-11-13T22:22:18.4497617Z PASS
+2026-11-13T22:22:18.4497937Z ok  	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.004s
+2026-11-13T22:22:18.4521214Z ##[group]Run set -uo pipefail
+2026-11-13T22:22:18.4521500Z [36;1mset -uo pipefail[0m
+2026-11-13T22:22:18.4521768Z [36;1mout=tests/opentelemetry/16236/r2_evidence[0m
+2026-11-13T22:22:18.4522038Z [36;1mset +e[0m
+2026-11-13T22:22:18.4522492Z [36;1mtimeout 420s go -C /tmp/otel-16236-candidate/exporter/exporterhelper test -count=1 -timeout=6m ./internal/queue > "$out/upstream_queue_regression.log" 2>&1[0m
+2026-11-13T22:22:18.4522985Z [36;1mcode=$?[0m
+2026-11-13T22:22:18.4523143Z [36;1mset -e[0m
+2026-11-13T22:22:18.4523353Z [36;1mecho "$code" > "$out/upstream_queue_regression_exit.txt"[0m
+2026-11-13T22:22:18.4523641Z [36;1mtail -100 "$out/upstream_queue_regression.log"[0m
+2026-11-13T22:22:18.4549914Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:22:18.4550129Z env:
+2026-11-13T22:22:18.4550297Z   GOTOOLCHAIN: local
+2026-11-13T22:22:18.4550472Z ##[endgroup]
+2026-11-13T22:22:24.9749282Z ok  	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	6.136s
+2026-11-13T22:22:24.9778141Z ##[group]Run set -euo pipefail
+2026-11-13T22:22:24.9778463Z [36;1mset -euo pipefail[0m
+2026-11-13T22:22:24.9778677Z [36;1mcd tests/opentelemetry/16236/r2_evidence[0m
+2026-11-13T22:22:24.9778911Z [36;1mpython3 - <<'PY'[0m
+2026-11-13T22:22:24.9779091Z [36;1mimport json[0m
+2026-11-13T22:22:24.9779346Z [36;1mfrom pathlib import Path[0m
+2026-11-13T22:22:24.9779650Z [36;1mdef v(n):[0m
+2026-11-13T22:22:24.9779822Z [36;1m    p=Path(n)[0m
+2026-11-13T22:22:24.9780051Z [36;1m    return p.read_text().strip() if p.is_file() else None[0m
+2026-11-13T22:22:24.9780328Z [36;1mbaseline=v('baseline_red.log') or ''[0m
+2026-11-13T22:22:24.9780579Z [36;1mgreen=v('candidate_focused_green.log') or ''[0m
+2026-11-13T22:22:24.9780802Z [36;1mr={[0m
+2026-11-13T22:22:24.9781023Z [36;1m    "mission":"AXG-OTEL-PERSISTENT-RECOVERY-R2-20261114",[0m
+2026-11-13T22:22:24.9781373Z [36;1m    "upstream_head_expected":"572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",[0m
+2026-11-13T22:22:24.9781727Z [36;1m    "baseline_exit":v("baseline_red_exit.txt"),[0m
+2026-11-13T22:22:24.9782191Z [36;1m    "baseline_actual_loss":"AXG_LOSS_CONFIRMED" in baseline and "--- FAIL: TestAXGRecoveryCutAfterCommittedRetirement" in baseline,[0m
+2026-11-13T22:22:24.9782663Z [36;1m    "candidate_focused_exit":v("candidate_focused_exit.txt"),[0m
+2026-11-13T22:22:24.9782997Z [36;1m    "candidate_package_exit":v("upstream_queue_regression_exit.txt"),[0m
+2026-11-13T22:22:24.9783561Z [36;1m    "candidate_marker":"AXG_CRASH_RECOVERY_SAFE" in green and "AXG_REPEATED_CRASH_SAFE" in green and "AXG_LEGACY_CRASH_SAFE" in green and "AXG_ERROR_FAIL_CLOSED" in green,[0m
+2026-11-13T22:22:24.9784295Z [36;1m    "verification_scope":"synthetic atomic storage client and actual upstream queue Go tests; NOT bbolt process-kill; candidate is NOT upstream-submitted",[0m
+2026-11-13T22:22:24.9784746Z [36;1m}[0m
+2026-11-13T22:22:24.9784935Z [36;1mr['verdict']='R2_CANDIDATE_GREEN_SCOPED' if ([0m
+2026-11-13T22:22:24.9785224Z [36;1m    v("upstream_head.txt")==r['upstream_head_expected'] and[0m
+2026-11-13T22:22:24.9785525Z [36;1m    r['baseline_exit']=='1' and r['baseline_actual_loss'] and[0m
+2026-11-13T22:22:24.9785850Z [36;1m    r['candidate_focused_exit']=='0' and r['candidate_package_exit']=='0'[0m
+2026-11-13T22:22:24.9786206Z [36;1m    and r['candidate_marker'] and bool(v("candidate_source.diff"))[0m
+2026-11-13T22:22:24.9786480Z [36;1m) else 'R2_REVISE'[0m
+2026-11-13T22:22:24.9786758Z [36;1mPath("result.json").write_text(json.dumps(r,sort_keys=True,indent=2)+"\n")[0m
+2026-11-13T22:22:24.9787068Z [36;1mprint(json.dumps(r,sort_keys=True))[0m
+2026-11-13T22:22:24.9787415Z [36;1mPY[0m
+2026-11-13T22:22:24.9814076Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:22:24.9814280Z env:
+2026-11-13T22:22:24.9814447Z   GOTOOLCHAIN: local
+2026-11-13T22:22:24.9814618Z ##[endgroup]
+2026-11-13T22:22:25.0032451Z {"baseline_actual_loss": true, "baseline_exit": "1", "candidate_focused_exit": "0", "candidate_marker": true, "candidate_package_exit": "0", "mission": "AXG-OTEL-PERSISTENT-RECOVERY-R2-20261114", "upstream_head_expected": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0", "verdict": "R2_CANDIDATE_GREEN_SCOPED", "verification_scope": "synthetic atomic storage client and actual upstream queue Go tests; NOT bbolt process-kill; candidate is NOT upstream-submitted"}
+2026-11-13T22:22:25.0083600Z ##[group]Run set -euo pipefail
+2026-11-13T22:22:25.0083897Z [36;1mset -euo pipefail[0m
+2026-11-13T22:22:25.0084121Z [36;1mcd tests/opentelemetry/16236/r2_evidence[0m
+2026-11-13T22:22:25.0084357Z [36;1mpython3 - <<'PY'[0m
+2026-11-13T22:22:25.0084553Z [36;1mfrom pathlib import Path[0m
+2026-11-13T22:22:25.0084750Z [36;1mimport hashlib[0m
+2026-11-13T22:22:25.0084925Z [36;1mp=Path(".")[0m
+2026-11-13T22:22:25.0085197Z [36;1mfiles=sorted(f for f in p.iterdir() if f.is_file() and f.name!="SHA256SUMS.txt")[0m
+2026-11-13T22:22:25.0085524Z [36;1m(p/"SHA256SUMS.txt").write_text("".join([0m
+2026-11-13T22:22:25.0085832Z [36;1m    hashlib.sha256(f.read_bytes()).hexdigest()+"  "+f.name+"\n" for f in files[0m
+2026-11-13T22:22:25.0086114Z [36;1m))[0m
+2026-11-13T22:22:25.0086269Z [36;1mPY[0m
+2026-11-13T22:22:25.0108130Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:22:25.0108332Z env:
+2026-11-13T22:22:25.0108490Z   GOTOOLCHAIN: local
+2026-11-13T22:22:25.0108661Z ##[endgroup]
+2026-11-13T22:22:25.0386259Z ##[group]Run actions/upload-artifact@v4
+2026-11-13T22:22:25.0386580Z with:
+2026-11-13T22:22:25.0386764Z   name: axg-otel-16236-r2-candidate-evidence
+2026-11-13T22:22:25.0387017Z   path: tests/opentelemetry/16236/r2_evidence/
+2026-11-13T22:22:25.0387589Z   retention-days: 30
+2026-11-13T22:22:25.0387961Z   if-no-files-found: error
+2026-11-13T22:22:25.0388158Z   compression-level: 6
+2026-11-13T22:22:25.0388338Z   overwrite: false
+2026-11-13T22:22:25.0388516Z   include-hidden-files: false
+2026-11-13T22:22:25.0388721Z env:
+2026-11-13T22:22:25.0388876Z   GOTOOLCHAIN: local
+2026-11-13T22:22:25.0389047Z ##[endgroup]
+2026-11-13T22:22:25.1624402Z (node:7142) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-13T22:22:25.1624948Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-13T22:22:25.1698893Z With the provided path, there will be 14 files uploaded
+2026-11-13T22:22:25.1703698Z Artifact name is valid!
+2026-11-13T22:22:25.1704113Z Root directory input is valid!
+2026-11-13T22:22:25.5298512Z Beginning upload of artifact content to blob storage
+2026-11-13T22:22:25.5557618Z (node:7142) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-13T22:22:25.5958587Z Uploaded bytes 7277
+2026-11-13T22:22:25.6111248Z Finished uploading artifact content to blob storage!
+2026-11-13T22:22:25.6111853Z SHA256 digest of uploaded artifact zip is b4a130b30bd2c4900278466ae3c6646d9e005856f0570e32bba49d0b26f3595f
+2026-11-13T22:22:25.6113180Z Finalizing artifact upload
+2026-11-13T22:22:25.9354820Z Artifact axg-otel-16236-r2-candidate-evidence.zip successfully finalized. Artifact ID 14081821851
+2026-11-13T22:22:25.9355683Z Artifact axg-otel-16236-r2-candidate-evidence has been successfully uploaded! Final size is 7277 bytes. Artifact ID is 14081821851
+2026-11-13T22:22:25.9356786Z Artifact download URL: https://github.com/AETHERXGLOBAL/aether-x-open-contributions/actions/runs/43518638054/artifacts/14081821851
+2026-11-13T22:22:25.9471623Z ##[group]Run set -euo pipefail
+2026-11-13T22:22:25.9471890Z [36;1mset -euo pipefail[0m
+2026-11-13T22:22:25.9472099Z [36;1mpython3 - <<'PY'[0m
+2026-11-13T22:22:25.9472292Z [36;1mimport json[0m
+2026-11-13T22:22:25.9472480Z [36;1mfrom pathlib import Path[0m
+2026-11-13T22:22:25.9472755Z [36;1mp=Path("tests/opentelemetry/16236/r2_evidence/result.json")[0m
+2026-11-13T22:22:25.9473165Z [36;1mif not p.is_file() or json.loads(p.read_text()).get("verdict")!="R2_CANDIDATE_GREEN_SCOPED":[0m
+2026-11-13T22:22:25.9473632Z [36;1m    raise SystemExit("R2_REVISE: actual proof incomplete; inspect raw evidence, no GREEN claim")[0m
+2026-11-13T22:22:25.9474151Z [36;1mprint("R2_CANDIDATE_GREEN_SCOPED (internal only; NOT independent assurance or native bbolt qualification)")[0m
+2026-11-13T22:22:25.9474538Z [36;1mPY[0m
+2026-11-13T22:22:25.9501019Z shell: /usr/bin/bash -e {0}
+2026-11-13T22:22:25.9501246Z env:
+2026-11-13T22:22:25.9501415Z   GOTOOLCHAIN: local
+2026-11-13T22:22:25.9501639Z ##[endgroup]
+2026-11-13T22:22:25.9717932Z R2_CANDIDATE_GREEN_SCOPED (internal only; NOT independent assurance or native bbolt qualification)
+2026-11-13T22:22:25.9806829Z Post job cleanup.
+2026-11-13T22:22:26.0785613Z Post job cleanup.
+2026-11-13T22:22:26.1542245Z [command]/usr/bin/git version
+2026-11-13T22:22:26.1578576Z git version 2.56.1
+2026-11-13T22:22:26.1619635Z Temporarily overriding HOME='/home/runner/work/_temp/bf20fc8c-6910-46bf-8091-21a929cf171a' before making global git config changes
+2026-11-13T22:22:26.1620888Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-13T22:22:26.1628661Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aether-x-open-contributions/aether-x-open-contributions
+2026-11-13T22:22:26.1654581Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-13T22:22:26.1696757Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-13T22:22:26.1932782Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-13T22:22:26.1979061Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-13T22:22:26.2183388Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-13T22:22:26.2204331Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-13T22:22:26.2475444Z Cleaning up orphan processes
+2026-11-13T22:22:26.2734963Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
