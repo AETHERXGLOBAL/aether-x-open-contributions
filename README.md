@@ -16,6 +16,8 @@ We publish the outcomes and limits of our participation in independent open-sour
 | **[useful-actions #1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536)** — ExecSurface Action version update | **AETHER-authored PR merged** on 29 Sep 2026 | A version update, not a major upstream framework change. |
 | **[Redis #15930](https://github.com/redis/redis/pull/15930)** — AOF consumer regression | **Third-party-authored PR merged on 10 Nov 2026**, with the author explicitly [crediting the AETHER-reported AOF test path](https://github.com/redis/redis/pull/15930#issuecomment-6663086469) | The implementation and included test are the upstream author's work; this does not prove our exact test file was merged or caused the change. |
 
+**Dated evidence — 13 Nov 2026:** [gVisor #16723: CUDA discovery test follow-up](docs/STATUS_UPDATE_2026-11-13_GVISOR_16723.md). [Upstream participant AlanFokCo ran AETHER's proposed negative/positive controls](https://github.com/google/gvisor/issues/16723#issuecomment-6844027148), confirming the private-FD discovery gap but reporting **fail-closed**, not silently corrupting, behavior in the tested workload. The test, harness and patch are upstream participant work, **not** AETHER-authored or Google-endorsed. Historical C01-13 remains unchanged.
+
 Other source-linked cases include an [OpenTelemetry native regression candidate](tests/opentelemetry/README.md), a [Redis native RED/GREEN test candidate](tests/redis/15930/README.md), and an [earlier Cloudflare review](docs/STATUS_UPDATE_2026-11-09.md) preceding a third-party-authored merged fix. The strongest supported outcome and original author are stated separately for each case.
 
 ## Current status: outcomes before activity totals
