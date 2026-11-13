@@ -1,0 +1,19 @@
+=== RUN   TestAXGRecoveryUninterruptedControl
+    axg_recovery_contract_test.go:133: AXG_CONTROL_OK observed_ids=[11 22 33]
+--- PASS: TestAXGRecoveryUninterruptedControl (0.00s)
+=== RUN   TestAXGRecoveryCutAfterCommittedRetirement
+    axg_recovery_contract_test.go:157: AXG_CRASH_RECOVERY_SAFE ids=[11 22 33]
+--- PASS: TestAXGRecoveryCutAfterCommittedRetirement (0.00s)
+=== RUN   TestAXGRecoveryTwoInterruptedCommits
+    axg_recovery_r2_test.go:47: AXG_CUT_1_COMMITTED
+    axg_recovery_r2_test.go:47: AXG_CUT_2_COMMITTED
+    axg_recovery_r2_test.go:50: AXG_REPEATED_CRASH_SAFE
+--- PASS: TestAXGRecoveryTwoInterruptedCommits (0.00s)
+=== RUN   TestAXGRecoveryLegacyCommittedCut
+    axg_recovery_r2_test.go:66: AXG_LEGACY_CRASH_SAFE
+--- PASS: TestAXGRecoveryLegacyCommittedCut (0.00s)
+=== RUN   TestAXGRecoveryRejectsUncommittedBatchFailure
+    axg_recovery_r2_test.go:96: AXG_ERROR_FAIL_CLOSED
+--- PASS: TestAXGRecoveryRejectsUncommittedBatchFailure (0.00s)
+PASS
+ok  	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.004s
