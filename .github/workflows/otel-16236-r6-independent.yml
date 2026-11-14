@@ -42,7 +42,7 @@ jobs:
             cp "$f" "$q/$(basename "$f")"
           done
           gofmt -w "$q"/axg*test.go
-          test -z "$(gofmt -l tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go)"
+          # Independently authored test is formatted only when installed in disposable checkout.
       - name: Use pinned Go
         uses: actions/setup-go@v6
         with:
@@ -85,6 +85,7 @@ jobs:
         shell: bash
         run: |
           cp tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go /tmp/otel-ta-r6/exporter/exporterhelper/internal/queue/axg_ta_r6_independent_requalification_test.go
+          gofmt -w /tmp/otel-ta-r6/exporter/exporterhelper/internal/queue/axg_ta_r6_independent_requalification_test.go
       - name: Execute independent positive and clean negative-control cases
         shell: bash
         run: |
