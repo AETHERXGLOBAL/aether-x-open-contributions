@@ -48,11 +48,6 @@ jobs:
           git add "$dest"
           # .gitignore excludes *.log; force-stage raw log receipts required by AX-TEST-EVIDENCE-001.
           git add -f "$dest"/*.log
-          test "$(git diff --cached --name-only -- "$dest" | grep -c '\.log          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'test(otel-r9): preserve independently verified raw runner evidence'
-          git push origin HEAD:"$GITHUB_REF_NAME"
-)" -ge 5
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'test(otel-r9): preserve independently verified raw runner evidence'
