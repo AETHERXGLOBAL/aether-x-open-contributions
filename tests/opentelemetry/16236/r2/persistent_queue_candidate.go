@@ -197,6 +197,20 @@ func (pq *persistentQueue[T]) loadQueueMetadata(ctx context.Context) error {
 	if pq.metadata.ReadIndex > pq.metadata.WriteIndex {
 		return fmt.Errorf("invalid persistent queue metadata: read index %d exceeds write index %d", pq.metadata.ReadIndex, pq.metadata.WriteIndex)
 	}
+	// Bounded consistency check: an outstanding first queued request must
+	// have a physical payload. This catches the independently reproduced
+	// protobuf-valid qmv0 referencing no stored item. It does NOT prove
+	// every pending index exists and must not be marketed as such.
+	if pq.metadata.ReadIndex < pq.metadata.WriteIndex {
+		firstKey := getItemKey(pq.metadata.ReadIndex)
+		firstPayload, err := pq.client.Get(ctx, firstKey)
+		if err != nil {
+			return fmt.Errorf("verify first persistent queue payload at %s: %w", firstKey, err)
+		}
+		if len(firstPayload) == 0 {
+			return fmt.Errorf("persistent queue metadata references missing first queued payload at %s", firstKey)
+		}
+	}
 
 	pq.logger.Info("Loaded queue metadata",
 		zap.Uint64("readIndex", pq.metadata.ReadIndex),
@@ -260,6 +274,20 @@ func (pq *persistentQueue[T]) loadLegacyMetadata(ctx context.Context) error {
 		}
 		if len(dispatched) != 0 {
 			return fmt.Errorf("incomplete legacy queue metadata: dispatched list exists without read/write indices")
+		}
+		// Without Walker we cannot enumerate arbitrary numeric keys or
+		// distinguish an empty-but-present legacy index from an absent key.
+		// Probe the first write slot: an existing orphan would otherwise be
+		// overwritten by Offer(41) immediately after successful startup.
+		// Later orphan slots are guarded separately at each Offer.
+		if _, ok := pq.client.(storage.Walker); !ok {
+			first, err := pq.client.Get(ctx, getItemKey(0))
+			if err != nil {
+				return fmt.Errorf("inspect legacy queue first numeric slot: %w", err)
+			}
+			if len(first) != 0 {
+				return fmt.Errorf("orphan durable request at key 0 without legacy queue metadata")
+			}
 		}
 		pq.logger.Info("Initializing new persistent queue")
 	case len(riOp.Value) == 0 || len(wiOp.Value) == 0:
