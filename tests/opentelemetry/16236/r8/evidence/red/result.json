@@ -1,0 +1,32 @@
+{
+  "bbolt_version": "go.etcd.io/bbolt v1.5.0",
+  "candidate_sha256": "4b362e244ec5365ee6bfd5e5499bcba4be03078339fc3733943e2c8f71060d93",
+  "contrib_version": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "full_original_exit": "1",
+  "full_original_failures": [
+    "TestPersistentQueue_CorruptedData",
+    "TestPersistentQueue_CorruptedData/corrupted_metadata",
+    "TestPersistentQueue_CorruptedData/corrupted_everything"
+  ],
+  "historical_r5_r6_exit": "0",
+  "independent_R8_signoff": false,
+  "internal_run_head": "25a5b10e2973a524b19013553d8237d26aa478a9",
+  "mission": "AXG-OTEL-16236-R8-LEGACY-ENGINEERING-20261114",
+  "new_ta_r7_exit": "1",
+  "new_ta_r7_failures": [
+    "TestAXGTAR7EmptyButPresentLegacyIndices",
+    "TestAXGTAR7EmptyButPresentLegacyIndices/empty_both",
+    "TestAXGTAR7TrailingGarbageInDispatchArrayFailClosed",
+    "TestAXGTAR7OrphanNumericPayloadWithoutAnyMetadata"
+  ],
+  "previous_r6_and_r7_exit": "0",
+  "r8_exit": "1",
+  "r8_failures": [
+    "TestAXGR8AbsentIndexWithNumericRequestBeyondZeroFailsClosed",
+    "TestAXGR8PresentEmptyLegacyDispatchMarkerNotNewQueue",
+    "TestAXGR8LegacyDispatchZeroCountWithTrailingGarbageFailsClosed"
+  ],
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "upstream_policy_accepted": false,
+  "verdict": "R8_EXPECTED_RED"
+}
