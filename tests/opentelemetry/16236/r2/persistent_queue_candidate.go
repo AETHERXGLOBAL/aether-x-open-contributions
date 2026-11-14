@@ -210,7 +210,33 @@ func (pq *persistentQueue[T]) loadQueueMetadata(ctx context.Context) error {
 
 // TODO: Remove legacy format support after 6 months (target: December 2025)
 func (pq *persistentQueue[T]) loadLegacyMetadata(ctx context.Context) error {
-	// Fallback to legacy individual keys for backward compatibility
+	// The storage.Client Get/Batch contract does not distinguish an absent
+	// key from an existing key with an empty value. An actual file_storage
+	// Walker lets us inspect key existence *without any migration writes*.
+	// Also reject orphaned numeric request keys before treating this store
+	// as new and risking overwrite on the first Offer.
+	var presentRI, presentWI, presentDI, orphanNumeric bool
+	if walker, ok := pq.client.(storage.Walker); ok {
+		if err := walker.Walk(ctx, func(key string, _ []byte) ([]*storage.Operation, error) {
+			switch key {
+			case legacyReadIndexKey:
+				presentRI = true
+			case legacyWriteIndexKey:
+				presentWI = true
+			case legacyCurrentlyDispatchedItemsKey:
+				presentDI = true
+			default:
+				if _, err := strconv.ParseUint(key, 10, 64); err == nil {
+					orphanNumeric = true
+				}
+			}
+			return nil, nil
+		}); err != nil {
+			return fmt.Errorf("inspect legacy metadata and orphan request keys: %w", err)
+		}
+	}
+
+	// Fallback to legacy individual keys for backward compatibility.
 	riOp := storage.GetOperation(legacyReadIndexKey)
 	wiOp := storage.GetOperation(legacyWriteIndexKey)
 
@@ -222,8 +248,12 @@ func (pq *persistentQueue[T]) loadLegacyMetadata(ctx context.Context) error {
 	// requests and overwrite the old keys on the next Offer.
 	switch {
 	case len(riOp.Value) == 0 && len(wiOp.Value) == 0:
-		// An existing dispatch list without its indices also contains
-		// recovery state and must not be converted into an empty queue.
+		// Either index present but empty is corrupt, not a new queue.
+		// With no indices, an orphaned numeric payload or even a present
+		// empty dispatch marker likewise means an unsafe ambiguous store.
+		if presentRI || presentWI || presentDI || orphanNumeric {
+			return fmt.Errorf("invalid legacy queue metadata: empty index marker or orphan durable request present")
+		}
 		dispatched, err := pq.client.Get(ctx, legacyCurrentlyDispatchedItemsKey)
 		if err != nil {
 			return fmt.Errorf("read legacy dispatch marker: %w", err)
@@ -619,24 +649,20 @@ func bytesToItemIndexArray(buf []byte) ([]uint64, error) {
 	if len(buf) == 0 {
 		return nil, nil
 	}
-
-	// The sizeof uint32 in binary is 4.
+	// Exactly four count bytes followed by exactly count uint64s.
+	// Validate the available bytes before allocation to avoid integer
+	// overflow or trusting a forged count from the persistent store.
 	if len(buf) < 4 {
 		return nil, errInvalidValue
 	}
-	size := int(binary.LittleEndian.Uint32(buf))
-	if size == 0 {
-		return nil, nil
-	}
-
-	buf = buf[4:]
-	// The sizeof uint64 in binary is 8, so we need to have size*8 bytes.
-	if len(buf) < size*8 {
+	payloadBytes := len(buf) - 4
+	count := uint64(binary.LittleEndian.Uint32(buf))
+	if payloadBytes%8 != 0 || count != uint64(payloadBytes/8) {
 		return nil, errInvalidValue
 	}
-
-	val := make([]uint64, size)
-	for i := range size {
+	val := make([]uint64, int(count))
+	buf = buf[4:]
+	for i := range val {
 		val[i] = binary.LittleEndian.Uint64(buf)
 		buf = buf[8:]
 	}
