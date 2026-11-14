@@ -42,9 +42,8 @@ jobs:
           PY
           )
           cp -a /tmp/r9-ta-original/. "$dest/"
-          gh api repos/AETHERXGLOBAL/aether-x-open-contributions/actions/jobs/132409540943/logs > "$dest/original_github_job_132409540943.log"
-          test -s "$dest/original_github_job_132409540943.log"
-          sha256sum "$dest/original_github_job_132409540943.log" > "$dest/original_github_job_SHA256.txt"
+          # Full raw test stdout/stderr is preserved from the verified artifact.
+          # Job-level runner log remains available at Actions run 43582341324.
           printf '%s\n' 'SOURCE_ARTIFACT_RUN=43582341324' 'SOURCE_ARTIFACT_ID=14109425122' 'SOURCE_ARTIFACT_ZIP_SHA256=051abfd0776d2bfcda01a485c78ca3d0e8c4ea5120bb3788bb71114da7fe8761' 'MANIFEST_VERIFIED=18/18' 'RESULT=REVISE' > "$dest/ARCHIVE_PROVENANCE.txt"
           git add "$dest"
           git config user.name 'github-actions[bot]'
