@@ -104,6 +104,7 @@ func axgR6RequireInventory(t *testing.T, dir string, expected []intRequest) {
 
 func TestAXGR6RealFileStorageInjectedPrecommitENOSPC(t *testing.T) {
 	dir := filepath.Join(t.TempDir(), "injected-full")
+	require.NoError(t, os.MkdirAll(dir, 0o700))
 	ext, c := axgR5OpenFileStorage(t, dir)
 	axgR6Seed(t, c, false)
 	axgR5CloseFileStorage(t, ext, c)
@@ -122,6 +123,7 @@ func TestAXGR6RealFileStorageInjectedPrecommitENOSPC(t *testing.T) {
 
 func TestAXGR6RealFileStorageAmbiguousErrorAfterCommit(t *testing.T) {
 	dir := filepath.Join(t.TempDir(), "ambiguous-commit")
+	require.NoError(t, os.MkdirAll(dir, 0o700))
 	ext, c := axgR5OpenFileStorage(t, dir)
 	axgR6Seed(t, c, false)
 	axgR5CloseFileStorage(t, ext, c)
@@ -150,6 +152,7 @@ func TestAXGR6AckedVsUnackedDeliveryBoundaries(t *testing.T) {
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			dir := filepath.Join(t.TempDir(), "delivery-ack")
+	require.NoError(t, os.MkdirAll(dir, 0o700))
 			ext, c := axgR5OpenFileStorage(t, dir)
 			q := axgR5NewQueue()
 			require.NoError(t, q.initClient(context.Background(), c))
@@ -173,6 +176,7 @@ func TestAXGR6AckedVsUnackedDeliveryBoundaries(t *testing.T) {
 
 func TestAXGR6DurableFullCapacityAfterRecovery(t *testing.T) {
 	dir := filepath.Join(t.TempDir(), "full-capacity")
+	require.NoError(t, os.MkdirAll(dir, 0o700))
 	ext, c := axgR5OpenFileStorage(t, dir)
 	q := newPersistentQueue[intRequest](newSettingsWithStorage(request.SizerTypeRequests, 3)).(*persistentQueue[intRequest])
 	require.NoError(t, q.initClient(context.Background(), c))
@@ -245,6 +249,7 @@ func TestAXGR6ActualFileStoragePostCommitSIGKILL(t *testing.T) {
 	} {
 		t.Run(tc.name,func(t *testing.T){
 			dir := filepath.Join(t.TempDir(), strings.ToLower(tc.name))
+		require.NoError(t, os.MkdirAll(dir, 0o700))
 			axgR6RunExtensionChild(t, dir, tc.seed, false)
 			axgR6RunExtensionChild(t, dir, "crash", true)
 			axgR6RequireInventory(t, dir, []intRequest{11, 22, 33})
