@@ -1,0 +1,53 @@
+name: OTel 16236 R9 independent evidence permanent archival
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - .github/workflows/otel-16236-r9-independent-evidence-archive.yml
+permissions:
+  contents: write
+  actions: read
+jobs:
+  archive-original-verified-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: true
+      - name: Acquire byte-exact source artifacts and seal permanent records
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = evidence/otel-queue-recovery-16236-r1-20261113
+          dest="tests/opentelemetry/16236/r9/independent/evidence"
+          mkdir -p "$dest"
+          mkdir -p /tmp/r9-ta-original
+          gh run download 43582341324 --repo AETHERXGLOBAL/aether-x-open-contributions --name axg-otel-16236-r9-ta-independent --dir /tmp/r9-ta-original
+          (
+            cd /tmp/r9-ta-original
+            sha256sum -c SHA256SUMS.txt
+            test "$(cat execution_head.txt)" = b18313bfa30ee098b0e6a2de074245589b7d90bf
+            test "$(cat execution_tree.txt)" = 417ff03881ba814318a6027a33c93e7c5da162bb
+            python3 - <<'PY'
+          import json
+          p=json.load(open('/tmp/r9-ta-original/result.json'))
+          assert p['verdict']=='REVISE'
+          assert p['exit_codes']=={'engineering':'0','historical':'0','independent':'1','original':'1'}
+          assert len(p['failed_tests']['independent'])==4
+          assert len(p['failed_tests']['original'])==3
+          PY
+          )
+          cp -a /tmp/r9-ta-original/. "$dest/"
+          gh api repos/AETHERXGLOBAL/aether-x-open-contributions/actions/jobs/132409540943/logs > "$dest/original_github_job_132409540943.log"
+          test -s "$dest/original_github_job_132409540943.log"
+          sha256sum "$dest/original_github_job_132409540943.log" > "$dest/original_github_job_SHA256.txt"
+          printf '%s\n' 'SOURCE_ARTIFACT_RUN=43582341324' 'SOURCE_ARTIFACT_ID=14109425122' 'SOURCE_ARTIFACT_ZIP_SHA256=051abfd0776d2bfcda01a485c78ca3d0e8c4ea5120bb3788bb71114da7fe8761' 'MANIFEST_VERIFIED=18/18' 'RESULT=REVISE' > "$dest/ARCHIVE_PROVENANCE.txt"
+          git add "$dest"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'test(otel-r9): preserve independently verified raw runner evidence'
+          git push origin HEAD:"$GITHUB_REF_NAME"
