@@ -214,23 +214,43 @@ func (pq *persistentQueue[T]) loadLegacyMetadata(ctx context.Context) error {
 	riOp := storage.GetOperation(legacyReadIndexKey)
 	wiOp := storage.GetOperation(legacyWriteIndexKey)
 
-	err := pq.client.Batch(ctx, riOp, wiOp)
-	if err == nil {
-		pq.metadata.ReadIndex, err = bytesToItemIndex(riOp.Value)
+	if err := pq.client.Batch(ctx, riOp, wiOp); err != nil {
+		return fmt.Errorf("read legacy queue indices: %w", err)
 	}
-
-	if err == nil {
-		pq.metadata.WriteIndex, err = bytesToItemIndex(wiOp.Value)
-	}
-
-	if err != nil {
-		if errors.Is(err, errValueNotSet) {
-			pq.logger.Info("Initializing new persistent queue")
-		} else {
-			pq.logger.Error("Failed getting read/write index, starting with new ones", zap.Error(err))
+	// A brand-new queue has no legacy indices. A partially present or
+	// malformed pair is NOT a new queue: resetting it can orphan durable
+	// requests and overwrite the old keys on the next Offer.
+	switch {
+	case len(riOp.Value) == 0 && len(wiOp.Value) == 0:
+		// An existing dispatch list without its indices also contains
+		// recovery state and must not be converted into an empty queue.
+		dispatched, err := pq.client.Get(ctx, legacyCurrentlyDispatchedItemsKey)
+		if err != nil {
+			return fmt.Errorf("read legacy dispatch marker: %w", err)
 		}
-		pq.metadata.ReadIndex = 0
-		pq.metadata.WriteIndex = 0
+		if len(dispatched) != 0 {
+			return fmt.Errorf("incomplete legacy queue metadata: dispatched list exists without read/write indices")
+		}
+		pq.logger.Info("Initializing new persistent queue")
+	case len(riOp.Value) == 0 || len(wiOp.Value) == 0:
+		return fmt.Errorf("incomplete legacy queue metadata: read/write indices must both exist")
+	default:
+		if len(riOp.Value) != 8 || len(wiOp.Value) != 8 {
+			return fmt.Errorf("invalid legacy queue metadata: read/write indices must each be exactly 8 bytes")
+		}
+		readIndex, err := bytesToItemIndex(riOp.Value)
+		if err != nil {
+			return fmt.Errorf("invalid legacy read index: %w", err)
+		}
+		writeIndex, err := bytesToItemIndex(wiOp.Value)
+		if err != nil {
+			return fmt.Errorf("invalid legacy write index: %w", err)
+		}
+		if readIndex > writeIndex {
+			return fmt.Errorf("invalid legacy queue metadata: read index %d exceeds write index %d", readIndex, writeIndex)
+		}
+		pq.metadata.ReadIndex = readIndex
+		pq.metadata.WriteIndex = writeIndex
 	}
 
 	if err = pq.retrieveAndEnqueueNotDispatchedReqs(ctx); err != nil {
