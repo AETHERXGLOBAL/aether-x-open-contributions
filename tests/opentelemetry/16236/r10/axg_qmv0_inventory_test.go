@@ -7,7 +7,6 @@ package queue
 import (
     "bytes"
     "context"
-    "math"
     "os"
     "path/filepath"
     "testing"
@@ -36,7 +35,7 @@ func TestAXGR10MissingPendingPayloadsRefuseWithoutMutation(t *testing.T) {
         {"missing_last",0,3,map[string][]byte{"0":[]byte("11"),"1":[]byte("22")},false},
         {"noncanonical_alias_not_enough",0,2,map[string][]byte{"0":[]byte("11"),"01":[]byte("22")},false},
         {"missing_middle_nonwalker",0,3,map[string][]byte{"0":[]byte("11"),"2":[]byte("33")},true},
-        {"implausibly_large_metadata",0,math.MaxUint64,map[string][]byte{"0":[]byte("11")},false},
+        {"implausibly_large_metadata",0,^uint64(0),map[string][]byte{"0":[]byte("11")},false},
     } {
         t.Run(tc.name,func(t *testing.T) {
             ctx:=context.Background()
