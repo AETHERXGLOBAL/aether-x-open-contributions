@@ -197,18 +197,47 @@ func (pq *persistentQueue[T]) loadQueueMetadata(ctx context.Context) error {
 	if pq.metadata.ReadIndex > pq.metadata.WriteIndex {
 		return fmt.Errorf("invalid persistent queue metadata: read index %d exceeds write index %d", pq.metadata.ReadIndex, pq.metadata.WriteIndex)
 	}
-	// Bounded consistency check: an outstanding first queued request must
-	// have a physical payload. This catches the independently reproduced
-	// protobuf-valid qmv0 referencing no stored item. It does NOT prove
-	// every pending index exists and must not be marketed as such.
-	if pq.metadata.ReadIndex < pq.metadata.WriteIndex {
-		firstKey := getItemKey(pq.metadata.ReadIndex)
-		firstPayload, err := pq.client.Get(ctx, firstKey)
-		if err != nil {
-			return fmt.Errorf("verify first persistent queue payload at %s: %w", firstKey, err)
-		}
-		if len(firstPayload) == 0 {
-			return fmt.Errorf("persistent queue metadata references missing first queued payload at %s", firstKey)
+	// Verify every undispatched request referenced by qmv0 before any
+	// recovery writes. Checking only ReadIndex misses gaps in the middle,
+	// which the independent R9 tests showed are accepted silently.
+	pending := pq.metadata.WriteIndex - pq.metadata.ReadIndex
+	if pending > 0 {
+		if walker, ok := pq.client.(storage.Walker); ok {
+			// A Walker enumerates actual keys (including their presence).
+			// Count canonical pending keys without allocating from the
+			// potentially corrupted metadata's claimed queue length.
+			var present uint64
+			if err := walker.Walk(ctx, func(key string, value []byte) ([]*storage.Operation, error) {
+				index, parseErr := strconv.ParseUint(key, 10, 64)
+				if parseErr != nil || key != getItemKey(index) ||
+					index < pq.metadata.ReadIndex || index >= pq.metadata.WriteIndex {
+					return nil, nil
+				}
+				if len(value) == 0 {
+					return nil, fmt.Errorf("persistent queue metadata references empty pending payload at %s", key)
+				}
+				present++
+				return nil, nil
+			}); err != nil {
+				return fmt.Errorf("verify persistent queue pending inventory: %w", err)
+			}
+			if present != pending {
+				return fmt.Errorf("persistent queue metadata references missing pending payload: found %d of %d", present, pending)
+			}
+		} else {
+			// Without Walker, Get has no existence oracle for present-empty
+			// keys. Reject missing/empty bytes conservatively; this is not
+			// a proof of exclusive ownership or safe concurrent writers.
+			for index := pq.metadata.ReadIndex; index < pq.metadata.WriteIndex; index++ {
+				key := getItemKey(index)
+				value, err := pq.client.Get(ctx, key)
+				if err != nil {
+					return fmt.Errorf("verify persistent queue pending payload at %s: %w", key, err)
+				}
+				if len(value) == 0 {
+					return fmt.Errorf("persistent queue metadata references missing pending payload at %s", key)
+				}
+			}
 		}
 	}
 
