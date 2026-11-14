@@ -45,8 +45,6 @@ jobs:
           sha256sum "$src" > "$out/candidate_sha256.txt"
           sha256sum tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go > "$out/r9_test_sha256.txt"
           sha256sum \
-            tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go \
-            tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go \
             tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go > "$out/independent_fixture_hashes.txt"
           cp "$src" "$q/persistent_queue.go"
           for f in \
@@ -56,13 +54,9 @@ jobs:
             tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go \
             tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go \
             tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go \
-            tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go \
-            tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go \
-            tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go \
+            tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go
             tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go \
-            tests/opentelemetry/16236/r8/axg_metadata_presence_test.go \
             tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go \
-            tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go
           do cp "$f" "$q/$(basename "$f")"; done
           gofmt -w "$q"/axg*test.go
       - name: Resolve exact real Contrib file_storage and bbolt
@@ -84,6 +78,20 @@ jobs:
           echo "$?" > "$out/full_original.exit"
           tail -60 "$out/full_original.log"
           exit 0
+      - name: Add unchanged independent TA regression fixtures and new R9 engineering tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          q=/tmp/otel-r9/exporter/exporterhelper/internal/queue
+          for f in \
+            tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go \
+            tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go \
+            tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go \
+            tests/opentelemetry/16236/r8/axg_metadata_presence_test.go \
+            tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go \
+            tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go
+          do cp "$f" "$q/$(basename "$f")"; done
+          gofmt -w "$q"/axg*test.go
       - name: Execute historical R5 R6 R7 R8 targeted tests
         shell: bash
         run: |
