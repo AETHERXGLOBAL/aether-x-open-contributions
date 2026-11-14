@@ -379,6 +379,20 @@ func (pq *persistentQueue[T]) Offer(ctx context.Context, req T) error {
 		}
 	}
 
+	// A storage.Client without Walker cannot enumerate orphaned records.
+	// Before each Offer, refuse to overwrite a nonempty durable write-slot.
+	// This protects single-queue writes at an encountered key, but is not
+	// a cross-process compare-and-swap or a full existence oracle.
+	if _, ok := pq.client.(storage.Walker); !ok {
+		key := getItemKey(pq.metadata.WriteIndex)
+		previous, err := pq.client.Get(ctx, key)
+		if err != nil {
+			return fmt.Errorf("check persistent queue write slot %s: %w", key, err)
+		}
+		if len(previous) != 0 {
+			return fmt.Errorf("refusing to overwrite existing persistent queue payload at %s", key)
+		}
+	}
 	pq.metadata.ItemsSize += pq.itemsSizer.Sizeof(req)
 	pq.metadata.BytesSize += pq.bytesSizer.Sizeof(req)
 
