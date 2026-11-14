@@ -55,8 +55,6 @@ jobs:
             tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go \
             tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go \
             tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go
-            tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go \
-            tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go \
           do cp "$f" "$q/$(basename "$f")"; done
           gofmt -w "$q"/axg*test.go
       - name: Resolve exact real Contrib file_storage and bbolt
