@@ -25,7 +25,7 @@ import (
 type axgTAR8NonWalker struct{ storage.Client }
 
 type axgTAR8ErrorWalker struct{ storage.Client }
-func (axgTAR8ErrorWalker) Walk(_ context.Context, _ func(string, []byte) ([]*storage.Operation, error)) error {
+func (axgTAR8ErrorWalker) Walk(_ context.Context, _ storage.WalkFunc) error {
     return errors.New("AXG_TA_R8_INJECTED_WALK_ERROR")
 }
 
@@ -34,7 +34,7 @@ type axgTAR8CountingWalker struct {
     inner storage.Walker
     seen int
 }
-func (w *axgTAR8CountingWalker) Walk(ctx context.Context, f func(string, []byte) ([]*storage.Operation, error)) error {
+func (w *axgTAR8CountingWalker) Walk(ctx context.Context, f storage.WalkFunc) error {
     return w.inner.Walk(ctx, func(key string, value []byte) ([]*storage.Operation, error) {
         w.seen++
         return f(key, value)
@@ -102,6 +102,8 @@ func TestAXGTAR8WalkErrorFailsClosedBeforeWrite(t *testing.T) {
     _, ext, c := axgTAR8Open(t)
     require.NoError(t, c.Set(ctx, getItemKey(0), []byte("11")))
     q := axgR5NewQueue()
+    _, implementsWalker := interface{}(axgTAR8ErrorWalker{Client: c}).(storage.Walker)
+    require.True(t, implementsWalker, "test must inject through the real storage.Walker interface")
     err := q.initClient(ctx, axgTAR8ErrorWalker{Client: c})
     require.ErrorContains(t, err, "inspect legacy metadata")
     require.ErrorContains(t, err, "AXG_TA_R8_INJECTED_WALK_ERROR")
@@ -140,6 +142,8 @@ func TestAXGTAR8WalkerScanCardinality(t *testing.T) {
     walker, ok := c.(storage.Walker)
     require.True(t, ok)
     wrapped := &axgTAR8CountingWalker{Client: c, inner: walker}
+    _, implementsWalker := interface{}(wrapped).(storage.Walker)
+    require.True(t, implementsWalker, "counting proxy must implement Walker")
     q := axgR5NewQueue()
     require.NoError(t, q.initClient(ctx, wrapped))
     t.Logf("AXG_TA_R8_WALK_SCAN keys_seeded=%d keys_visited=%d", n, wrapped.seen)
@@ -155,12 +159,16 @@ func TestAXGTAR8RealFileStorageNamespaceIsolation(t *testing.T) {
     require.NoError(t, c1.Set(ctx, getItemKey(1024), []byte("11")))
     q2 := axgR5NewQueue()
     require.NoError(t, q2.initClient(ctx, c2), "other scoped client's orphan must not reject this clean namespace")
-    qmv2, err := c2.Get(ctx, metadataKey)
-    require.NoError(t, err)
-    require.NotEmpty(t, qmv2)
-    qmv1, err := c1.Get(ctx, metadataKey)
-    require.NoError(t, err)
-    require.Empty(t, qmv1, "other namespace must not write qmv0 here")
+    w2, ok := c2.(storage.Walker)
+    require.True(t, ok)
+    scoped2 := map[string]bool{}
+    require.NoError(t, w2.Walk(ctx, func(k string, _ []byte) ([]*storage.Operation, error) { scoped2[k] = true; return nil, nil }))
+    require.True(t, scoped2[metadataKey], "new empty queue persists its qmv0 marker even when protobuf bytes are empty")
+    w1, ok := c1.(storage.Walker)
+    require.True(t, ok)
+    scoped1 := map[string]bool{}
+    require.NoError(t, w1.Walk(ctx, func(k string, _ []byte) ([]*storage.Operation, error) { scoped1[k] = true; return nil, nil }))
+    require.False(t, scoped1[metadataKey], "other namespace must not write qmv0 here")
     original, err := c1.Get(ctx, getItemKey(1024))
     require.NoError(t, err)
     require.Equal(t, []byte("11"), original)
