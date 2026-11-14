@@ -1,0 +1,168 @@
+name: OTel 16236 R6 independent Test Architect evidence
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - .github/workflows/otel-16236-r6-independent.yml
+      - tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go
+permissions:
+  contents: read
+jobs:
+  independent-qualification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout frozen internal branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Pin original upstream and verify candidate, fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r6_ta_independent_evidence"
+          mkdir -p "$out"
+          echo "$GITHUB_SHA" > "$out/internal_run_head.txt"
+          git init -q /tmp/otel-ta-r6
+          git -C /tmp/otel-ta-r6 remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-ta-r6 fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-ta-r6 checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-ta-r6 rev-parse HEAD)" = 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-ta-r6 rev-parse HEAD > "$out/upstream_head.txt"
+          q=/tmp/otel-ta-r6/exporter/exporterhelper/internal/queue
+          test "$(sha256sum "$q/persistent_queue.go" | awk '{print $1}')" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          candidate=tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+          fixture=tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go
+          test "$(sha256sum "$candidate" | awk '{print $1}')" = 52e5bc04cbc9cb46f1fe4e3e432a19bacb47c5ff0d44232ac337f557e33e6446
+          test "$(sha256sum "$fixture" | awk '{print $1}')" = c09f2f0a72b5c49da3d4812b68ad2a1212f31c7522c29b04b5d12919158d4a1b
+          sha256sum "$candidate" "$fixture" tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go > "$out/checked_source_sha256.txt"
+          cp "$candidate" "$q/persistent_queue.go"
+          for f in tests/opentelemetry/16236/axg_recovery_contract_test.go tests/opentelemetry/16236/r2/axg_recovery_r2_test.go tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go; do
+            cp "$f" "$q/$(basename "$f")"
+          done
+          gofmt -w "$q"/axg*test.go
+          test -z "$(gofmt -l tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go)"
+      - name: Use pinned Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Resolve exact Contrib file_storage release
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r6_ta_independent_evidence
+          go version > "$out/go_version.txt"
+          go -C /tmp/otel-ta-r6/exporter/exporterhelper get github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage@v0.165.0 > "$out/module_get.log" 2>&1
+          go -C /tmp/otel-ta-r6/exporter/exporterhelper list -m github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage > "$out/contrib_version.txt"
+          go -C /tmp/otel-ta-r6/exporter/exporterhelper list -m go.etcd.io/bbolt > "$out/bbolt_version.txt"
+          grep -qx 'github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0' "$out/contrib_version.txt"
+          go -C /tmp/otel-ta-r6/exporter/exporterhelper list -m all > "$out/modules.txt"
+      - name: Independent cold-start rerun of previously authored R5-R6 controls
+        shell: bash
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r6_ta_independent_evidence
+          set +e
+          timeout 420s go -C /tmp/otel-ta-r6/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGR(5|6)' ./internal/queue > "$out/r5_r6_focused.log" 2>&1
+          result=$?
+          set -e
+          echo "$result" > "$out/r5_r6_focused.exit"
+          tail -55 "$out/r5_r6_focused.log"
+      - name: Original entire upstream package with unchanged upstream cases
+        shell: bash
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r6_ta_independent_evidence
+          set +e
+          timeout 450s go -C /tmp/otel-ta-r6/exporter/exporterhelper test -count=1 -timeout=7m ./internal/queue > "$out/full_original.log" 2>&1
+          result=$?
+          set -e
+          echo "$result" > "$out/full_original.exit"
+          tail -45 "$out/full_original.log"
+      - name: Install independently authored tests after original-package run
+        shell: bash
+        run: |
+          cp tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go /tmp/otel-ta-r6/exporter/exporterhelper/internal/queue/axg_ta_r6_independent_requalification_test.go
+      - name: Execute independent positive and clean negative-control cases
+        shell: bash
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r6_ta_independent_evidence
+          set +e
+          timeout 210s go -C /tmp/otel-ta-r6/exporter/exporterhelper test -count=1 -v -timeout=3m -run '^TestAXGTAR6(CleanNewQueueControl|RepeatedRealContribReopen)$' ./internal/queue > "$out/independent_controls.log" 2>&1
+          result=$?
+          set -e
+          echo "$result" > "$out/independent_controls.exit"
+          tail -45 "$out/independent_controls.log"
+      - name: Challenge corrupt legacy metadata fail-closed invariant
+        shell: bash
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r6_ta_independent_evidence
+          set +e
+          timeout 120s go -C /tmp/otel-ta-r6/exporter/exporterhelper test -count=1 -v -timeout=90s -run '^TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning$' ./internal/queue > "$out/independent_legacy_adversarial.log" 2>&1
+          result=$?
+          set -e
+          echo "$result" > "$out/independent_legacy_adversarial.exit"
+          cat "$out/independent_legacy_adversarial.log"
+      - name: Classify all raw outcomes without concealing incompatibility
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r6_ta_independent_evidence
+          export OUT="$out"
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          p=Path(os.environ["OUT"])
+          def read(name): return (p/name).read_text(errors="replace") if (p/name).exists() else ""
+          def exit_of(name): return read(name).strip()
+          failures=re.findall(r'(?m)^\s*--- FAIL:\s+([^\n(]+)', read('full_original.log'))
+          expected={'TestPersistentQueue_CorruptedData','TestPersistentQueue_CorruptedData/corrupted_metadata','TestPersistentQueue_CorruptedData/corrupted_everything'}
+          original_known=set(failures)==expected and len(failures)==3
+          independent_legacy_detected=(exit_of('independent_legacy_adversarial.exit')=='1' and 'AXG_TA_R6_LEGACY_RESET_DEFECT' in read('independent_legacy_adversarial.log'))
+          positives=(exit_of('r5_r6_focused.exit')=='0' and exit_of('independent_controls.exit')=='0')
+          result={'mission':'AXG-OTEL-16236-R6-INDEPENDENT-REQUALIFICATION-20261114','run_head':read('internal_run_head.txt').strip(),
+            'upstream_head':read('upstream_head.txt').strip(),'go_version':read('go_version.txt').strip(),
+            'contrib_version':read('contrib_version.txt').strip(),'bbolt_version':read('bbolt_version.txt').strip(),
+            'r5_r6_focused_exit':exit_of('r5_r6_focused.exit'),'full_original_exit':exit_of('full_original.exit'),
+            'full_original_failures':failures,'independent_controls_exit':exit_of('independent_controls.exit'),
+            'independent_legacy_exit':exit_of('independent_legacy_adversarial.exit'),'independent_legacy_defect_observed':independent_legacy_detected,
+            'exact_upstream_known_failures_only':original_known,'bounded_positives':positives,
+            'real_ENOSPC_tested':False,'power_loss_tested':False,'non_atomic_backend_tested':False,
+            'full_collector_tested':False,'exactly_once_delivery_tested':False}
+          result['verdict']='REVISE' if (positives and exit_of('full_original.exit')=='1' and original_known and independent_legacy_detected and result['upstream_head']=='572057cde7e9bbe3aed6e5e3e8f16290d487f7d0') else 'INCONCLUSIVE_OR_UNEXPECTED_FAIL'
+          (p/'result.json').write_text(json.dumps(result, indent=2, sort_keys=True)+'\n')
+          print(json.dumps(result,sort_keys=True))
+          PY
+      - name: Record actual raw checksums
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r6_ta_independent_evidence
+          sha256sum $(find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -printf '%f\n' | sort) > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+      - name: Upload original independently executed raw evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r6-test-architect-independent
+          path: tests/opentelemetry/16236/r6_ta_independent_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce truthful classifier, no upstream merge clearance
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r6_ta_independent_evidence/result.json')
+          if not p.exists() or json.loads(p.read_text()).get('verdict') != 'REVISE':
+              raise SystemExit('INDEPENDENT_R6_INCONCLUSIVE: inspect all raw outputs before adjudication')
+          print('INDEPENDENT_R6_REVISE: original upstream compatibility fails; new legacy corruption defect; no merge or upstream publication')
+          PY
