@@ -1,0 +1,15 @@
+{
+  "bbolt_version": "go.etcd.io/bbolt v1.5.0",
+  "candidate_source_sha256": "52e5bc04cbc9cb46f1fe4e3e432a19bacb47c5ff0d44232ac337f557e33e6446",
+  "focused_exit": "0",
+  "full_package_exit": "1",
+  "green_4_marker_count": 5,
+  "mission": "AXG-OTEL-16236-R5-QMV0-INTEGRITY-ENGINEERING-20261114",
+  "prior_reviewed_r4_candidate_sha256": "c9705f155cd3c143da236741947689120670d17817c0244e386a4d138f86afce",
+  "red_corrupt_qmv0_test_failed": false,
+  "red_indices_test_failed": false,
+  "red_read_error_test_failed": false,
+  "tested_internal_head": "a876e1686e8c653c4a5cf92b8511558c44b5136a",
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "R5_REVISE"
+}
