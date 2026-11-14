@@ -69,6 +69,7 @@ jobs:
       - name: Execute unchanged original upstream package with historical fixtures
         shell: bash
         run: |
+          set +e
           set -uo pipefail
           out=tests/opentelemetry/16236/r7_independent_evidence
           timeout 450s go -C /tmp/otel-ta-r7/exporter/exporterhelper test -count=1 -v -timeout=7m ./internal/queue > "$out/full_original.log" 2>&1
@@ -79,6 +80,7 @@ jobs:
       - name: Independently re-run historical R5 R6 reliability
         shell: bash
         run: |
+          set +e
           set -uo pipefail
           out=tests/opentelemetry/16236/r7_independent_evidence
           timeout 410s go -C /tmp/otel-ta-r7/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGR(5|6)' ./internal/queue > "$out/historical_r5_r6.log" 2>&1
@@ -98,6 +100,7 @@ jobs:
       - name: Execute original R6 defect test and R7 engineering controls cold-start
         shell: bash
         run: |
+          set +e
           set -uo pipefail
           out=tests/opentelemetry/16236/r7_independent_evidence
           timeout 300s go -C /tmp/otel-ta-r7/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning$|^TestAXGR7' ./internal/queue > "$out/previous_r6_and_r7.log" 2>&1
@@ -108,6 +111,7 @@ jobs:
       - name: Execute distinct TA R7 adversarial tests on real bbolt
         shell: bash
         run: |
+          set +e
           set -uo pipefail
           out=tests/opentelemetry/16236/r7_independent_evidence
           timeout 300s go -C /tmp/otel-ta-r7/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGTAR7' ./internal/queue > "$out/ta_r7_new.log" 2>&1
