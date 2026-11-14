@@ -1,0 +1,381 @@
+go: downloading google.golang.org/protobuf v1.36.12
+go: downloading github.com/stretchr/testify v1.12.1
+go: downloading go.opentelemetry.io/otel/sdk/metric v1.47.0
+go: downloading go.opentelemetry.io/otel/sdk v1.47.0
+go: downloading github.com/google/uuid v1.6.0
+go: downloading google.golang.org/grpc v1.85.0
+go: downloading go.yaml.in/yaml/v3 v3.0.6
+go: downloading github.com/go-viper/mapstructure/v2 v2.5.0
+go: downloading github.com/gobwas/glob v0.2.3
+go: downloading github.com/knadh/koanf/maps v0.1.3
+go: downloading github.com/knadh/koanf/providers/confmap v1.0.1
+go: downloading github.com/knadh/koanf/v2 v2.4.1
+go: downloading github.com/go-logr/logr v1.4.4
+go: downloading go.opentelemetry.io/otel/log v1.47.0
+go: downloading github.com/go-logr/stdr v1.2.2
+go: downloading go.opentelemetry.io/auto/sdk v1.2.1
+go: downloading github.com/mitchellh/copystructure v1.2.0
+go: downloading github.com/mitchellh/reflectwalk v1.0.2
+go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20260817212433-ac3dfec99bb1
+=== RUN   TestAsyncMemoryQueue
+--- PASS: TestAsyncMemoryQueue (0.00s)
+=== RUN   TestAsyncMemoryQueueBlocking
+--- PASS: TestAsyncMemoryQueueBlocking (0.32s)
+=== RUN   TestAsyncMemoryWaitForResultQueueBlocking
+--- PASS: TestAsyncMemoryWaitForResultQueueBlocking (0.52s)
+=== RUN   TestAsyncMemoryQueueBlockingCancelled
+--- PASS: TestAsyncMemoryQueueBlockingCancelled (1.00s)
+=== RUN   TestAsyncMemoryQueueReleasesReferenceOnDone
+--- PASS: TestAsyncMemoryQueueReleasesReferenceOnDone (0.00s)
+=== RUN   TestAsyncMemoryWaitForResultQueueTakesNoReference
+--- PASS: TestAsyncMemoryWaitForResultQueueTakesNoReference (0.00s)
+=== RUN   TestAsyncMemoryWaitForResultQueueCancelledNotConsumed
+--- PASS: TestAsyncMemoryWaitForResultQueueCancelledNotConsumed (0.21s)
+=== RUN   TestAXGR5FileStorageActualExtensionRestartNoLoss
+    axg_actual_filestorage_test.go:90: AXG_R5_REAL_FILESTORAGE_QMV0_RESTART_PASS
+--- PASS: TestAXGR5FileStorageActualExtensionRestartNoLoss (0.01s)
+=== RUN   TestAXGR5FileStorageActualExtensionLegacyMigration
+    axg_actual_filestorage_test.go:111: AXG_R5_REAL_FILESTORAGE_LEGACY_PASS
+--- PASS: TestAXGR5FileStorageActualExtensionLegacyMigration (0.00s)
+=== RUN   TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed
+    axg_actual_filestorage_test.go:145: AXG_R5_REAL_FILESTORAGE_CORRUPT_QMV0_FAIL_CLOSED
+--- PASS: TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed (0.00s)
+=== RUN   TestAXGBboltChild
+    axg_bbolt_sigkill_linux_test.go:112: subprocess-only test
+--- SKIP: TestAXGBboltChild (0.00s)
+=== RUN   TestAXGBboltSIGKILLRecovery
+=== RUN   TestAXGBboltSIGKILLRecovery/qmv0_first_committed
+    axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash
+    axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+=== RUN   TestAXGBboltSIGKILLRecovery/qmv0_second_committed
+    axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash_second
+    axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+=== RUN   TestAXGBboltSIGKILLRecovery/legacy_first_committed
+    axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash
+    axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+--- PASS: TestAXGBboltSIGKILLRecovery (0.04s)
+    --- PASS: TestAXGBboltSIGKILLRecovery/qmv0_first_committed (0.02s)
+    --- PASS: TestAXGBboltSIGKILLRecovery/qmv0_second_committed (0.02s)
+    --- PASS: TestAXGBboltSIGKILLRecovery/legacy_first_committed (0.01s)
+=== RUN   TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness
+=== RUN   TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_false
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=1 logical=[11 22 33] physical=[11 22 33]
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=2 logical=[11 22 33] physical=[11 22 33]
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=3 logical=[11 22 33] physical=[11 22 33]
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=4 logical=[11 22 33] physical=[11 22 33]
+=== RUN   TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_true
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=1 logical=[11 22 33] physical=[11 22 33]
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=2 logical=[11 22 33] physical=[11 22 33]
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=3 logical=[11 22 33] physical=[11 22 33]
+    axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=4 logical=[11 22 33] physical=[11 22 33]
+--- PASS: TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness (0.01s)
+    --- PASS: TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_false (0.01s)
+    --- PASS: TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_true (0.01s)
+=== RUN   TestAXGIndependentPreCommitWriteFailurePreservesDurableItems
+    axg_independent_bbolt_linux_test.go:93: AXG_INDEPENDENT_FAILED_MOVE_REJECTED error=atomically move in-flight item 0: injected pre-commit full disk during in-flight move: the storage extension has run out of available space
+    axg_independent_bbolt_linux_test.go:100: AXG_INDEPENDENT_PRECOMMIT_ROLLBACK_OK: injected error, no missing/duplicate physical items
+--- PASS: TestAXGIndependentPreCommitWriteFailurePreservesDurableItems (0.00s)
+=== RUN   TestAXGIndependentCorruptedMetadataCharacterization
+    axg_independent_bbolt_linux_test.go:124: AXG_INDEPENDENT_METADATA_CORRUPTION_OUTCOME err=persistent queue metadata unreadable; refusing index reset: invalid consolidated queue metadata encoding: proto: cannot parse invalid wire-format data read=0 write=0
+--- PASS: TestAXGIndependentCorruptedMetadataCharacterization (0.00s)
+=== RUN   TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk
+    axg_qmv0_integrity_test.go:51: AXG_R5_CORRUPT_QMV0_FAIL_CLOSED_PRESERVED
+    axg_qmv0_integrity_test.go:62: AXG_R5_QMV0_MANUAL_RESTORE_SUCCESS
+--- PASS: TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk (0.00s)
+=== RUN   TestAXGR5MetadataReadErrorFailsClosed
+    axg_qmv0_integrity_test.go:95: AXG_R5_METADATA_IO_ERROR_FAIL_CLOSED
+--- PASS: TestAXGR5MetadataReadErrorFailsClosed (0.00s)
+=== RUN   TestAXGR5ImpossibleMetadataIndicesFailClosed
+    axg_qmv0_integrity_test.go:121: AXG_R5_IMPOSSIBLE_INDICES_FAIL_CLOSED
+--- PASS: TestAXGR5ImpossibleMetadataIndicesFailClosed (0.00s)
+=== RUN   TestAXGR5MissingMetadataStillInitializesNewQueue
+    axg_qmv0_integrity_test.go:134: AXG_R5_NEW_EMPTY_QUEUE_CONTROL_PASS
+--- PASS: TestAXGR5MissingMetadataStillInitializesNewQueue (0.00s)
+=== RUN   TestAXGR6RealFileStorageInjectedPrecommitENOSPC
+    axg_real_filestorage_reliability_test.go:120: AXG_R6_CONTRIB_PRECOMMIT_FULL_FAIL_CLOSED_PRESERVED
+--- PASS: TestAXGR6RealFileStorageInjectedPrecommitENOSPC (0.00s)
+=== RUN   TestAXGR6RealFileStorageAmbiguousErrorAfterCommit
+    axg_real_filestorage_reliability_test.go:141: AXG_R6_CONTRIB_POSTCOMMIT_AMBIGUOUS_REOPEN_PRESERVED
+--- PASS: TestAXGR6RealFileStorageAmbiguousErrorAfterCommit (0.00s)
+=== RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries
+=== RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed
+    axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=acked_first_is_not_replayed expected=[22 33]
+=== RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed
+    axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=unacked_first_may_be_replayed expected=[11 22 33]
+=== NAME  TestAXGR6AckedVsUnackedDeliveryBoundaries
+    axg_real_filestorage_reliability_test.go:174: AXG_R6_NO_EXACTLY_ONCE_CLAIM: unacknowledged delivery replays by design
+--- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries (0.01s)
+    --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed (0.00s)
+    --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed (0.00s)
+=== RUN   TestAXGR6DurableFullCapacityAfterRecovery
+    axg_real_filestorage_reliability_test.go:200: AXG_R6_FULL_CAPACITY_RESTART_PRESERVED_AND_REJECTED_NEW_OFFER
+--- PASS: TestAXGR6DurableFullCapacityAfterRecovery (0.01s)
+=== RUN   TestAXGR6ExtensionChildSIGKILL
+    axg_real_filestorage_reliability_test.go:206: subprocess-only test
+--- SKIP: TestAXGR6ExtensionChildSIGKILL (0.00s)
+=== RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL
+=== RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0
+    axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+    axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=qmv0
+=== RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy
+    axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+    axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=legacy
+--- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL (0.02s)
+    --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0 (0.01s)
+    --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy (0.01s)
+=== RUN   TestAXGRecoveryUninterruptedControl
+    axg_recovery_contract_test.go:133: AXG_CONTROL_OK observed_ids=[11 22 33]
+--- PASS: TestAXGRecoveryUninterruptedControl (0.00s)
+=== RUN   TestAXGRecoveryCutAfterCommittedRetirement
+    axg_recovery_contract_test.go:157: AXG_CRASH_RECOVERY_SAFE ids=[11 22 33]
+--- PASS: TestAXGRecoveryCutAfterCommittedRetirement (0.00s)
+=== RUN   TestAXGRecoveryTwoInterruptedCommits
+    axg_recovery_r2_test.go:47: AXG_CUT_1_COMMITTED
+    axg_recovery_r2_test.go:47: AXG_CUT_2_COMMITTED
+    axg_recovery_r2_test.go:50: AXG_REPEATED_CRASH_SAFE
+--- PASS: TestAXGRecoveryTwoInterruptedCommits (0.00s)
+=== RUN   TestAXGRecoveryLegacyCommittedCut
+    axg_recovery_r2_test.go:66: AXG_LEGACY_CRASH_SAFE
+--- PASS: TestAXGRecoveryLegacyCommittedCut (0.00s)
+=== RUN   TestAXGRecoveryRejectsUncommittedBatchFailure
+    axg_recovery_r2_test.go:96: AXG_ERROR_FAIL_CLOSED
+--- PASS: TestAXGRecoveryRejectsUncommittedBatchFailure (0.00s)
+=== RUN   TestCondSignalDoesNotBlockBehindCanceledWaiters
+=== PAUSE TestCondSignalDoesNotBlockBehindCanceledWaiters
+=== RUN   TestCondSignalAccounting
+=== PAUSE TestCondSignalAccounting
+=== RUN   TestCondCancellationNotification
+=== PAUSE TestCondCancellationNotification
+=== RUN   TestBlockedOfferCancellationDoesNotConsumeCapacityNotification
+=== RUN   TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/memory
+=== RUN   TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/persistent
+--- PASS: TestBlockedOfferCancellationDoesNotConsumeCapacityNotification (0.00s)
+    --- PASS: TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/memory (0.00s)
+    --- PASS: TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/persistent (0.00s)
+=== RUN   TestMemoryQueue
+--- PASS: TestMemoryQueue (0.00s)
+=== RUN   TestMemoryQueueBlockingCancelled
+--- PASS: TestMemoryQueueBlockingCancelled (0.00s)
+=== RUN   TestMemoryQueueDrainWhenShutdown
+--- PASS: TestMemoryQueueDrainWhenShutdown (0.00s)
+=== RUN   TestMemoryQueueOfferInvalidSize
+--- PASS: TestMemoryQueueOfferInvalidSize (0.00s)
+=== RUN   TestMemoryQueueRejectOverCapacityElements
+--- PASS: TestMemoryQueueRejectOverCapacityElements (0.00s)
+=== RUN   TestMemoryQueueOfferZeroSize
+--- PASS: TestMemoryQueueOfferZeroSize (0.00s)
+=== RUN   TestMemoryQueueOverflow
+--- PASS: TestMemoryQueueOverflow (0.00s)
+=== RUN   TestMemoryQueueWaitForResultPassErrorBack
+--- PASS: TestMemoryQueueWaitForResultPassErrorBack (0.00s)
+=== RUN   TestMemoryQueueWaitForResultCancelIncomingRequest
+--- PASS: TestMemoryQueueWaitForResultCancelIncomingRequest (0.10s)
+=== RUN   TestMemoryQueueWaitForResultCancelBeforeAccepted
+--- PASS: TestMemoryQueueWaitForResultCancelBeforeAccepted (0.11s)
+=== RUN   TestMemoryQueueWaitForResultSizeAndCapacity
+--- PASS: TestMemoryQueueWaitForResultSizeAndCapacity (0.01s)
+=== RUN   TestLinkedQueueQueued
+=== RUN   TestLinkedQueueQueued/sole_element
+=== RUN   TestLinkedQueueQueued/head_after_popping_the_previous_one
+=== RUN   TestLinkedQueueQueued/still_queued_behind_others
+--- PASS: TestLinkedQueueQueued (0.00s)
+    --- PASS: TestLinkedQueueQueued/sole_element (0.00s)
+    --- PASS: TestLinkedQueueQueued/head_after_popping_the_previous_one (0.00s)
+    --- PASS: TestLinkedQueueQueued/still_queued_behind_others (0.00s)
+=== RUN   TestObsQueueRegistrationRollback
+--- PASS: TestObsQueueRegistrationRollback (0.00s)
+=== RUN   TestNewExporterObsMetricsError
+--- PASS: TestNewExporterObsMetricsError (0.00s)
+=== RUN   TestExporterObsMetricsUnsupportedMetric
+--- PASS: TestExporterObsMetricsUnsupportedMetric (0.00s)
+=== RUN   TestExporterObsMetricsAttributeCompatibility
+--- PASS: TestExporterObsMetricsAttributeCompatibility (0.00s)
+=== RUN   TestObsQueueLogsSizeCapacity
+--- PASS: TestObsQueueLogsSizeCapacity (0.00s)
+=== RUN   TestObsQueueLogsFailure
+--- PASS: TestObsQueueLogsFailure (0.00s)
+=== RUN   TestObsQueueTracesSizeCapacity
+--- PASS: TestObsQueueTracesSizeCapacity (0.00s)
+=== RUN   TestObsQueueTracesFailure
+--- PASS: TestObsQueueTracesFailure (0.00s)
+=== RUN   TestObsQueueMetrics
+--- PASS: TestObsQueueMetrics (0.00s)
+=== RUN   TestObsQueueMetricsFailure
+--- PASS: TestObsQueueMetricsFailure (0.00s)
+=== RUN   TestObsQueueProfiles
+--- PASS: TestObsQueueProfiles (0.00s)
+=== RUN   TestObsQueueProfilesFailure
+--- PASS: TestObsQueueProfilesFailure (0.00s)
+=== RUN   TestObsQueueLogsBatchSize
+--- PASS: TestObsQueueLogsBatchSize (0.00s)
+=== RUN   TestObsQueueTracesBatchSize
+--- PASS: TestObsQueueTracesBatchSize (0.00s)
+=== RUN   TestObsQueueMetricsBatchSize
+--- PASS: TestObsQueueMetricsBatchSize (0.00s)
+=== RUN   TestObsQueueProfilesBatchSize
+--- PASS: TestObsQueueProfilesBatchSize (0.00s)
+=== RUN   TestObsQueueEnqueueSpanAttributes
+=== PAUSE TestObsQueueEnqueueSpanAttributes
+=== RUN   TestPersistentQueue_FullCapacity
+=== RUN   TestPersistentQueue_FullCapacity/requests_capacity
+=== RUN   TestPersistentQueue_FullCapacity/items_capacity
+=== RUN   TestPersistentQueue_FullCapacity/bytes_capacity
+--- PASS: TestPersistentQueue_FullCapacity (0.00s)
+    --- PASS: TestPersistentQueue_FullCapacity/requests_capacity (0.00s)
+    --- PASS: TestPersistentQueue_FullCapacity/items_capacity (0.00s)
+    --- PASS: TestPersistentQueue_FullCapacity/bytes_capacity (0.00s)
+=== RUN   TestPersistentQueue_Shutdown
+--- PASS: TestPersistentQueue_Shutdown (0.00s)
+=== RUN   TestPersistentQueue_ConsumersProducers
+=== RUN   TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_1
+=== RUN   TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_1
+=== RUN   TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_3
+=== RUN   TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_100
+=== RUN   TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_100
+--- PASS: TestPersistentQueue_ConsumersProducers (0.05s)
+    --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_1 (0.01s)
+    --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_1 (0.01s)
+    --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_3 (0.01s)
+    --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_100 (0.01s)
+    --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_100 (0.01s)
+=== RUN   TestPersistentBlockingQueue
+=== RUN   TestPersistentBlockingQueue/requests_based
+=== RUN   TestPersistentBlockingQueue/items_based
+--- PASS: TestPersistentBlockingQueue (2.60s)
+    --- PASS: TestPersistentBlockingQueue/requests_based (1.30s)
+    --- PASS: TestPersistentBlockingQueue/items_based (1.29s)
+=== RUN   TestToStorageClient
+=== RUN   TestToStorageClient/obtain_storage_extension_by_name
+=== RUN   TestToStorageClient/fail_on_not_existing_storage_extension
+=== RUN   TestToStorageClient/invalid_extension_type
+=== RUN   TestToStorageClient/fail_on_error_getting_storage_client_from_extension
+--- PASS: TestToStorageClient (0.00s)
+    --- PASS: TestToStorageClient/obtain_storage_extension_by_name (0.00s)
+    --- PASS: TestToStorageClient/fail_on_not_existing_storage_extension (0.00s)
+    --- PASS: TestToStorageClient/invalid_extension_type (0.00s)
+    --- PASS: TestToStorageClient/fail_on_error_getting_storage_client_from_extension (0.00s)
+=== RUN   TestInvalidStorageExtensionType
+--- PASS: TestInvalidStorageExtensionType (0.00s)
+=== RUN   TestPersistentQueue_StopAfterBadStart
+--- PASS: TestPersistentQueue_StopAfterBadStart (0.00s)
+=== RUN   TestPersistentQueue_CorruptedData
+=== RUN   TestPersistentQueue_CorruptedData/corrupted_no_items
+=== RUN   TestPersistentQueue_CorruptedData/corrupted_all_items
+=== RUN   TestPersistentQueue_CorruptedData/corrupted_some_items
+=== RUN   TestPersistentQueue_CorruptedData/corrupted_metadata
+    persistent_queue_test.go:283: 
+        	Error Trace:	/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/persistent_queue_test.go:283
+        	            				/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/persistent_queue_test.go:274
+        	            				/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/persistent_queue_test.go:618
+        	Error:      	Received unexpected error:
+        	            	failed recovering persistent queue: persistent queue metadata unreadable; refusing index reset: invalid consolidated queue metadata encoding: proto: cannot parse invalid wire-format data
+        	Test:       	TestPersistentQueue_CorruptedData/corrupted_metadata
+=== RUN   TestPersistentQueue_CorruptedData/corrupted_everything
+    persistent_queue_test.go:283: 
+        	Error Trace:	/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/persistent_queue_test.go:283
+        	            				/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/persistent_queue_test.go:274
+        	            				/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/persistent_queue_test.go:618
+        	Error:      	Received unexpected error:
+        	            	failed recovering persistent queue: persistent queue metadata unreadable; refusing index reset: invalid consolidated queue metadata encoding: proto: cannot parse invalid wire-format data
+        	Test:       	TestPersistentQueue_CorruptedData/corrupted_everything
+--- FAIL: TestPersistentQueue_CorruptedData (0.00s)
+    --- PASS: TestPersistentQueue_CorruptedData/corrupted_no_items (0.00s)
+    --- PASS: TestPersistentQueue_CorruptedData/corrupted_all_items (0.00s)
+    --- PASS: TestPersistentQueue_CorruptedData/corrupted_some_items (0.00s)
+    --- FAIL: TestPersistentQueue_CorruptedData/corrupted_metadata (0.00s)
+    --- FAIL: TestPersistentQueue_CorruptedData/corrupted_everything (0.00s)
+=== RUN   TestPersistentQueue_CurrentlyProcessedItems
+--- PASS: TestPersistentQueue_CurrentlyProcessedItems (0.00s)
+=== RUN   TestPersistentQueueStartWithNonDispatched
+--- PASS: TestPersistentQueueStartWithNonDispatched (0.00s)
+=== RUN   TestPersistentQueueStartWithNonDispatchedConcurrent
+--- PASS: TestPersistentQueueStartWithNonDispatchedConcurrent (0.00s)
+=== RUN   TestPersistentQueue_PutCloseReadClose
+--- PASS: TestPersistentQueue_PutCloseReadClose (0.00s)
+=== RUN   TestItemIndexMarshaling
+=== RUN   TestItemIndexMarshaling/#elements:0
+=== RUN   TestItemIndexMarshaling/#elements:1
+=== RUN   TestItemIndexMarshaling/#elements:18446744073709551615
+--- PASS: TestItemIndexMarshaling (0.00s)
+    --- PASS: TestItemIndexMarshaling/#elements:0 (0.00s)
+    --- PASS: TestItemIndexMarshaling/#elements:1 (0.00s)
+    --- PASS: TestItemIndexMarshaling/#elements:18446744073709551615 (0.00s)
+=== RUN   TestItemIndexArrayMarshaling
+=== RUN   TestItemIndexArrayMarshaling/#elements:[0_1_2]
+=== RUN   TestItemIndexArrayMarshaling/#elements:[]
+=== RUN   TestItemIndexArrayMarshaling/#elements:[]#01
+--- PASS: TestItemIndexArrayMarshaling (0.00s)
+    --- PASS: TestItemIndexArrayMarshaling/#elements:[0_1_2] (0.00s)
+    --- PASS: TestItemIndexArrayMarshaling/#elements:[] (0.00s)
+    --- PASS: TestItemIndexArrayMarshaling/#elements:[]#01 (0.00s)
+=== RUN   TestPersistentQueue_ShutdownWhileConsuming
+--- PASS: TestPersistentQueue_ShutdownWhileConsuming (0.00s)
+=== RUN   TestPersistentQueue_StorageFull
+--- PASS: TestPersistentQueue_StorageFull (0.00s)
+=== RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling
+=== RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/no_errors
+=== RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_transaction,_success_afterwards
+=== RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_second_transaction
+=== RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_third_transaction
+--- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling (0.00s)
+    --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/no_errors (0.00s)
+    --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_transaction,_success_afterwards (0.00s)
+    --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_second_transaction (0.00s)
+    --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_third_transaction (0.00s)
+=== RUN   TestPersistentQueue_ItemsCapacityUsageRestoredOnShutdown
+--- PASS: TestPersistentQueue_ItemsCapacityUsageRestoredOnShutdown (0.00s)
+=== RUN   TestPersistentQueue_ItemsCapacityIsAlwyasRecorder
+--- PASS: TestPersistentQueue_ItemsCapacityIsAlwyasRecorder (0.00s)
+=== RUN   TestPersistentQueue_RequestCapacityLessAfterRestart
+--- PASS: TestPersistentQueue_RequestCapacityLessAfterRestart (0.00s)
+=== RUN   TestPersistentQueue_RestoredUsedSizeIsCorrectedOnDrain
+--- PASS: TestPersistentQueue_RestoredUsedSizeIsCorrectedOnDrain (0.00s)
+=== CONT  TestCondSignalDoesNotBlockBehindCanceledWaiters
+=== CONT  TestObsQueueEnqueueSpanAttributes
+=== RUN   TestObsQueueEnqueueSpanAttributes/traces
+=== RUN   TestObsQueueEnqueueSpanAttributes/traces/success
+=== CONT  TestCondSignalAccounting
+=== RUN   TestCondSignalAccounting/1
+=== CONT  TestCondCancellationNotification
+=== RUN   TestCondCancellationNotification/cancel_then_signal
+=== RUN   TestCondSignalAccounting/3
+--- PASS: TestCondSignalAccounting (0.00s)
+    --- PASS: TestCondSignalAccounting/1 (0.00s)
+    --- PASS: TestCondSignalAccounting/3 (0.00s)
+--- PASS: TestCondSignalDoesNotBlockBehindCanceledWaiters (0.00s)
+=== RUN   TestCondCancellationNotification/signal_then_cancel
+=== RUN   TestCondCancellationNotification/mixed_cancel_then_signal
+=== RUN   TestCondCancellationNotification/cancel_then_signal_without_live_waiters
+=== RUN   TestObsQueueEnqueueSpanAttributes/traces/failure
+=== RUN   TestCondCancellationNotification/cancel_then_signal_overflowing_buffer
+--- PASS: TestCondCancellationNotification (0.00s)
+    --- PASS: TestCondCancellationNotification/cancel_then_signal (0.00s)
+    --- PASS: TestCondCancellationNotification/signal_then_cancel (0.00s)
+    --- PASS: TestCondCancellationNotification/mixed_cancel_then_signal (0.00s)
+    --- PASS: TestCondCancellationNotification/cancel_then_signal_without_live_waiters (0.00s)
+    --- PASS: TestCondCancellationNotification/cancel_then_signal_overflowing_buffer (0.00s)
+=== RUN   TestObsQueueEnqueueSpanAttributes/metrics
+=== RUN   TestObsQueueEnqueueSpanAttributes/metrics/success
+=== RUN   TestObsQueueEnqueueSpanAttributes/metrics/failure
+=== RUN   TestObsQueueEnqueueSpanAttributes/logs
+=== RUN   TestObsQueueEnqueueSpanAttributes/logs/success
+=== RUN   TestObsQueueEnqueueSpanAttributes/logs/failure
+=== RUN   TestObsQueueEnqueueSpanAttributes/profiles
+=== RUN   TestObsQueueEnqueueSpanAttributes/profiles/success
+=== RUN   TestObsQueueEnqueueSpanAttributes/profiles/failure
+--- PASS: TestObsQueueEnqueueSpanAttributes (0.00s)
+    --- PASS: TestObsQueueEnqueueSpanAttributes/traces (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/traces/success (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/traces/failure (0.00s)
+    --- PASS: TestObsQueueEnqueueSpanAttributes/metrics (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/metrics/success (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/metrics/failure (0.00s)
+    --- PASS: TestObsQueueEnqueueSpanAttributes/logs (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/logs/success (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/logs/failure (0.00s)
+    --- PASS: TestObsQueueEnqueueSpanAttributes/profiles (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/profiles/success (0.00s)
+        --- PASS: TestObsQueueEnqueueSpanAttributes/profiles/failure (0.00s)
+FAIL
+FAIL	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	5.071s
+FAIL

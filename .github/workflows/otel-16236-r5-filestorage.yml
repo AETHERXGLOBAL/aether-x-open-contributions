@@ -1,0 +1,136 @@
+name: OTel 16236 R5 actual Contrib file_storage lifecycle
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go
+      - .github/workflows/otel-16236-r5-filestorage.yml
+      - tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+permissions:
+  contents: read
+jobs:
+  actual-contrib-extension:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - name: Read-only checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Pin exact upstream Go source and internal R5 candidate
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r5_extension_evidence"
+          mkdir -p "$out"
+          printf '%s\n' "$GITHUB_SHA" > "$out/internal_head.txt"
+          git init -q /tmp/otel-r5-ext
+          git -C /tmp/otel-r5-ext remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-r5-ext fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r5-ext checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-r5-ext rev-parse HEAD)" = '572057cde7e9bbe3aed6e5e3e8f16290d487f7d0'
+          git -C /tmp/otel-r5-ext rev-parse HEAD > "$out/upstream_head.txt"
+          q=/tmp/otel-r5-ext/exporter/exporterhelper/internal/queue
+          test "$(sha256sum "$q/persistent_queue.go" | cut -d' ' -f1)" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          cp tests/opentelemetry/16236/r2/persistent_queue_candidate.go "$q/persistent_queue.go"
+          cp tests/opentelemetry/16236/axg_recovery_contract_test.go "$q/axg_recovery_contract_test.go"
+          cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"
+          cp tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go "$q/axg_bbolt_sigkill_linux_test.go"
+          cp tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go "$q/axg_independent_bbolt_linux_test.go"
+          cp tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go "$q/axg_qmv0_integrity_test.go"
+          cp tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go "$q/axg_actual_filestorage_test.go"
+          gofmt -w "$q/"axg*test.go
+          sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go > "$out/candidate_sha256.txt"
+          sha256sum tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go > "$out/extension_test_sha256.txt"
+      - name: Install pinned Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Install exact release Contrib filestorage v0.165.0 in isolated module
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r5_extension_evidence
+          go version > "$out/go_version.txt"
+          go -C /tmp/otel-r5-ext/exporter/exporterhelper get github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage@v0.165.0 > "$out/contrib_get.log" 2>&1
+          go -C /tmp/otel-r5-ext/exporter/exporterhelper list -m github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage | tee "$out/contrib_version.txt"
+          grep -qx 'github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0' "$out/contrib_version.txt"
+          go -C /tmp/otel-r5-ext/exporter/exporterhelper list -m go.etcd.io/bbolt > "$out/bbolt_version.txt"
+          go -C /tmp/otel-r5-ext/exporter/exporterhelper list -m all > "$out/resolved_module_versions.txt"
+      - name: Execute actual extension lifecycle and recovery tests
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r5_extension_evidence
+          set +e
+          timeout 410s go -C /tmp/otel-r5-ext/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGR5FileStorageActualExtension' ./internal/queue > "$out/extension_focused.log" 2>&1
+          code=$?
+          set -e
+          printf '%s\n' "$code" > "$out/extension_exit.txt"
+          tail -100 "$out/extension_focused.log"
+      - name: Classify exact three integration outcomes
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r5_extension_evidence
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          def v(n):
+              p=Path(n)
+              return p.read_text(errors='replace').strip() if p.is_file() else ''
+          out=v('extension_focused.log')
+          tests={
+              'qmv0_restart':'AXG_R5_REAL_FILESTORAGE_QMV0_RESTART_PASS' in out,
+              'legacy_migration':'AXG_R5_REAL_FILESTORAGE_LEGACY_PASS' in out,
+              'metadata_fail_closed':'AXG_R5_REAL_FILESTORAGE_CORRUPT_QMV0_FAIL_CLOSED' in out
+          }
+          data={
+              'mission':'AXG-OTEL-16236-R5-CONTRIB-FILESTORAGE-INTEGRATION-20261114',
+              'head':v('internal_head.txt'),
+              'upstream_head':v('upstream_head.txt'),
+              'contrib_module':v('contrib_version.txt'),
+              'bbolt_module':v('bbolt_version.txt'),
+              'focused_exit':v('extension_exit.txt'),
+              'integration_tests':tests,
+              'test_scope':'Actual Contrib file_storage factory extension Start/GetClient/Client.Close/Shutdown with real on-disk bbolt; no full Collector distribution, no power-loss or compaction',
+              'original_upstream_corrupt_metadata_test_contract':'CONFLICT; existing R5 separate suite REVISE until maintainer policy approved'
+          }
+          data['verdict']='R5_ACTUAL_FILESTORAGE_PASS_SCOPED' if (
+              data['focused_exit']=='0' and
+              data['upstream_head']=='572057cde7e9bbe3aed6e5e3e8f16290d487f7d0' and
+              data['contrib_module'].endswith(' v0.165.0') and all(tests.values())
+          ) else 'R5_EXTENSION_REVISE'
+          Path('result.json').write_text(json.dumps(data,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(data,sort_keys=True))
+          PY
+      - name: Seal actual raw evidence with SHA-256
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r5_extension_evidence
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          files=sorted(f for f in Path('.').iterdir() if f.is_file() and f.name!='SHA256SUMS.txt')
+          Path('SHA256SUMS.txt').write_text(''.join(hashlib.sha256(f.read_bytes()).hexdigest()+'  '+f.name+'\n' for f in files))
+          PY
+      - name: Archive exact test logs and failed builds
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r5-real-contrib-file-storage
+          path: tests/opentelemetry/16236/r5_extension_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce narrow test claim only
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r5_extension_evidence/result.json')
+          if not p.exists() or json.loads(p.read_text()).get('verdict')!='R5_ACTUAL_FILESTORAGE_PASS_SCOPED':
+              raise SystemExit('R5_EXTENSION_REVISE: inspect raw logs; do not claim extension PASS')
+          print('R5_ACTUAL_FILESTORAGE_PASS_SCOPED — broader package compatibility remains blocked')
+          PY

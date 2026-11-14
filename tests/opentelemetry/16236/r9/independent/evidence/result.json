@@ -1,0 +1,68 @@
+{
+  "accepted_upstream_corrupt_qmv0_contract": false,
+  "all_backends_certified": false,
+  "bbolt": "go.etcd.io/bbolt v1.5.0",
+  "candidate_sha256": "74a66d85a4e2000a3292aeed1ec2e3cfe59e1de9b9c873fb07c5620a6158469c",
+  "contrib": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "execution_head": "b18313bfa30ee098b0e6a2de074245589b7d90bf",
+  "execution_tree": "417ff03881ba814318a6027a33c93e7c5da162bb",
+  "exit_codes": {
+    "engineering": "0",
+    "historical": "0",
+    "independent": "1",
+    "original": "1"
+  },
+  "failed_tests": {
+    "engineering": [],
+    "historical": [],
+    "independent": [
+      "TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite ",
+      "TestAXGTAR9Qmv0MissingMiddlePayloadMustRefuse ",
+      "TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject ",
+      "TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest "
+    ],
+    "original": [
+      "TestPersistentQueue_CorruptedData ",
+      "TestPersistentQueue_CorruptedData/corrupted_metadata ",
+      "TestPersistentQueue_CorruptedData/corrupted_everything "
+    ]
+  },
+  "mission": "AXG-OTEL-16236-R9-INDEPENDENT-NONWALKER-QMV0-REQUALIFICATION-20261114",
+  "original_upstream_full_suite_pass": false,
+  "ta_r9_top_level_cases": [
+    [
+      "PASS",
+      "TestAXGTAR9NonWalkerOrphanZeroPreserved"
+    ],
+    [
+      "PASS",
+      "TestAXGTAR9NonWalkerOrphan1024CollisionPreserved"
+    ],
+    [
+      "FAIL",
+      "TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite"
+    ],
+    [
+      "FAIL",
+      "TestAXGTAR9Qmv0MissingMiddlePayloadMustRefuse"
+    ],
+    [
+      "FAIL",
+      "TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject"
+    ],
+    [
+      "PASS",
+      "TestAXGTAR9GetErrorMustNotAdvanceDurableWrite"
+    ],
+    [
+      "FAIL",
+      "TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest"
+    ],
+    [
+      "PASS",
+      "TestAXGTAR9ValidTwoPendingQmv0RestartControl"
+    ]
+  ],
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "REVISE"
+}

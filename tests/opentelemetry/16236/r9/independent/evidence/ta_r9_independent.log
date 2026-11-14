@@ -1,0 +1,52 @@
+=== RUN   TestAXGTAR9NonWalkerOrphanZeroPreserved
+--- PASS: TestAXGTAR9NonWalkerOrphanZeroPreserved (0.00s)
+=== RUN   TestAXGTAR9NonWalkerOrphan1024CollisionPreserved
+--- PASS: TestAXGTAR9NonWalkerOrphan1024CollisionPreserved (0.00s)
+=== RUN   TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite
+    axg_ta_r9_independent_test.go:89: 
+        	Error Trace:	/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/axg_ta_r9_independent_test.go:89
+        	Error:      	An error is expected but got nil.
+        	Test:       	TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite
+        	Messages:   	cannot certify a fresh queue with occupied but empty key 0
+--- FAIL: TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite (0.00s)
+=== RUN   TestAXGTAR9Qmv0MissingMiddlePayloadMustRefuse
+    axg_ta_r9_independent_test.go:104: 
+        	Error Trace:	/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/axg_ta_r9_independent_test.go:104
+        	Error:      	An error is expected but got nil.
+        	Test:       	TestAXGTAR9Qmv0MissingMiddlePayloadMustRefuse
+        	Messages:   	first key exists, but missing middle key must not silently pass
+--- FAIL: TestAXGTAR9Qmv0MissingMiddlePayloadMustRefuse (0.00s)
+=== RUN   TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject
+    axg_ta_r9_independent_test.go:125: 
+        	Error Trace:	/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/axg_ta_r9_independent_test.go:125
+        	Error:      	An error is expected but got nil.
+        	Test:       	TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject
+        	Messages:   	ambiguous empty legacy markers must not be overwritten on startup
+--- FAIL: TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject (0.00s)
+=== RUN   TestAXGTAR9GetErrorMustNotAdvanceDurableWrite
+--- PASS: TestAXGTAR9GetErrorMustNotAdvanceDurableWrite (0.00s)
+=== RUN   TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest
+    axg_ta_r9_independent_test.go:208: TA_R9_CONCURRENT_BOTH_READ_BEFORE_BATCH first=<nil> second=<nil>
+    axg_ta_r9_independent_test.go:211: TA_R9_CONCURRENT_PHYSICAL_INVENTORY=[41]
+    axg_ta_r9_independent_test.go:212: 
+        	Error Trace:	/tmp/otel-ta-r9/exporter/exporterhelper/internal/queue/axg_ta_r9_independent_test.go:212
+        	Error:      	Not equal: 
+        	            	expected: []queue.intRequest{11, 41}
+        	            	actual  : []queue.intRequest{41}
+        	            	
+        	            	Diff:
+        	            	--- Expected
+        	            	+++ Actual
+        	            	@@ -1,3 +1,2 @@
+        	            	-([]queue.intRequest) (len=2) {
+        	            	- (queue.intRequest) 11,
+        	            	+([]queue.intRequest) (len=1) {
+        	            	  (queue.intRequest) 41
+        	Test:       	TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest
+        	Messages:   	must not claim shared-namespace two-writer lossless behavior without CAS/ownership
+--- FAIL: TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest (0.00s)
+=== RUN   TestAXGTAR9ValidTwoPendingQmv0RestartControl
+--- PASS: TestAXGTAR9ValidTwoPendingQmv0RestartControl (0.00s)
+FAIL
+FAIL	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.025s
+FAIL

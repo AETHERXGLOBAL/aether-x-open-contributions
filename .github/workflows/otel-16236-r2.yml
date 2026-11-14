@@ -1,0 +1,146 @@
+name: OTel 16236 R2 internal atomic recovery spike
+on:
+  pull_request:
+    paths:
+      - 'tests/opentelemetry/16236/r2/persistent_queue_candidate.go'
+      - 'tests/opentelemetry/16236/r2/axg_recovery_r2_test.go'
+      - '.github/workflows/otel-16236-r2.yml'
+permissions:
+  contents: read
+jobs:
+  recovery-spike:
+    if: github.event.pull_request.head.ref == 'evidence/otel-queue-recovery-16236-r1-20261113'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 19
+    steps:
+      - name: Checkout internal review (read-only credentials)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Get exact upstream baseline and verify unmodified Go source
+        run: |
+          set -euo pipefail
+          mkdir -p tests/opentelemetry/16236/r2_evidence
+          git init -q /tmp/otel-16236-candidate
+          git -C /tmp/otel-16236-candidate remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-16236-candidate fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-16236-candidate checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-16236-candidate rev-parse HEAD)" = '572057cde7e9bbe3aed6e5e3e8f16290d487f7d0'
+          git -C /tmp/otel-16236-candidate rev-parse HEAD > tests/opentelemetry/16236/r2_evidence/upstream_head.txt
+          sha256sum /tmp/otel-16236-candidate/exporter/exporterhelper/internal/queue/persistent_queue.go > tests/opentelemetry/16236/r2_evidence/baseline_source_sha256.txt
+          test "$(cut -d' ' -f1 tests/opentelemetry/16236/r2_evidence/baseline_source_sha256.txt)" = 'c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4'
+      - name: Install exact Go toolchain
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Baseline RED on original upstream implementation
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r2_evidence
+          go version > "$out/go_version.txt"
+          cp tests/opentelemetry/16236/axg_recovery_contract_test.go /tmp/otel-16236-candidate/exporter/exporterhelper/internal/queue/axg_recovery_contract_test.go
+          set +e
+          timeout 420s go -C /tmp/otel-16236-candidate/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGRecoveryCutAfterCommittedRetirement$' ./internal/queue > "$out/baseline_red.log" 2>&1
+          code=$?
+          set -e
+          echo "$code" > "$out/baseline_red_exit.txt"
+          tail -24 "$out/baseline_red.log"
+      - name: Install isolated candidate and archive source-level diff
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r2_evidence
+          q=/tmp/otel-16236-candidate/exporter/exporterhelper/internal/queue
+          test -z "$(gofmt -l tests/opentelemetry/16236/r2/persistent_queue_candidate.go)"
+          cp tests/opentelemetry/16236/r2/persistent_queue_candidate.go "$q/persistent_queue.go"
+          cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"
+          sha256sum "$q/persistent_queue.go" > "$out/candidate_source_sha256.txt"
+          sha256sum "$q/axg_recovery_r2_test.go" > "$out/r2_test_sha256.txt"
+          git -C /tmp/otel-16236-candidate diff -- exporter/exporterhelper/internal/queue/persistent_queue.go > "$out/candidate_source.diff"
+          test -s "$out/candidate_source.diff"
+      - name: GREEN verification including multi-cut legacy and failure injections
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r2_evidence
+          set +e
+          timeout 420s go -C /tmp/otel-16236-candidate/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGRecovery' ./internal/queue > "$out/candidate_focused_green.log" 2>&1
+          code=$?
+          set -e
+          echo "$code" > "$out/candidate_focused_exit.txt"
+          tail -95 "$out/candidate_focused_green.log"
+      - name: Full pre-existing upstream queue package regression
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r2_evidence
+          set +e
+          timeout 420s go -C /tmp/otel-16236-candidate/exporter/exporterhelper test -count=1 -timeout=6m ./internal/queue > "$out/upstream_queue_regression.log" 2>&1
+          code=$?
+          set -e
+          echo "$code" > "$out/upstream_queue_regression_exit.txt"
+          tail -100 "$out/upstream_queue_regression.log"
+      - name: Classify exact outcomes and preserve failures
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r2_evidence
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          def v(n):
+              p=Path(n)
+              return p.read_text().strip() if p.is_file() else None
+          baseline=v('baseline_red.log') or ''
+          green=v('candidate_focused_green.log') or ''
+          r={
+              "mission":"AXG-OTEL-PERSISTENT-RECOVERY-R2-20261114",
+              "upstream_head_expected":"572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+              "baseline_exit":v("baseline_red_exit.txt"),
+              "baseline_actual_loss":"AXG_LOSS_CONFIRMED" in baseline and "--- FAIL: TestAXGRecoveryCutAfterCommittedRetirement" in baseline,
+              "candidate_focused_exit":v("candidate_focused_exit.txt"),
+              "candidate_package_exit":v("upstream_queue_regression_exit.txt"),
+              "candidate_marker":"AXG_CRASH_RECOVERY_SAFE" in green and "AXG_REPEATED_CRASH_SAFE" in green and "AXG_LEGACY_CRASH_SAFE" in green and "AXG_ERROR_FAIL_CLOSED" in green,
+              "verification_scope":"synthetic atomic storage client and actual upstream queue Go tests; NOT bbolt process-kill; candidate is NOT upstream-submitted",
+          }
+          r['verdict']='R2_CANDIDATE_GREEN_SCOPED' if (
+              v("upstream_head.txt")==r['upstream_head_expected'] and
+              r['baseline_exit']=='1' and r['baseline_actual_loss'] and
+              r['candidate_focused_exit']=='0' and r['candidate_package_exit']=='0'
+              and r['candidate_marker'] and bool(v("candidate_source.diff"))
+          ) else 'R2_REVISE'
+          Path("result.json").write_text(json.dumps(r,sort_keys=True,indent=2)+"\n")
+          print(json.dumps(r,sort_keys=True))
+          PY
+      - name: Seal raw evidence with integrity manifest
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r2_evidence
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          p=Path(".")
+          files=sorted(f for f in p.iterdir() if f.is_file() and f.name!="SHA256SUMS.txt")
+          (p/"SHA256SUMS.txt").write_text("".join(
+              hashlib.sha256(f.read_bytes()).hexdigest()+"  "+f.name+"\n" for f in files
+          ))
+          PY
+      - name: Upload actual before-after Go evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r2-candidate-evidence
+          path: tests/opentelemetry/16236/r2_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce scope-specific R2 result
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path("tests/opentelemetry/16236/r2_evidence/result.json")
+          if not p.is_file() or json.loads(p.read_text()).get("verdict")!="R2_CANDIDATE_GREEN_SCOPED":
+              raise SystemExit("R2_REVISE: actual proof incomplete; inspect raw evidence, no GREEN claim")
+          print("R2_CANDIDATE_GREEN_SCOPED (internal only; NOT independent assurance or native bbolt qualification)")
+          PY

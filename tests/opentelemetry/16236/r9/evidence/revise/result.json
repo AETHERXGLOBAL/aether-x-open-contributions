@@ -1,0 +1,28 @@
+{
+  "all_storage_backends_proven_safe": false,
+  "bbolt_version": "go.etcd.io/bbolt v1.5.0",
+  "candidate_sha256": "303add23a90a6aad5cfdad2611b46c77d73a4bf670bf54b45ed654a51c82410a",
+  "contrib_version": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "full_original_exit": "1",
+  "historical_exit": "0",
+  "independent_R9_approved": false,
+  "independent_r8_exit": "0",
+  "independent_r8_failures": [],
+  "mission": "AXG-OTEL-16236-R9-ENGINEERING-20261114",
+  "original_failures": [
+    "TestPersistentQueue_CorruptedData",
+    "TestPersistentQueue_CorruptedData/corrupted_metadata",
+    "TestPersistentQueue_CorruptedData/corrupted_everything"
+  ],
+  "original_suite_pass": false,
+  "power_loss_tested": false,
+  "r9_failures": [
+    "TestAXGR9NonWalkerFutureOrphanSlotNotOverwritten"
+  ],
+  "r9_focused_exit": "1",
+  "real_ENOSPC_tested": false,
+  "tested_head": "3e9fa68bb270c8a1d75b08b13533ac56f3ef154d",
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "upstream_policy_accepted": false,
+  "verdict": "R9_REVISE"
+}

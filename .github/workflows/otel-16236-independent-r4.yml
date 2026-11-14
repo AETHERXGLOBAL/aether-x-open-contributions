@@ -1,0 +1,139 @@
+name: OTel 16236 Independent R4 native bbolt falsification
+
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - 'tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go'
+      - '.github/workflows/otel-16236-independent-r4.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  independent-native-requalification:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact internal branch without persistent credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+
+      - name: Install same Go toolchain as R3
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+
+      - name: Independently re-run old RED, native SIGKILL and adversarial candidate tests
+        id: verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r4_evidence"
+          mkdir -p "$out"
+          printf '%s\n' "$GITHUB_SHA" > "$out/internal_review_head.txt"
+          go version > "$out/go_version.txt"
+          git init -q /tmp/axg-otel-independent
+          git -C /tmp/axg-otel-independent remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/axg-otel-independent fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/axg-otel-independent checkout -q --detach FETCH_HEAD
+          uhead="$(git -C /tmp/axg-otel-independent rev-parse HEAD)"
+          printf '%s\n' "$uhead" > "$out/upstream_head.txt"
+          test "$uhead" = "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0"
+          original="/tmp/axg-otel-independent/exporter/exporterhelper/internal/queue/persistent_queue.go"
+          candidate="tests/opentelemetry/16236/r2/persistent_queue_candidate.go"
+          native="tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go"
+          independent="tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go"
+          sha256sum "$original" "$candidate" "$native" "$independent" | tee "$out/source_sha256.txt"
+          test "$(sha256sum "$original" | cut -d' ' -f1)" = "c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4"
+          test "$(sha256sum "$candidate" | cut -d' ' -f1)" = "c9705f155cd3c143da236741947689120670d17817c0244e386a4d138f86afce"
+          test "$(sha256sum "$native" | cut -d' ' -f1)" = "c461fc2ceceb4217bb8545562d3a6c43f10495566ee72e833591141c8667329a"
+          test "$(sha256sum "$independent" | cut -d' ' -f1)" = "dfead9a31cc205ebdce9484f1e98442994b19fe0608348649d6d7a0629a4ec0d"
+          q="/tmp/axg-otel-independent/exporter/exporterhelper/internal/queue"
+          cp tests/opentelemetry/16236/axg_recovery_contract_test.go "$q/axg_recovery_contract_test.go"
+          cp "$native" "$q/axg_bbolt_sigkill_linux_test.go"
+          # The independent tests use candidate-only initClient(error) semantics.
+          # Keep them out of the original baseline compilation.
+          gofmt -w "$q/axg_bbolt_sigkill_linux_test.go"
+          go -C /tmp/axg-otel-independent/exporter/exporterhelper get go.etcd.io/bbolt@v1.5.0 > "$out/pin_bbolt.log" 2>&1
+          go -C /tmp/axg-otel-independent/exporter/exporterhelper list -m go.etcd.io/bbolt | tee "$out/pinned_bbolt.txt"
+          grep -qx 'go.etcd.io/bbolt v1.5.0' "$out/pinned_bbolt.txt"
+          set +e
+          timeout 360s go -C /tmp/axg-otel-independent/exporter/exporterhelper test -count=1 -v -timeout=5m -run '^TestAXGBboltSIGKILLRecovery$/^qmv0_first_committed$' ./internal/queue > "$out/baseline_red.log" 2>&1
+          baseline_exit="$?"
+          set -e
+          printf '%s\n' "$baseline_exit" > "$out/baseline_exit.txt"
+          cp "$candidate" "$q/persistent_queue.go"
+          cp "$independent" "$q/axg_independent_bbolt_linux_test.go"
+          gofmt -w "$q/axg_independent_bbolt_linux_test.go"
+          cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"
+          set +e
+          timeout 360s go -C /tmp/axg-otel-independent/exporter/exporterhelper test -count=1 -v -timeout=5m -run '^TestAXG(Independent|BboltSIGKILLRecovery)' ./internal/queue > "$out/independent_native.log" 2>&1
+          independent_exit="$?"
+          timeout 400s go -C /tmp/axg-otel-independent/exporter/exporterhelper test -count=1 -timeout=6m ./internal/queue > "$out/full_package.log" 2>&1
+          full_exit="$?"
+          set -e
+          printf '%s\n' "$independent_exit" > "$out/independent_exit.txt"
+          printf '%s\n' "$full_exit" > "$out/full_package_exit.txt"
+          OUT="$out" python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ['OUT'])
+          read=lambda f:(p/f).read_text(errors='replace')
+          b,c=read('baseline_red.log'),read('independent_native.log')
+          result={
+            'mission':'AXG-OTEL-16236-R3-INDEPENDENT-NATIVE-REQUALIFICATION-20261114',
+            'actor':'AETHER TEST ARCHITECT - executed through separately authored independent GitHub Actions workflow',
+            'internal_review_head':read('internal_review_head.txt').strip(),
+            'upstream_head':read('upstream_head.txt').strip(),
+            'go_version':read('go_version.txt').strip(),
+            'bbolt_version':read('pinned_bbolt.txt').strip(),
+            'baseline_red_exit':read('baseline_exit.txt').strip(),
+            'independent_native_exit':read('independent_exit.txt').strip(),
+            'full_package_exit':read('full_package_exit.txt').strip(),
+            'baseline_sigkill_confirmed':'AXG_BBOLT_SIGKILL_CONFIRMED' in b,
+            'baseline_missing_ids':'actual  : []queue.intRequest{33}' in b,
+            'candidate_sigkill_count':c.count('AXG_BBOLT_SIGKILL_CONFIRMED'),
+            'candidate_recovery_count':c.count('AXG_BBOLT_RESTART_PRESERVED'),
+            'native_restarts_observed':c.count('AXG_INDEPENDENT_RESTART_OK'),
+            'injected_failure_rejected':'AXG_INDEPENDENT_PRECOMMIT_ROLLBACK_OK' in c,
+            'metadata_corruption_observed':'AXG_INDEPENDENT_ADVERSE_FINDING' in c,
+            'collector_extension_tested':False,
+            'power_loss_tested':False,
+          }
+          result['verdict']='PASS_SCOPED_WITH_EXPLICIT_LIMITATIONS' if (
+            result['baseline_red_exit']=='1' and result['baseline_sigkill_confirmed'] and result['baseline_missing_ids'] and
+            result['independent_native_exit']=='0' and result['full_package_exit']=='0' and
+            result['candidate_sigkill_count']==3 and result['candidate_recovery_count']==3 and
+            result['native_restarts_observed']==8 and result['injected_failure_rejected']
+          ) else 'REVISE'
+          (p/'result.json').write_text(json.dumps(result,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(result,sort_keys=True,indent=2))
+          PY
+          tail -65 "$out/independent_native.log"
+          test "$(python3 -c "import json;print(json.load(open('$out/result.json'))['verdict'])")" = "PASS_SCOPED_WITH_EXPLICIT_LIMITATIONS"
+
+      - name: Seal raw evidence and negative results
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r4_evidence
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          paths=sorted(p for p in Path('.').iterdir() if p.is_file() and p.name!='SHA256SUMS.txt')
+          Path('SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in paths))
+          PY
+
+      - name: Preserve complete actual evidence including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-independent-native-r4
+          path: tests/opentelemetry/16236/r4_evidence/
+          retention-days: 30
+          if-no-files-found: error

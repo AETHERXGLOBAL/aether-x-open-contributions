@@ -1,0 +1,225 @@
+name: OTel 16236 R10 independent Test Architect requalification
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - .github/workflows/otel-16236-r10-ta-independent.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  separate-ta-r10-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Checkout tested AETHER source without persisted credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Pin Go 1.26.0
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Freeze sources and prepare real upstream queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r10_ta_independent_evidence"
+          mkdir -p "$out"
+          git rev-parse HEAD > "$out/tested_head.txt"
+          git rev-parse HEAD^{tree} > "$out/tested_tree.txt"
+          go version > "$out/go_version.txt"
+          git hash-object tests/opentelemetry/16236/r9/independent/axg_ta_r9_independent_test.go > "$out/r9_ta_git_blob.txt"
+          test "$(cat "$out/r9_ta_git_blob.txt")" = da58cdec582045b1506a5b992bca7132105ba84c
+          test "$(sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go | cut -d' ' -f1)" = 5b1df085d3db0e91a2c0e8f5aef529087985b3cd102d725a206697cbdc3df176
+          test "$(sha256sum tests/opentelemetry/16236/r10/axg_qmv0_inventory_test.go | cut -d' ' -f1)" = ea7a616757b2ccc9db28c7513566d404feb15640ee0237700e2beacbcf00671c
+          sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go tests/opentelemetry/16236/r10/axg_qmv0_inventory_test.go tests/opentelemetry/16236/r10/independent/axg_ta_r10_independent_test.go > "$out/frozen_code_test_sha256.txt"
+          git init -q /tmp/otel-r10-ta
+          git -C /tmp/otel-r10-ta remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-r10-ta fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r10-ta checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-r10-ta rev-parse HEAD)" = 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r10-ta rev-parse HEAD > "$out/upstream_head.txt"
+          q=/tmp/otel-r10-ta/exporter/exporterhelper/internal/queue
+          test "$(sha256sum "$q/persistent_queue.go" | cut -d' ' -f1)" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          sha256sum "$q/persistent_queue.go" > "$out/upstream_original_sha256.txt"
+          cp tests/opentelemetry/16236/r2/persistent_queue_candidate.go "$q/persistent_queue.go"
+          for f in             tests/opentelemetry/16236/axg_recovery_contract_test.go             tests/opentelemetry/16236/r2/axg_recovery_r2_test.go             tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go             tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go             tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go             tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go             tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go
+          do cp "$f" "$q/$(basename "$f")"; done
+          gofmt -w "$q"/axg*test.go
+      - name: Resolve real Contrib and bbolt pinned modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r10_ta_independent_evidence
+          go -C /tmp/otel-r10-ta/exporter/exporterhelper get github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage@v0.165.0 > "$out/module_get.log" 2>&1
+          go -C /tmp/otel-r10-ta/exporter/exporterhelper list -m github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage > "$out/contrib_version.txt"
+          go -C /tmp/otel-r10-ta/exporter/exporterhelper list -m go.etcd.io/bbolt > "$out/bbolt_version.txt"
+          grep -qx 'github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0' "$out/contrib_version.txt"
+          grep -qx 'go.etcd.io/bbolt v1.5.0' "$out/bbolt_version.txt"
+      - name: Execute original upstream queue suite without edits to original assertions
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_ta_independent_evidence
+          timeout 450s go -C /tmp/otel-r10-ta/exporter/exporterhelper test -json -count=1 -timeout=7m ./internal/queue > "$out/upstream_queue.jsonl" 2>&1
+          echo "$?" > "$out/upstream_queue.exit"
+          tail -30 "$out/upstream_queue.jsonl"
+          exit 0
+      - name: Add unchanged R6-R9 independent fixtures and engineering R10 tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          q=/tmp/otel-r10-ta/exporter/exporterhelper/internal/queue
+          for f in             tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go             tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go             tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go             tests/opentelemetry/16236/r8/axg_metadata_presence_test.go             tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go             tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go             tests/opentelemetry/16236/r9/independent/axg_ta_r9_independent_test.go             tests/opentelemetry/16236/r10/axg_qmv0_inventory_test.go             tests/opentelemetry/16236/r10/independent/axg_ta_r10_independent_test.go
+          do cp "$f" "$q/$(basename "$f")"; done
+          gofmt -w "$q"/axg*test.go
+      - name: Independently run old and new cases, retaining expected FAIL evidence
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_ta_independent_evidence
+          run_case() {
+            name="$1"; regex="$2"; limit="$3"
+            timeout "$limit" go -C /tmp/otel-r10-ta/exporter/exporterhelper test -json -count=1 -timeout=6m -run "$regex" ./internal/queue > "$out/$name.jsonl" 2>&1
+            echo "$?" > "$out/$name.exit"
+            printf 'TA-R10 %s: exit=%s\n' "$name" "$(cat "$out/$name.exit")"
+            tail -10 "$out/$name.jsonl"
+          }
+          run_case historical '^(TestAXGR(5|6|7|8)|TestAXGTAR6|TestAXGTAR7)' 410s
+          run_case ta_r8 '^TestAXGTAR8' 310s
+          run_case engineering_r9 '^TestAXGR9' 310s
+          run_case engineering_r10 '^TestAXGR10' 310s
+          run_case ta_r9 '^TestAXGTAR9' 310s
+          run_case ta_r10 '^TestAXGTAR10' 310s
+          exit 0
+      - name: Independent fail-closed, TOCTOU and upstream evidence adjudication
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r10_ta_independent_evidence
+          export OUT="$out"
+          python3 - <<'PY'
+          import json, os, hashlib
+          from pathlib import Path
+          p = Path(os.environ["OUT"])
+          names = ["upstream_queue","historical","ta_r8","engineering_r9","engineering_r10","ta_r9","ta_r10"]
+          cases = {}
+          for name in names:
+              log = p / (name + ".jsonl")
+              exit_file = p / (name + ".exit")
+              record = {"exit":exit_file.read_text().strip() if exit_file.exists() else "NOT_RUN",
+                        "run":[], "pass":[], "fail":[], "skip":[], "parse_errors":0}
+              if log.exists():
+                  for line in log.read_text(errors="replace").splitlines():
+                      try: event = json.loads(line)
+                      except (ValueError,TypeError):
+                          record["parse_errors"] += 1
+                          continue
+                      test, action = event.get("Test"), event.get("Action")
+                      if test and action in ("run", "pass", "fail", "skip"):
+                          record[action].append(test)
+              record["run"]=sorted(set(record["run"]))
+              record["pass"]=sorted(set(record["pass"]))
+              record["fail"]=sorted(set(record["fail"]))
+              record["skip"]=sorted(set(record["skip"]))
+              cases[name] = record
+          original = {
+              "TestPersistentQueue_CorruptedData",
+              "TestPersistentQueue_CorruptedData/corrupted_metadata",
+              "TestPersistentQueue_CorruptedData/corrupted_everything"
+          }
+          r9fail = {
+              "TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite",
+              "TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject",
+              "TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest"
+          }
+          r10fail = {"TestAXGTAR10PostScanMutationCannotAuthorizeStaleQueue"}
+          expected = (
+              cases["upstream_queue"]["exit"] == "1" and set(cases["upstream_queue"]["fail"]) == original
+              and all(cases[n]["exit"]=="0" and not cases[n]["fail"] and cases[n]["run"]
+                      for n in ("historical","ta_r8","engineering_r9","engineering_r10"))
+              and cases["ta_r9"]["exit"]=="1" and set(cases["ta_r9"]["fail"])==r9fail
+              and cases["ta_r10"]["exit"]=="1" and set(cases["ta_r10"]["fail"])==r10fail
+              and any("PendingInventoryNeverMutatedOnRefusal" in x for x in cases["ta_r10"]["pass"])
+              and "TestAXGTAR10ActualDiskValid256PendingSubrange" in cases["ta_r10"]["pass"]
+              and (p/"contrib_version.txt").read_text().strip().endswith(" v0.165.0")
+              and (p/"bbolt_version.txt").read_text().strip()=="go.etcd.io/bbolt v1.5.0"
+          )
+          src=Path("tests/opentelemetry/16236/r2/persistent_queue_candidate.go")
+          result={
+              "mission":"AXG-OTEL-16236-R10-INDEPENDENT-QMV0-OWNER-REQUALIFICATION-20261114",
+              "execution_kind":"separately triggered Test Architect GitHub Actions, original code and old fixtures preserved",
+              "tested_head":(p/"tested_head.txt").read_text().strip() if (p/"tested_head.txt").exists() else None,
+              "tested_tree":(p/"tested_tree.txt").read_text().strip() if (p/"tested_tree.txt").exists() else None,
+              "candidate_sha256":hashlib.sha256(src.read_bytes()).hexdigest(),
+              "upstream_head":(p/"upstream_head.txt").read_text().strip() if (p/"upstream_head.txt").exists() else None,
+              "independent_r9_blob":(p/"r9_ta_git_blob.txt").read_text().strip() if (p/"r9_ta_git_blob.txt").exists() else None,
+              "suites":cases,
+              "backend_ownership_proven":False,
+              "nonwalker_physical_presence_proven":False,
+              "upstream_maintainer_contract_accepted":False,
+              "observed_expected_signature":expected,
+              "verdict":"REVISE_QMV0_SCOPED_POSITIVE_OWNER_TOCTOU_AND_UPSTREAM_BLOCKED" if expected else "BLOCKED_OR_UNEXPECTED_TEST_RESULT"
+          }
+          (p/"result.json").write_text(json.dumps(result,indent=2,sort_keys=True)+"\n")
+          print("TA_R10_MACHINE_RESULT_BEGIN")
+          print(json.dumps(result,sort_keys=True))
+          print("TA_R10_MACHINE_RESULT_END")
+          PY
+      - name: Seal independent full machine and raw command logs
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r10_ta_independent_evidence
+          find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -printf '%f\n' | sort | xargs -r sha256sum > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+      - name: Upload all raw independent cases and negative evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-r10-ta-separate-execution
+          path: tests/opentelemetry/16236/r10_ta_independent_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Final gate must remain REVISE despite expected-case evidence
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r10_ta_independent_evidence/result.json')
+          if not p.exists(): raise SystemExit('TA R10 BLOCKED: no execution result')
+          obj=json.loads(p.read_text())
+          print('INDEPENDENT_TEST_VERDICT='+obj['verdict'])
+          if not obj['observed_expected_signature']:
+              raise SystemExit('TA R10 BLOCKED: unexpected evidence; inspect raw logs')
+          print('PR #22 must remain DRAFT. No upstream PR, merge, deploy or broad PASS.')
+          PY
+
+      - name: Commit exact raw independent logs and SHA-256 checks to same Draft PR
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          src=tests/opentelemetry/16236/r10_ta_independent_evidence
+          dst="tests/opentelemetry/16236/r10/independent/evidence/run_${GITHUB_RUN_ID}"
+          test -f "$src/result.json"
+          test -f "$src/SHA256SUMS.txt"
+          (cd "$src" && sha256sum -c SHA256SUMS.txt)
+          mkdir -p "$dst"
+          cp "$src"/* "$dst"/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$dst"
+          git commit -m "evidence(otel): preserve raw R10 TA run ${GITHUB_RUN_ID} and failed-case logs"
+          git -c credential.helper= -c 'credential.helper=!f() { echo username=x-access-token; echo "password=$GH_TOKEN"; }; f' push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          echo "TA_R10_EVIDENCE_COMMITTED_PATH=$dst"
+          echo "TA_R10_EVIDENCE_TESTED_HEAD=$GITHUB_SHA"
