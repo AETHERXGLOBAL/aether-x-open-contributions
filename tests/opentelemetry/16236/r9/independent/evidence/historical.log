@@ -1,0 +1,155 @@
+=== RUN   TestAXGR5FileStorageActualExtensionRestartNoLoss
+    axg_actual_filestorage_test.go:90: AXG_R5_REAL_FILESTORAGE_QMV0_RESTART_PASS
+--- PASS: TestAXGR5FileStorageActualExtensionRestartNoLoss (0.01s)
+=== RUN   TestAXGR5FileStorageActualExtensionLegacyMigration
+    axg_actual_filestorage_test.go:111: AXG_R5_REAL_FILESTORAGE_LEGACY_PASS
+--- PASS: TestAXGR5FileStorageActualExtensionLegacyMigration (0.00s)
+=== RUN   TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed
+    axg_actual_filestorage_test.go:145: AXG_R5_REAL_FILESTORAGE_CORRUPT_QMV0_FAIL_CLOSED
+--- PASS: TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed (0.01s)
+=== RUN   TestAXGR7LegacyMetadataMustFailClosed
+=== RUN   TestAXGR7LegacyMetadataMustFailClosed/invalid_read_index
+    axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=invalid_read_index
+=== RUN   TestAXGR7LegacyMetadataMustFailClosed/invalid_write_index
+    axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=invalid_write_index
+=== RUN   TestAXGR7LegacyMetadataMustFailClosed/missing_read_index
+    axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=missing_read_index
+=== RUN   TestAXGR7LegacyMetadataMustFailClosed/missing_write_index
+    axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=missing_write_index
+=== RUN   TestAXGR7LegacyMetadataMustFailClosed/read_after_write
+    axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=read_after_write
+=== RUN   TestAXGR7LegacyMetadataMustFailClosed/trailing_bytes_in_read_index
+    axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=trailing_bytes_in_read_index
+--- PASS: TestAXGR7LegacyMetadataMustFailClosed (0.01s)
+    --- PASS: TestAXGR7LegacyMetadataMustFailClosed/invalid_read_index (0.00s)
+    --- PASS: TestAXGR7LegacyMetadataMustFailClosed/invalid_write_index (0.00s)
+    --- PASS: TestAXGR7LegacyMetadataMustFailClosed/missing_read_index (0.00s)
+    --- PASS: TestAXGR7LegacyMetadataMustFailClosed/missing_write_index (0.00s)
+    --- PASS: TestAXGR7LegacyMetadataMustFailClosed/read_after_write (0.00s)
+    --- PASS: TestAXGR7LegacyMetadataMustFailClosed/trailing_bytes_in_read_index (0.00s)
+=== RUN   TestAXGR7NewQueueAndValidLegacyStillWork
+=== RUN   TestAXGR7NewQueueAndValidLegacyStillWork/clean_new
+    axg_legacy_fail_closed_test.go:79: AXG_R7_CLEAN_QUEUE_CONTROL_PASS
+=== RUN   TestAXGR7NewQueueAndValidLegacyStillWork/valid_legacy
+    axg_legacy_fail_closed_test.go:95: AXG_R7_VALID_LEGACY_CONTROL_PASS
+--- PASS: TestAXGR7NewQueueAndValidLegacyStillWork (0.01s)
+    --- PASS: TestAXGR7NewQueueAndValidLegacyStillWork/clean_new (0.00s)
+    --- PASS: TestAXGR7NewQueueAndValidLegacyStillWork/valid_legacy (0.00s)
+=== RUN   TestAXGR7OrphanedLegacyDispatchMarkerMustNotBecomeNewQueue
+    axg_legacy_fail_closed_test.go:121: AXG_R7_ORPHAN_DISPATCH_MARKER_FAIL_CLOSED
+--- PASS: TestAXGR7OrphanedLegacyDispatchMarkerMustNotBecomeNewQueue (0.00s)
+=== RUN   TestAXGR8AbsentIndexWithNumericRequestBeyondZeroFailsClosed
+    axg_metadata_presence_test.go:35: AXG_R8_ORPHAN_1024_BLOCKED
+--- PASS: TestAXGR8AbsentIndexWithNumericRequestBeyondZeroFailsClosed (0.00s)
+=== RUN   TestAXGR8PresentEmptyLegacyDispatchMarkerNotNewQueue
+    axg_metadata_presence_test.go:57: AXG_R8_PRESENT_EMPTY_DI_BLOCKED
+--- PASS: TestAXGR8PresentEmptyLegacyDispatchMarkerNotNewQueue (0.00s)
+=== RUN   TestAXGR8EmptyConsolidatedMetadataHasNoOrphans
+    axg_metadata_presence_test.go:77: AXG_R8_EMPTY_QMV0_CONTROL_PASS
+--- PASS: TestAXGR8EmptyConsolidatedMetadataHasNoOrphans (0.00s)
+=== RUN   TestAXGR8LegacyDispatchZeroCountWithTrailingGarbageFailsClosed
+    axg_metadata_presence_test.go:102: AXG_R8_ZERO_COUNT_TRAILING_DI_BLOCKED
+--- PASS: TestAXGR8LegacyDispatchZeroCountWithTrailingGarbageFailsClosed (0.00s)
+=== RUN   TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk
+    axg_qmv0_integrity_test.go:51: AXG_R5_CORRUPT_QMV0_FAIL_CLOSED_PRESERVED
+    axg_qmv0_integrity_test.go:62: AXG_R5_QMV0_MANUAL_RESTORE_SUCCESS
+--- PASS: TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk (0.00s)
+=== RUN   TestAXGR5MetadataReadErrorFailsClosed
+    axg_qmv0_integrity_test.go:95: AXG_R5_METADATA_IO_ERROR_FAIL_CLOSED
+--- PASS: TestAXGR5MetadataReadErrorFailsClosed (0.00s)
+=== RUN   TestAXGR5ImpossibleMetadataIndicesFailClosed
+    axg_qmv0_integrity_test.go:121: AXG_R5_IMPOSSIBLE_INDICES_FAIL_CLOSED
+--- PASS: TestAXGR5ImpossibleMetadataIndicesFailClosed (0.00s)
+=== RUN   TestAXGR5MissingMetadataStillInitializesNewQueue
+    axg_qmv0_integrity_test.go:134: AXG_R5_NEW_EMPTY_QUEUE_CONTROL_PASS
+--- PASS: TestAXGR5MissingMetadataStillInitializesNewQueue (0.02s)
+=== RUN   TestAXGR6RealFileStorageInjectedPrecommitENOSPC
+    axg_real_filestorage_reliability_test.go:120: AXG_R6_CONTRIB_PRECOMMIT_FULL_FAIL_CLOSED_PRESERVED
+--- PASS: TestAXGR6RealFileStorageInjectedPrecommitENOSPC (0.00s)
+=== RUN   TestAXGR6RealFileStorageAmbiguousErrorAfterCommit
+    axg_real_filestorage_reliability_test.go:141: AXG_R6_CONTRIB_POSTCOMMIT_AMBIGUOUS_REOPEN_PRESERVED
+--- PASS: TestAXGR6RealFileStorageAmbiguousErrorAfterCommit (0.00s)
+=== RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries
+=== RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed
+    axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=acked_first_is_not_replayed expected=[22 33]
+=== RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed
+    axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=unacked_first_may_be_replayed expected=[11 22 33]
+=== NAME  TestAXGR6AckedVsUnackedDeliveryBoundaries
+    axg_real_filestorage_reliability_test.go:174: AXG_R6_NO_EXACTLY_ONCE_CLAIM: unacknowledged delivery replays by design
+--- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries (0.01s)
+    --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed (0.00s)
+    --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed (0.00s)
+=== RUN   TestAXGR6DurableFullCapacityAfterRecovery
+    axg_real_filestorage_reliability_test.go:200: AXG_R6_FULL_CAPACITY_RESTART_PRESERVED_AND_REJECTED_NEW_OFFER
+--- PASS: TestAXGR6DurableFullCapacityAfterRecovery (0.00s)
+=== RUN   TestAXGR6ExtensionChildSIGKILL
+    axg_real_filestorage_reliability_test.go:206: subprocess-only test
+--- SKIP: TestAXGR6ExtensionChildSIGKILL (0.00s)
+=== RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL
+=== RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0
+    axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+    axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=qmv0
+=== RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy
+    axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+    axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=legacy
+--- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL (0.02s)
+    --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0 (0.01s)
+    --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy (0.01s)
+=== RUN   TestAXGTAR6CleanNewQueueControl
+    axg_ta_r6_independent_requalification_test.go:58: AXG_TA_R6_CLEAN_CONTROL_PASS
+--- PASS: TestAXGTAR6CleanNewQueueControl (0.00s)
+=== RUN   TestAXGTAR6RepeatedRealContribReopen
+=== RUN   TestAXGTAR6RepeatedRealContribReopen/legacy_false
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=1
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=2
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=3
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=4
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=5
+=== RUN   TestAXGTAR6RepeatedRealContribReopen/legacy_true
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=1
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=2
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=3
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=4
+    axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=5
+--- PASS: TestAXGTAR6RepeatedRealContribReopen (0.01s)
+    --- PASS: TestAXGTAR6RepeatedRealContribReopen/legacy_false (0.01s)
+    --- PASS: TestAXGTAR6RepeatedRealContribReopen/legacy_true (0.01s)
+=== RUN   TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning
+    axg_ta_r6_independent_requalification_test.go:135: AXG_TA_R6_LEGACY_OBSERVED init_error=invalid legacy queue metadata: read/write indices must each be exactly 8 bytes physical=[11]
+--- PASS: TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning (0.00s)
+=== RUN   TestAXGTAR7EmptyButPresentLegacyIndices
+=== RUN   TestAXGTAR7EmptyButPresentLegacyIndices/empty_ri
+=== RUN   TestAXGTAR7EmptyButPresentLegacyIndices/empty_wi
+=== RUN   TestAXGTAR7EmptyButPresentLegacyIndices/empty_both
+--- PASS: TestAXGTAR7EmptyButPresentLegacyIndices (0.01s)
+    --- PASS: TestAXGTAR7EmptyButPresentLegacyIndices/empty_ri (0.00s)
+    --- PASS: TestAXGTAR7EmptyButPresentLegacyIndices/empty_wi (0.00s)
+    --- PASS: TestAXGTAR7EmptyButPresentLegacyIndices/empty_both (0.00s)
+=== RUN   TestAXGTAR7OversizedDispatchCountFailClosed
+--- PASS: TestAXGTAR7OversizedDispatchCountFailClosed (0.00s)
+=== RUN   TestAXGTAR7TrailingGarbageInDispatchArrayFailClosed
+--- PASS: TestAXGTAR7TrailingGarbageInDispatchArrayFailClosed (0.00s)
+=== RUN   TestAXGTAR7OrphanNumericPayloadWithoutAnyMetadata
+--- PASS: TestAXGTAR7OrphanNumericPayloadWithoutAnyMetadata (0.00s)
+=== RUN   TestAXGTAR7RestartAfterConsolidatedMetadataBeforeLegacyCleanup
+--- PASS: TestAXGTAR7RestartAfterConsolidatedMetadataBeforeLegacyCleanup (0.00s)
+=== RUN   TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers
+=== RUN   TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/orphan_zero
+=== RUN   TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/empty_present_indices
+--- PASS: TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers (0.00s)
+    --- PASS: TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/orphan_zero (0.00s)
+    --- PASS: TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/empty_present_indices (0.00s)
+=== RUN   TestAXGTAR8NonWalkerCleanQueueControl
+--- PASS: TestAXGTAR8NonWalkerCleanQueueControl (0.00s)
+=== RUN   TestAXGTAR8WalkErrorFailsClosedBeforeWrite
+--- PASS: TestAXGTAR8WalkErrorFailsClosedBeforeWrite (0.00s)
+=== RUN   TestAXGTAR8PlausibleButWrongQmv0RefusesStartup
+    axg_ta_r8_independent_test.go:131: AXG_TA_R8_PLAUSIBLE_QMV0_READ_WITHOUT_PAYLOAD init=persistent queue metadata unreadable; refusing index reset: persistent queue metadata references missing first queued payload at 0
+--- PASS: TestAXGTAR8PlausibleButWrongQmv0RefusesStartup (0.00s)
+=== RUN   TestAXGTAR8WalkerScanCardinality
+    axg_ta_r8_independent_test.go:151: AXG_TA_R8_WALK_SCAN keys_seeded=256 keys_visited=256
+--- PASS: TestAXGTAR8WalkerScanCardinality (0.05s)
+=== RUN   TestAXGTAR8RealFileStorageNamespaceIsolation
+--- PASS: TestAXGTAR8RealFileStorageNamespaceIsolation (0.00s)
+PASS
+ok  	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.221s
