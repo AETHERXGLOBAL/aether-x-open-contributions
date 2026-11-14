@@ -7,7 +7,7 @@ on:
       - .github/workflows/otel-16236-r10-ta-independent.yml
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   separate-ta-r10-evidence:
     runs-on: ubuntu-24.04
@@ -201,3 +201,25 @@ jobs:
               raise SystemExit('TA R10 BLOCKED: unexpected evidence; inspect raw logs')
           print('PR #22 must remain DRAFT. No upstream PR, merge, deploy or broad PASS.')
           PY
+
+      - name: Commit exact raw independent logs and SHA-256 checks to same Draft PR
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          src=tests/opentelemetry/16236/r10_ta_independent_evidence
+          dst="tests/opentelemetry/16236/r10/independent/evidence/run_${GITHUB_RUN_ID}"
+          test -f "$src/result.json"
+          test -f "$src/SHA256SUMS.txt"
+          (cd "$src" && sha256sum -c SHA256SUMS.txt)
+          mkdir -p "$dst"
+          cp "$src"/* "$dst"/
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$dst"
+          git commit -m "evidence(otel): preserve raw R10 TA run ${GITHUB_RUN_ID} and failed-case logs"
+          git -c credential.helper= -c 'credential.helper=!f() { echo username=x-access-token; echo "password=$GH_TOKEN"; }; f' push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          echo "TA_R10_EVIDENCE_COMMITTED_PATH=$dst"
+          echo "TA_R10_EVIDENCE_TESTED_HEAD=$GITHUB_SHA"
