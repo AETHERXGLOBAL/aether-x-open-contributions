@@ -1,0 +1,16 @@
+{
+  "bbolt_module": "go.etcd.io/bbolt v1.5.0",
+  "contrib_module": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "focused_exit": "0",
+  "head": "178e00c5acba5fb254b96000b4a7f1be89bb6572",
+  "integration_tests": {
+    "legacy_migration": true,
+    "metadata_fail_closed": true,
+    "qmv0_restart": true
+  },
+  "mission": "AXG-OTEL-16236-R5-CONTRIB-FILESTORAGE-INTEGRATION-20261114",
+  "original_upstream_corrupt_metadata_test_contract": "CONFLICT; existing R5 separate suite REVISE until maintainer policy approved",
+  "test_scope": "Actual Contrib file_storage factory extension Start/GetClient/Client.Close/Shutdown with real on-disk bbolt; no full Collector distribution, no power-loss or compaction",
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "R5_ACTUAL_FILESTORAGE_PASS_SCOPED"
+}
