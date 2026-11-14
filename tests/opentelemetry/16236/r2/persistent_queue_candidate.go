@@ -660,6 +660,11 @@ func bytesToItemIndexArray(buf []byte) ([]uint64, error) {
 	if payloadBytes%8 != 0 || count != uint64(payloadBytes/8) {
 		return nil, errInvalidValue
 	}
+	// Preserve the original nil-slice contract for a correctly encoded
+	// zero-count array. A zero count with trailing bytes is rejected above.
+	if count == 0 {
+		return nil, nil
+	}
 	val := make([]uint64, int(count))
 	buf = buf[4:]
 	for i := range val {
