@@ -121,7 +121,7 @@ jobs:
           p=Path(os.environ["OUT"])
           def read(name): return (p/name).read_text(errors="replace") if (p/name).exists() else ""
           def exit_of(name): return read(name).strip()
-          failures=re.findall(r'(?m)^\s*--- FAIL:\s+([^\n(]+)', read('full_original.log'))
+          failures=[v.strip() for v in re.findall(r'(?m)^\s*--- FAIL:\s+([^\n(]+)', read('full_original.log'))]
           expected={'TestPersistentQueue_CorruptedData','TestPersistentQueue_CorruptedData/corrupted_metadata','TestPersistentQueue_CorruptedData/corrupted_everything'}
           original_known=set(failures)==expected and len(failures)==3
           independent_legacy_detected=(exit_of('independent_legacy_adversarial.exit')=='1' and 'AXG_TA_R6_LEGACY_RESET_DEFECT' in read('independent_legacy_adversarial.log'))

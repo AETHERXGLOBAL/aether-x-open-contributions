@@ -9,6 +9,7 @@ import (
     "bytes"
     "context"
     "fmt"
+    "os"
     "path/filepath"
     "sort"
     "strconv"
@@ -41,6 +42,7 @@ func axgTAR6PhysicalInventory(t *testing.T, c storage.Client) []intRequest {
 
 func TestAXGTAR6CleanNewQueueControl(t *testing.T) {
     dir := filepath.Join(t.TempDir(), "new")
+    require.NoError(t, os.MkdirAll(dir, 0o700))
     ext, client := axgR5OpenFileStorage(t, dir)
     q := axgR5NewQueue()
     require.NoError(t, q.initClient(context.Background(), client))
@@ -60,6 +62,7 @@ func TestAXGTAR6RepeatedRealContribReopen(t *testing.T) {
     for _, legacy := range []bool{false, true} {
         t.Run(fmt.Sprintf("legacy_%t", legacy), func(t *testing.T) {
             dir := filepath.Join(t.TempDir(), "real-filestorage")
+    require.NoError(t, os.MkdirAll(dir, 0o700))
             ext, client := axgR5OpenFileStorage(t, dir)
             ctx := context.Background()
             if legacy {
@@ -102,6 +105,7 @@ func TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning(t *testing.T) {
     // occur when an existing legacy read index cannot be decoded.
     ctx := context.Background()
     dir := filepath.Join(t.TempDir(), "corrupt-legacy-ri")
+    require.NoError(t, os.MkdirAll(dir, 0o700))
     ext, client := axgR5OpenFileStorage(t, dir)
     invalidRI := []byte{0x01, 0x02}
     require.NoError(t, client.Set(ctx, legacyReadIndexKey, invalidRI))
