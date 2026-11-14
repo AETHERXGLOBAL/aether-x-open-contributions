@@ -1,0 +1,29 @@
+{
+  "bbolt": "go.etcd.io/bbolt v1.5.0",
+  "candidate_sha256": "5b1df085d3db0e91a2c0e8f5aef529087985b3cd102d725a206697cbdc3df176",
+  "contrib": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "distinct_R10_independent_reviewer_signed_off": false,
+  "full_original_exit": "1",
+  "full_original_failures": [
+    "TestPersistentQueue_CorruptedData",
+    "TestPersistentQueue_CorruptedData/corrupted_metadata",
+    "TestPersistentQueue_CorruptedData/corrupted_everything"
+  ],
+  "historical_exit": "0",
+  "mission": "AXG-OTEL-16236-R10-QMV0-PENDING-REQUALIFICATION-20261114",
+  "multiwriter_safe": false,
+  "nonwalker_ownership_proven": false,
+  "r10_exit": "0",
+  "r10_failures": [],
+  "r9_engineering_exit": "0",
+  "ta_r9_exit": "1",
+  "ta_r9_failures": [
+    "TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite",
+    "TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject",
+    "TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest"
+  ],
+  "tested_head": "8c82c3a6ff9be73b2698eaf011d676414accae68",
+  "upstream_contract_approved": false,
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "R10_QMV0_PARTIAL_PASS_THREE_INDEPENDENT_BLOCKERS"
+}
