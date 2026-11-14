@@ -253,7 +253,7 @@ func (pq *persistentQueue[T]) loadLegacyMetadata(ctx context.Context) error {
 		pq.metadata.WriteIndex = writeIndex
 	}
 
-	if err = pq.retrieveAndEnqueueNotDispatchedReqs(ctx); err != nil {
+	if err := pq.retrieveAndEnqueueNotDispatchedReqs(ctx); err != nil {
 		return err
 	}
 
