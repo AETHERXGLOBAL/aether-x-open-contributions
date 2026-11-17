@@ -2,6 +2,12 @@
 
 **Snapshot:** 2026-11-03. Original upstream authors retain full credit for their own code and tests.
 
+## 17 November 2026 — verified positive outcomes (dated update)
+
+**Two AETHER-authored external PRs merged:** [useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534) and [#1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536). **Distinct upstream outcomes:** Redis #15930 accepted an upstream-author-written AOF regression covering an AETHER-reported test path; Cloudflare workers-sdk #16612 merged an upstream-authored environment-forwarding hardening change following a source-linked AETHER review; NVIDIA/aicr #3539 merged an upstream-authored attestation fix with an AETHER-proposed extra test recognized as nonblocking but **not included**; and a gVisor #16723 participant executed AETHER's proposed CUDA discovery controls, finding a real census miss with **fail-closed**, not silent-corruption, behavior. No partnership, endorsement or merged AETHER code is implied by those third-party outcomes.
+
+[**Read the primary-source-linked 17 November evidence dossier and attribution limits**](../docs/VERIFIED_POSITIVE_OUTCOMES_2026-11-17.md). The 3 November historical snapshot and its original case classifications below are preserved.
+
 ## Our pull requests actually merged
 
 - [useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534) — merged 2026-09-28, commit `1ab2b4ccac754b4d10b04c6e88829d6d628974bd`.

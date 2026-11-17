@@ -20,6 +20,14 @@ We publish the outcomes and limits of our participation in independent open-sour
 
 Other source-linked cases include an [OpenTelemetry native regression candidate](tests/opentelemetry/README.md), a [Redis native RED/GREEN test candidate](tests/redis/15930/README.md), and an [earlier Cloudflare review](docs/STATUS_UPDATE_2026-11-09.md) preceding a third-party-authored merged fix. The strongest supported outcome and original author are stated separately for each case.
 
+## Verified positive outcomes — 17 November 2026
+
+- **2 AETHER-authored, upstream-merged PRs:** [useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534) and [#1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536), documenting an ExecSurface listing/example and its version update.
+- **3 distinct upstream-authored merged fixes with bounded AETHER review/test involvement:** [Redis #15930](https://github.com/redis/redis/pull/15930) (author explicitly credited the AOF regression path), [Cloudflare #16612](https://github.com/cloudflare/workers-sdk/pull/16612) (related credential-propagation review; causation not established), and [NVIDIA/aicr #3539](https://github.com/NVIDIA/aicr/pull/3539) (reviewer recognized an additional test gap, **not** included in the merge).
+- **1 upstream-executed technical control:** [gVisor #16723](https://github.com/google/gvisor/issues/16723), confirming a CUDA private-FD discovery miss and **fail-closed** behavior in that tested case, not a merged fix.
+
+[**View the dated primary-source evidence, actual authors, exact limits and open PR gates**](docs/VERIFIED_POSITIVE_OUTCOMES_2026-11-17.md) · [Detailed achievements](achievements/README.md). These categories are **not additive accepted AETHER code contributions**; there is no claimed institutional endorsement, partnership or product adoption. Historical counts remain unchanged.
+
 ## Current status: outcomes before activity totals
 
 | Measure | Verified scope |

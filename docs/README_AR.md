@@ -16,6 +16,14 @@
 | [useful-actions #1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536) | تحديث نسخة Action كتبته AETHER ودُمج في 29 سبتمبر 2026. | تحديث إصدار، وليس تغييرًا أساسيًا في منصة خارجية. |
 | [Redis #15930](https://github.com/redis/redis/pull/15930) | طلب دمج **للمطور الأصلي**، دُمج في 10 نوفمبر 2026، وأشار مؤلفه [صراحةً إلى مسار اختبار AETHER](https://github.com/redis/redis/pull/15930#issuecomment-6663086469). | الكود والاختبار المدمجان للمطور الأصلي؛ لا ننسبهما للشركة ولا ندّعي إثبات السببية. |
 
+## نتائج إيجابية مؤكدة — 17 نوفمبر 2026
+
+**مساهمتان كتبهما حساب الشركة ودُمجتا:** [useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534) و[#1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536)، لإضافة ExecSurface إلى دليل GitHub Actions وتحديث نسخته.
+
+**نتائج إيجابية لمساهمات المراجعة والاختبار، دون نسب كود الآخرين للشركة:** دُمج [Redis #15930](https://github.com/redis/redis/pull/15930) مع إقرار مؤلفه بمسار اختبار AOF الذي كشفته AETHER؛ ودُمج إصلاح [Cloudflare #16612](https://github.com/cloudflare/workers-sdk/pull/16612) بعد ملاحظة فنية ذات صلة، دون إثبات أن الملاحظة تسببت في التغيير؛ ودُمج إصلاح [NVIDIA/aicr #3539](https://github.com/NVIDIA/aicr/pull/3539) مع اعتراف المراجع بثغرة تغطية إضافية لم يُدمج اختبار AETHER المقترح لها. وفي [gVisor #16723](https://github.com/google/gvisor/issues/16723)، نفّذ مشارك خارجي الاختبار المقترح من الشركة وأكد نقص اكتشاف CUDA في الحالة المختبرة مع فشل آمن، لا فساد صامت.
+
+[**التوثيق التفصيلي وروابط الأدلة الأصلية وحدود النسب**](VERIFIED_POSITIVE_OUTCOMES_2026-11-17.md). هذه الحالات ليست جميعًا مساهمات برمجية للشركة تم دمجها، ولا تعني شراكة أو اعتمادًا من المشاريع المذكورة. تبقى الإحصاءات التاريخية كما هي.
+
 ## الأرقام الصحيحة
 
 - **2**: طلبا دمج للشركة قُبلا ودُمجا في الفهرس التاريخي.
