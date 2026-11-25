@@ -1,0 +1,193 @@
+name: OTel 16236 R9 non-Walker and qmv0 metadata integrity
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - .github/workflows/otel-16236-r9.yml
+      - tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go
+      - tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+permissions:
+  contents: read
+jobs:
+  r9-recovery-fault-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Freeze original upstream and all exact independent tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r9_evidence"
+          mkdir -p "$out"
+          printf '%s\n' "$GITHUB_SHA" > "$out/run_head.txt"
+          go version > "$out/go_version.txt"
+          git init -q /tmp/otel-r9
+          git -C /tmp/otel-r9 remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-r9 fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r9 checkout --quiet --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-r9 rev-parse HEAD)" = 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r9 rev-parse HEAD > "$out/upstream_head.txt"
+          q=/tmp/otel-r9/exporter/exporterhelper/internal/queue
+          test "$(sha256sum "$q/persistent_queue.go" | awk '{print $1}')" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          sha256sum "$q/persistent_queue.go" > "$out/upstream_source_hash.txt"
+          test "$(sha256sum tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go | awk '{print $1}')" = 2a5ea725923b3a36a4a00af06bf05a21d45eb37cc2718d4a549bd9e2c8eaf3c8
+          test "$(sha256sum tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go | awk '{print $1}')" = e994907ab702f68415e113b7dc948595f7a9a61437da85cec867439956a9dfd5
+          test "$(sha256sum tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go | awk '{print $1}')" = e1ff29373e36588e283cda892a7ae8515e9d653775c4692905859a60d35891b7
+          src=tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+          sha256sum "$src" > "$out/candidate_sha256.txt"
+          sha256sum tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go > "$out/r9_test_sha256.txt"
+          sha256sum \
+            tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go > "$out/independent_fixture_hashes.txt"
+          cp "$src" "$q/persistent_queue.go"
+          for f in \
+            tests/opentelemetry/16236/axg_recovery_contract_test.go \
+            tests/opentelemetry/16236/r2/axg_recovery_r2_test.go \
+            tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go \
+            tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go \
+            tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go \
+            tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go \
+            tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go
+          do cp "$f" "$q/$(basename "$f")"; done
+          gofmt -w "$q"/axg*test.go
+      - name: Resolve exact real Contrib file_storage and bbolt
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r9_evidence
+          go -C /tmp/otel-r9/exporter/exporterhelper get github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage@v0.165.0 > "$out/module_get.log" 2>&1
+          go -C /tmp/otel-r9/exporter/exporterhelper list -m github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage > "$out/contrib_version.txt"
+          go -C /tmp/otel-r9/exporter/exporterhelper list -m go.etcd.io/bbolt > "$out/bbolt_version.txt"
+          grep -qx 'github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0' "$out/contrib_version.txt"
+          grep -qx 'go.etcd.io/bbolt v1.5.0' "$out/bbolt_version.txt"
+      - name: Execute unchanged full original Go package
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r9_evidence
+          timeout 450s go -C /tmp/otel-r9/exporter/exporterhelper test -count=1 -v -timeout=7m ./internal/queue > "$out/full_original.log" 2>&1
+          echo "$?" > "$out/full_original.exit"
+          tail -60 "$out/full_original.log"
+          exit 0
+      - name: Add unchanged independent TA regression fixtures and new R9 engineering tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          q=/tmp/otel-r9/exporter/exporterhelper/internal/queue
+          for f in \
+            tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go \
+            tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go \
+            tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go \
+            tests/opentelemetry/16236/r8/axg_metadata_presence_test.go \
+            tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go \
+            tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go
+          do cp "$f" "$q/$(basename "$f")"; done
+          gofmt -w "$q"/axg*test.go
+      - name: Execute historical R5 R6 R7 R8 targeted tests
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r9_evidence
+          timeout 410s go -C /tmp/otel-r9/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^(TestAXGR(5|6|7|8)|TestAXGTAR6|TestAXGTAR7)' ./internal/queue > "$out/historical.log" 2>&1
+          echo "$?" > "$out/historical.exit"
+          tail -55 "$out/historical.log"
+          exit 0
+      - name: Re-run exact unchanged independent R8 adversarial tests
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r9_evidence
+          timeout 310s go -C /tmp/otel-r9/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGTAR8' ./internal/queue > "$out/independent_r8.log" 2>&1
+          echo "$?" > "$out/independent_r8.exit"
+          tail -90 "$out/independent_r8.log"
+          exit 0
+      - name: Execute new R9 non-Walker and qmv0 controls
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r9_evidence
+          timeout 310s go -C /tmp/otel-r9/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGR9' ./internal/queue > "$out/r9_focused.log" 2>&1
+          echo "$?" > "$out/r9_focused.exit"
+          tail -95 "$out/r9_focused.log"
+          exit 0
+      - name: Classify exact RED or scoped engineering GREEN without upstream waiver
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r9_evidence
+          export OUT="$out"
+          python3 - <<'PY'
+          import json,os,re
+          from pathlib import Path
+          p=Path(os.environ['OUT'])
+          def s(n):
+              f=p/n
+              return f.read_text(errors='replace').strip() if f.exists() else 'NOT_RUN'
+          def fails(n):
+              return [x.strip() for x in re.findall(r'(?m)^\s*--- FAIL:\s+([^\n(]+)',s(n))]
+          known={'TestPersistentQueue_CorruptedData','TestPersistentQueue_CorruptedData/corrupted_metadata','TestPersistentQueue_CorruptedData/corrupted_everything'}
+          original_fails=fails('full_original.log')
+          independent_fails=fails('independent_r8.log')
+          r9_fails=fails('r9_focused.log')
+          d={'mission':'AXG-OTEL-16236-R9-ENGINEERING-20261114','tested_head':s('run_head.txt'),'candidate_sha256':s('candidate_sha256.txt').split(' ')[0],
+             'upstream_head':s('upstream_head.txt'),'contrib_version':s('contrib_version.txt'),'bbolt_version':s('bbolt_version.txt'),
+             'full_original_exit':s('full_original.exit'),'original_failures':original_fails,
+             'historical_exit':s('historical.exit'),'independent_r8_exit':s('independent_r8.exit'),
+             'independent_r8_failures':independent_fails,
+             'r9_focused_exit':s('r9_focused.exit'),'r9_failures':r9_fails,
+             'original_suite_pass':False,'upstream_policy_accepted':False,'independent_R9_approved':False,
+             'all_storage_backends_proven_safe':False,'real_ENOSPC_tested':False,'power_loss_tested':False}
+          base=(d['upstream_head']=='572057cde7e9bbe3aed6e5e3e8f16290d487f7d0'
+            and d['contrib_version'].endswith(' v0.165.0') and d['bbolt_version']=='go.etcd.io/bbolt v1.5.0'
+            and d['historical_exit']=='0'
+            and d['full_original_exit']=='1'
+            and set(original_fails)==known and len(original_fails)==3)
+          oldsha='200cb460efa44879827f9074edb911276a3ff1f7ca2f51a4d44c2f5ba844506c'
+          expected=['TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers','TestAXGTAR8PlausibleButWrongQmv0RefusesStartup']
+          if base and d['candidate_sha256']==oldsha and d['independent_r8_exit']=='1' and d['r9_focused_exit']=='1' and all(x in independent_fails for x in expected):
+              d['verdict']='R9_EXPECTED_RED'
+          elif base and d['candidate_sha256']!=oldsha and d['independent_r8_exit']=='0' and d['r9_focused_exit']=='0':
+              d['verdict']='R9_ENGINEERING_PASS_SCOPED_UPSTREAM_POLICY_BLOCK'
+          else:
+              d['verdict']='R9_REVISE'
+          (p/'result.json').write_text(json.dumps(d,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(d,sort_keys=True))
+          PY
+      - name: Seal raw logs and exact machine result with SHA-256
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r9_evidence
+          find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -printf '%f\n' | sort | xargs -r sha256sum > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+      - name: Upload full original evidence, including negative failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r9-nonwalker-qmv0
+          path: tests/opentelemetry/16236/r9_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce exact scoped result without permitting merge
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r9_evidence/result.json')
+          if not p.exists(): raise SystemExit('R9_REVISE: missing machine result')
+          v=json.loads(p.read_text())['verdict']
+          print(v+' — unmodified upstream qmv0 suite remains RED; keep PR Draft')
+          if v not in ('R9_EXPECTED_RED','R9_ENGINEERING_PASS_SCOPED_UPSTREAM_POLICY_BLOCK'):
+              raise SystemExit('R9_REVISE: inspect original logs; no merge or external publication')
+          PY

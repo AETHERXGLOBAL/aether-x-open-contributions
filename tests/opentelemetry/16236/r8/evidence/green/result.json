@@ -1,0 +1,23 @@
+{
+  "bbolt_version": "go.etcd.io/bbolt v1.5.0",
+  "candidate_sha256": "200cb460efa44879827f9074edb911276a3ff1f7ca2f51a4d44c2f5ba844506c",
+  "contrib_version": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "full_original_exit": "1",
+  "full_original_failures": [
+    "TestPersistentQueue_CorruptedData",
+    "TestPersistentQueue_CorruptedData/corrupted_metadata",
+    "TestPersistentQueue_CorruptedData/corrupted_everything"
+  ],
+  "historical_r5_r6_exit": "0",
+  "independent_R8_signoff": false,
+  "internal_run_head": "1065e0870fbc8acf9db963cd38ed90f07f13b94e",
+  "mission": "AXG-OTEL-16236-R8-LEGACY-ENGINEERING-20261114",
+  "new_ta_r7_exit": "0",
+  "new_ta_r7_failures": [],
+  "previous_r6_and_r7_exit": "0",
+  "r8_exit": "0",
+  "r8_failures": [],
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "upstream_policy_accepted": false,
+  "verdict": "R8_ENGINEERING_PASS_SCOPED_UPSTREAM_POLICY_BLOCK"
+}

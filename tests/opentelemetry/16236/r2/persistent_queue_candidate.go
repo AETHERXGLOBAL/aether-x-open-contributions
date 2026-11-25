@@ -1,0 +1,769 @@
+// Copyright The OpenTelemetry Authors
+// SPDX-License-Identifier: Apache-2.0
+
+package queue // import "go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue"
+
+import (
+	"context"
+	"encoding/binary"
+	"errors"
+	"fmt"
+	"strconv"
+	"sync"
+
+	"go.uber.org/zap"
+	"google.golang.org/protobuf/proto"
+
+	"go.opentelemetry.io/collector/component"
+	"go.opentelemetry.io/collector/config/configstorage"
+	"go.opentelemetry.io/collector/exporter/exporterhelper/internal/experr"
+	"go.opentelemetry.io/collector/exporter/exporterhelper/internal/request"
+	"go.opentelemetry.io/collector/extension/xextension/storage"
+	"go.opentelemetry.io/collector/pipeline"
+)
+
+const (
+	zapKey           = "key"
+	zapErrorCount    = "errorCount"
+	zapNumberOfItems = "numberOfItems"
+
+	legacyReadIndexKey                = "ri"
+	legacyWriteIndexKey               = "wi"
+	legacyCurrentlyDispatchedItemsKey = "di"
+
+	// metadataKey is the new single key for all queue metadata.
+	metadataKey = "qmv0"
+)
+
+var (
+	errValueNotSet  = errors.New("value not set")
+	errInvalidValue = errors.New("invalid value")
+)
+
+var indexDonePool = sync.Pool{
+	New: func() any {
+		return &indexDone{}
+	},
+}
+
+// persistentQueue provides a persistent queue implementation backed by file storage extension
+//
+// Write index describes the position at which next item is going to be stored.
+// Read index describes which item needs to be read next.
+// When Write index = Read index, no elements are in the queue.
+//
+// The items currently dispatched by consumers are not deleted until the processing is finished.
+// Their list is stored under a separate key.
+//
+//	┌───────file extension-backed queue───────┐
+//	│                                         │
+//	│     ┌───┐     ┌───┐ ┌───┐ ┌───┐ ┌───┐   │
+//	│ n+1 │ n │ ... │ 4 │ │ 3 │ │ 2 │ │ 1 │   │
+//	│     └───┘     └───┘ └─x─┘ └─|─┘ └─x─┘   │
+//	│                       x     |     x     │
+//	└───────────────────────x─────|─────x─────┘
+//	   ▲              ▲     x     |     x
+//	   │              │     x     |     xxxx deleted
+//	   │              │     x     |
+//	 write          read    x     └── currently dispatched item
+//	 index          index   x
+//	                        xxxx deleted
+type persistentQueue[T request.Request] struct {
+	logger      *zap.Logger
+	client      storage.Client
+	encoding    Encoding[T]
+	capacity    int64
+	sizerType   request.SizerType
+	activeSizer request.Sizer
+	itemsSizer  request.Sizer
+	bytesSizer  request.Sizer
+	storageID   configstorage.ID
+	id          component.ID
+	signal      pipeline.Signal
+
+	// mu guards everything declared below.
+	mu              sync.Mutex
+	hasMoreElements *sync.Cond
+	hasMoreSpace    *cond
+	metadata        PersistentMetadata
+	refClient       int64
+	stopped         bool
+
+	blockOnOverflow bool
+}
+
+// newPersistentQueue creates a new queue backed by file storage; name and signal must be a unique combination that identifies the queue storage
+func newPersistentQueue[T request.Request](set Settings[T]) readableQueue[T] {
+	pq := &persistentQueue[T]{
+		logger:          set.Telemetry.Logger,
+		encoding:        set.Encoding,
+		capacity:        set.Capacity,
+		sizerType:       set.SizerType,
+		activeSizer:     request.NewSizer(set.SizerType),
+		itemsSizer:      request.NewItemsSizer(),
+		bytesSizer:      request.NewBytesSizer(),
+		storageID:       *set.StorageID.Get(),
+		id:              set.ID,
+		signal:          set.Signal,
+		blockOnOverflow: set.BlockOnOverflow,
+	}
+	pq.hasMoreElements = sync.NewCond(&pq.mu)
+	pq.hasMoreSpace = newCond(&pq.mu)
+	return pq
+}
+
+// Start starts the persistentQueue with the given number of consumers.
+func (pq *persistentQueue[T]) Start(ctx context.Context, host component.Host) error {
+	storageClient, err := toStorageClient(ctx, pq.storageID, host, pq.id, pq.signal)
+	if err != nil {
+		return err
+	}
+	if err := pq.initClient(ctx, storageClient); err != nil {
+		_ = storageClient.Close(ctx)
+		return fmt.Errorf("failed recovering persistent queue: %w", err)
+	}
+	return nil
+}
+
+func (pq *persistentQueue[T]) Size() int64 {
+	pq.mu.Lock()
+	defer pq.mu.Unlock()
+	return pq.internalSize()
+}
+
+func (pq *persistentQueue[T]) internalSize() int64 {
+	switch pq.sizerType {
+	case request.SizerTypeBytes:
+		return pq.metadata.BytesSize
+	case request.SizerTypeItems:
+		return pq.metadata.ItemsSize
+	default:
+		return pq.requestSize()
+	}
+}
+
+func (pq *persistentQueue[T]) requestSize() int64 {
+	return int64(pq.metadata.WriteIndex-pq.metadata.ReadIndex) + int64(len(pq.metadata.CurrentlyDispatchedItems))
+}
+
+func (pq *persistentQueue[T]) Capacity() int64 {
+	return pq.capacity
+}
+
+func (pq *persistentQueue[T]) initClient(ctx context.Context, client storage.Client) error {
+	pq.client = client
+	// The first reference belongs to queue initialization and producers.
+	pq.refClient = 1
+
+	err := pq.loadQueueMetadata(ctx)
+	switch {
+	case err == nil:
+		// An interrupted in-flight requeue must never be silently accepted.
+		if err = pq.enqueueNotDispatchedReqs(ctx, append([]uint64(nil), pq.metadata.CurrentlyDispatchedItems...)); err != nil {
+			return err
+		}
+	case !errors.Is(err, errValueNotSet):
+		// Metadata that exists but cannot be read must not be mistaken for a
+		// never-initialized queue. Resetting indices here makes durable
+		// request payloads inaccessible and risks overwriting their keys.
+		pq.logger.Error("Refusing to reset unreadable persistent queue metadata", zap.Error(err))
+		return fmt.Errorf("persistent queue metadata unreadable; refusing index reset: %w", err)
+	default:
+		pq.logger.Info("New queue metadata key not found, attempting to load legacy format.")
+		if err = pq.loadLegacyMetadata(ctx); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// loadQueueMetadata loads queue metadata from the consolidated key
+func (pq *persistentQueue[T]) loadQueueMetadata(ctx context.Context) error {
+	buf, err := pq.client.Get(ctx, metadataKey)
+	if err != nil {
+		return err
+	}
+
+	if len(buf) == 0 {
+		return errValueNotSet
+	}
+
+	if err := proto.Unmarshal(buf, &pq.metadata); err != nil {
+		return fmt.Errorf("invalid consolidated queue metadata encoding: %w", err)
+	}
+	// A successfully decoded protobuf can still contain impossible indices.
+	// Reject this before the first write rather than making unknown payloads
+	// unreachable or wrapping the queue length calculation.
+	if pq.metadata.ReadIndex > pq.metadata.WriteIndex {
+		return fmt.Errorf("invalid persistent queue metadata: read index %d exceeds write index %d", pq.metadata.ReadIndex, pq.metadata.WriteIndex)
+	}
+	// Verify every undispatched request referenced by qmv0 before any
+	// recovery writes. Checking only ReadIndex misses gaps in the middle,
+	// which the independent R9 tests showed are accepted silently.
+	pending := pq.metadata.WriteIndex - pq.metadata.ReadIndex
+	if pending > 0 {
+		if walker, ok := pq.client.(storage.Walker); ok {
+			// A Walker enumerates actual keys (including their presence).
+			// Count canonical pending keys without allocating from the
+			// potentially corrupted metadata's claimed queue length.
+			var present uint64
+			if err := walker.Walk(ctx, func(key string, value []byte) ([]*storage.Operation, error) {
+				index, parseErr := strconv.ParseUint(key, 10, 64)
+				if parseErr != nil || key != getItemKey(index) ||
+					index < pq.metadata.ReadIndex || index >= pq.metadata.WriteIndex {
+					return nil, nil
+				}
+				if len(value) == 0 {
+					return nil, fmt.Errorf("persistent queue metadata references empty pending payload at %s", key)
+				}
+				present++
+				return nil, nil
+			}); err != nil {
+				return fmt.Errorf("verify persistent queue pending inventory: %w", err)
+			}
+			if present != pending {
+				return fmt.Errorf("persistent queue metadata references missing pending payload: found %d of %d", present, pending)
+			}
+		} else {
+			// Without Walker, Get has no existence oracle for present-empty
+			// keys. Reject missing/empty bytes conservatively; this is not
+			// a proof of exclusive ownership or safe concurrent writers.
+			for index := pq.metadata.ReadIndex; index < pq.metadata.WriteIndex; index++ {
+				key := getItemKey(index)
+				value, err := pq.client.Get(ctx, key)
+				if err != nil {
+					return fmt.Errorf("verify persistent queue pending payload at %s: %w", key, err)
+				}
+				if len(value) == 0 {
+					return fmt.Errorf("persistent queue metadata references missing pending payload at %s", key)
+				}
+			}
+		}
+	}
+
+	pq.logger.Info("Loaded queue metadata",
+		zap.Uint64("readIndex", pq.metadata.ReadIndex),
+		zap.Uint64("writeIndex", pq.metadata.WriteIndex),
+		zap.Int64("itemsSize", pq.metadata.ItemsSize),
+		zap.Int64("bytesSize", pq.metadata.BytesSize),
+		zap.Int("dispatchedItems", len(pq.metadata.CurrentlyDispatchedItems)))
+
+	return nil
+}
+
+// TODO: Remove legacy format support after 6 months (target: December 2025)
+func (pq *persistentQueue[T]) loadLegacyMetadata(ctx context.Context) error {
+	// The storage.Client Get/Batch contract does not distinguish an absent
+	// key from an existing key with an empty value. An actual file_storage
+	// Walker lets us inspect key existence *without any migration writes*.
+	// Also reject orphaned numeric request keys before treating this store
+	// as new and risking overwrite on the first Offer.
+	var presentRI, presentWI, presentDI, orphanNumeric bool
+	if walker, ok := pq.client.(storage.Walker); ok {
+		if err := walker.Walk(ctx, func(key string, _ []byte) ([]*storage.Operation, error) {
+			switch key {
+			case legacyReadIndexKey:
+				presentRI = true
+			case legacyWriteIndexKey:
+				presentWI = true
+			case legacyCurrentlyDispatchedItemsKey:
+				presentDI = true
+			default:
+				if _, err := strconv.ParseUint(key, 10, 64); err == nil {
+					orphanNumeric = true
+				}
+			}
+			return nil, nil
+		}); err != nil {
+			return fmt.Errorf("inspect legacy metadata and orphan request keys: %w", err)
+		}
+	}
+
+	// Fallback to legacy individual keys for backward compatibility.
+	riOp := storage.GetOperation(legacyReadIndexKey)
+	wiOp := storage.GetOperation(legacyWriteIndexKey)
+
+	if err := pq.client.Batch(ctx, riOp, wiOp); err != nil {
+		return fmt.Errorf("read legacy queue indices: %w", err)
+	}
+	// A brand-new queue has no legacy indices. A partially present or
+	// malformed pair is NOT a new queue: resetting it can orphan durable
+	// requests and overwrite the old keys on the next Offer.
+	switch {
+	case len(riOp.Value) == 0 && len(wiOp.Value) == 0:
+		// Either index present but empty is corrupt, not a new queue.
+		// With no indices, an orphaned numeric payload or even a present
+		// empty dispatch marker likewise means an unsafe ambiguous store.
+		if presentRI || presentWI || presentDI || orphanNumeric {
+			return fmt.Errorf("invalid legacy queue metadata: empty index marker or orphan durable request present")
+		}
+		dispatched, err := pq.client.Get(ctx, legacyCurrentlyDispatchedItemsKey)
+		if err != nil {
+			return fmt.Errorf("read legacy dispatch marker: %w", err)
+		}
+		if len(dispatched) != 0 {
+			return fmt.Errorf("incomplete legacy queue metadata: dispatched list exists without read/write indices")
+		}
+		// Without Walker we cannot enumerate arbitrary numeric keys or
+		// distinguish an empty-but-present legacy index from an absent key.
+		// Probe the first write slot: an existing orphan would otherwise be
+		// overwritten by Offer(41) immediately after successful startup.
+		// Later orphan slots are guarded separately at each Offer.
+		if _, ok := pq.client.(storage.Walker); !ok {
+			first, err := pq.client.Get(ctx, getItemKey(0))
+			if err != nil {
+				return fmt.Errorf("inspect legacy queue first numeric slot: %w", err)
+			}
+			if len(first) != 0 {
+				return fmt.Errorf("orphan durable request at key 0 without legacy queue metadata")
+			}
+		}
+		pq.logger.Info("Initializing new persistent queue")
+	case len(riOp.Value) == 0 || len(wiOp.Value) == 0:
+		return fmt.Errorf("incomplete legacy queue metadata: read/write indices must both exist")
+	default:
+		if len(riOp.Value) != 8 || len(wiOp.Value) != 8 {
+			return fmt.Errorf("invalid legacy queue metadata: read/write indices must each be exactly 8 bytes")
+		}
+		readIndex, err := bytesToItemIndex(riOp.Value)
+		if err != nil {
+			return fmt.Errorf("invalid legacy read index: %w", err)
+		}
+		writeIndex, err := bytesToItemIndex(wiOp.Value)
+		if err != nil {
+			return fmt.Errorf("invalid legacy write index: %w", err)
+		}
+		if readIndex > writeIndex {
+			return fmt.Errorf("invalid legacy queue metadata: read index %d exceeds write index %d", readIndex, writeIndex)
+		}
+		pq.metadata.ReadIndex = readIndex
+		pq.metadata.WriteIndex = writeIndex
+	}
+
+	if err := pq.retrieveAndEnqueueNotDispatchedReqs(ctx); err != nil {
+		return err
+	}
+
+	// Save to a new format and clean up legacy keys
+	metadataBytes, err := proto.Marshal(&pq.metadata)
+	if err != nil {
+		pq.logger.Error("Failed to marshal metadata", zap.Error(err))
+		return err
+	}
+
+	if err = pq.client.Set(ctx, metadataKey, metadataBytes); err != nil {
+		pq.logger.Error("Failed to persist current metadata to storage", zap.Error(err))
+		return err
+	}
+
+	if err = pq.client.Batch(ctx,
+		storage.DeleteOperation(legacyReadIndexKey),
+		storage.DeleteOperation(legacyWriteIndexKey),
+		storage.DeleteOperation(legacyCurrentlyDispatchedItemsKey)); err != nil {
+		pq.logger.Warn("Failed to cleanup legacy metadata keys", zap.Error(err))
+	} else {
+		pq.logger.Info("Successfully migrated to consolidated metadata format")
+	}
+	return nil
+}
+
+func (pq *persistentQueue[T]) Shutdown(ctx context.Context) error {
+	// If the queue is not initialized, there is nothing to shut down.
+	if pq.client == nil {
+		return nil
+	}
+
+	pq.mu.Lock()
+	defer pq.mu.Unlock()
+	// Mark this queue as stopped, so consumer don't start any more work.
+	pq.stopped = true
+	pq.hasMoreElements.Broadcast()
+	return pq.unrefClient(ctx)
+}
+
+// unrefClient unrefs the client, and closes if no more references. Callers MUST hold the mutex.
+// This is needed because consumers of the queue may still process the requests while the queue is shutting down or immediately after.
+func (pq *persistentQueue[T]) unrefClient(ctx context.Context) error {
+	pq.refClient--
+	if pq.refClient == 0 {
+		return pq.client.Close(ctx)
+	}
+	return nil
+}
+
+// Offer inserts the specified element into this queue if it is possible to do so immediately
+// without violating capacity restrictions. If success returns no error.
+// It returns ErrQueueIsFull if no space is currently available.
+func (pq *persistentQueue[T]) Offer(ctx context.Context, req T) error {
+	pq.mu.Lock()
+	defer pq.mu.Unlock()
+
+	size := pq.activeSizer.Sizeof(req)
+	for pq.internalSize()+size > pq.capacity {
+		if !pq.blockOnOverflow {
+			return ErrQueueIsFull
+		}
+		if err := pq.hasMoreSpace.Wait(ctx); err != nil {
+			return err
+		}
+	}
+
+	// A storage.Client without Walker cannot enumerate orphaned records.
+	// Before each Offer, refuse to overwrite a nonempty durable write-slot.
+	// This protects single-queue writes at an encountered key, but is not
+	// a cross-process compare-and-swap or a full existence oracle.
+	if _, ok := pq.client.(storage.Walker); !ok {
+		key := getItemKey(pq.metadata.WriteIndex)
+		previous, err := pq.client.Get(ctx, key)
+		if err != nil {
+			return fmt.Errorf("check persistent queue write slot %s: %w", key, err)
+		}
+		if len(previous) != 0 {
+			return fmt.Errorf("refusing to overwrite existing persistent queue payload at %s", key)
+		}
+	}
+	pq.metadata.ItemsSize += pq.itemsSizer.Sizeof(req)
+	pq.metadata.BytesSize += pq.bytesSizer.Sizeof(req)
+
+	return pq.putInternal(ctx, req)
+}
+
+// putInternal adds the request to the storage without updating items/bytes sizes.
+func (pq *persistentQueue[T]) putInternal(ctx context.Context, req T) error {
+	pq.metadata.WriteIndex++
+
+	metadataBuf, err := proto.Marshal(&pq.metadata)
+	if err != nil {
+		return err
+	}
+
+	reqBuf, err := pq.encoding.Marshal(ctx, req)
+	if err != nil {
+		return err
+	}
+	// Carry out a transaction where we both add the item and update the write index
+	ops := []*storage.Operation{
+		storage.SetOperation(metadataKey, metadataBuf),
+		storage.SetOperation(getItemKey(pq.metadata.WriteIndex-1), reqBuf),
+	}
+	if err := pq.client.Batch(ctx, ops...); err != nil {
+		// At this moment, metadata may be updated in the storage, so we cannot just revert changes to the
+		// metadata, rely on the sizes being fixed on complete draining.
+		return err
+	}
+
+	pq.hasMoreElements.Signal()
+
+	return nil
+}
+
+func (pq *persistentQueue[T]) Read(ctx context.Context) (context.Context, T, Done, bool) {
+	pq.mu.Lock()
+	defer pq.mu.Unlock()
+
+	for {
+		if pq.stopped {
+			var req T
+			return context.Background(), req, nil, false
+		}
+
+		// Read until either a successful retrieved element or no more elements in the storage.
+		for pq.metadata.ReadIndex != pq.metadata.WriteIndex {
+			index, req, reqCtx, consumed := pq.getNextItem(ctx)
+			// Ensure the used size are in sync when queue is drained.
+			if pq.requestSize() == 0 {
+				pq.metadata.BytesSize = 0
+				pq.metadata.ItemsSize = 0
+			}
+			if consumed {
+				id := indexDonePool.Get().(*indexDone)
+				id.reset(index, pq.itemsSizer.Sizeof(req), pq.bytesSizer.Sizeof(req), pq)
+				return reqCtx, req, id, true
+			}
+			// More space available, data was dropped.
+			pq.hasMoreSpace.Signal()
+		}
+
+		// TODO: Need to change the Queue interface to return an error to allow distinguish between shutdown and context canceled.
+		//  Until then use the sync.Cond.
+		pq.hasMoreElements.Wait()
+	}
+}
+
+// getNextItem pulls the next available item from the persistent storage along with its index. Once processing is
+// finished, the index should be called with onDone to clean up the storage. If no new item is available,
+// returns false.
+func (pq *persistentQueue[T]) getNextItem(ctx context.Context) (uint64, T, context.Context, bool) {
+	index := pq.metadata.ReadIndex
+	// Increase here, so even if errors happen below, it always iterates
+	pq.metadata.ReadIndex++
+	pq.metadata.CurrentlyDispatchedItems = append(pq.metadata.CurrentlyDispatchedItems, index)
+
+	var req T
+	restoredCtx := context.Background()
+	metadataBytes, err := proto.Marshal(&pq.metadata)
+	if err != nil {
+		return 0, req, restoredCtx, false
+	}
+
+	getOp := storage.GetOperation(getItemKey(index))
+	err = pq.client.Batch(ctx, storage.SetOperation(metadataKey, metadataBytes), getOp)
+	if err == nil {
+		restoredCtx, req, err = pq.encoding.Unmarshal(getOp.Value)
+	}
+
+	if err != nil {
+		pq.logger.Debug("Failed to dispatch item", zap.Error(err))
+		// We need to make sure that currently dispatched items list is cleaned
+		if err = pq.itemDispatchingFinish(ctx, index); err != nil {
+			pq.logger.Error("Error deleting item from queue", zap.Error(err))
+		}
+
+		return 0, req, restoredCtx, false
+	}
+
+	// Increase the reference count, so the client is not closed while the request is being processed.
+	// The client cannot be closed because we hold the lock since last we checked `stopped`.
+	pq.refClient++
+
+	return index, req, restoredCtx, true
+}
+
+// onDone should be called to remove the item of the given index from the queue once processing is finished.
+func (pq *persistentQueue[T]) onDone(index uint64, itemsSize, bytesSize int64, consumeErr error) {
+	// Delete the item from the persistent storage after it was processed.
+	pq.mu.Lock()
+	// Always unref client even if the consumer is shutdown because we always ref it for every valid request.
+	defer func() {
+		if err := pq.unrefClient(context.Background()); err != nil {
+			pq.logger.Error("Error closing the storage client", zap.Error(err))
+		}
+		pq.mu.Unlock()
+	}()
+
+	if experr.IsShutdownErr(consumeErr) {
+		// The queue is shutting down, don't mark the item as dispatched, so it's picked up again after restart.
+		// TODO: Handle partially delivered requests by updating their values in the storage.
+		return
+	}
+
+	pq.metadata.BytesSize -= bytesSize
+	if pq.metadata.BytesSize < 0 {
+		pq.metadata.BytesSize = 0
+	}
+	pq.metadata.ItemsSize -= itemsSize
+	if pq.metadata.ItemsSize < 0 {
+		pq.metadata.ItemsSize = 0
+	}
+
+	if err := pq.itemDispatchingFinish(context.Background(), index); err != nil {
+		pq.logger.Error("Error deleting item from queue", zap.Error(err))
+	}
+
+	// More space available after data are removed from the storage.
+	pq.hasMoreSpace.Signal()
+}
+
+// retrieveAndEnqueueNotDispatchedReqs moves unacknowledged legacy items into
+// the current queue, preserving replay state across each transaction.
+func (pq *persistentQueue[T]) retrieveAndEnqueueNotDispatchedReqs(ctx context.Context) error {
+	pq.mu.Lock()
+	defer pq.mu.Unlock()
+	itemKeysBuf, err := pq.client.Get(ctx, legacyCurrentlyDispatchedItemsKey)
+	if err != nil {
+		return fmt.Errorf("read legacy dispatched indices: %w", err)
+	}
+	dispatchedItems, err := bytesToItemIndexArray(itemKeysBuf)
+	if err != nil {
+		return fmt.Errorf("decode legacy dispatched indices: %w", err)
+	}
+	// This snapshot is persisted by the first move transaction, before any
+	// previously dispatched key can be retired. A restart then uses qmv0.
+	pq.metadata.CurrentlyDispatchedItems = append([]uint64(nil), dispatchedItems...)
+	return pq.enqueueNotDispatchedReqs(ctx, dispatchedItems)
+}
+
+// enqueueNotDispatchedReqs moves each unacknowledged item atomically with
+// the metadata update and retirement of its old key. It never deletes the
+// last durable copy before a new durable copy is visible after restart.
+func (pq *persistentQueue[T]) enqueueNotDispatchedReqs(ctx context.Context, dispatchedItems []uint64) error {
+	for _, index := range dispatchedItems {
+		oldKey := getItemKey(index)
+		raw, err := pq.client.Get(ctx, oldKey)
+		if err != nil {
+			return fmt.Errorf("read in-flight item %d: %w", index, err)
+		}
+		if len(raw) == 0 {
+			return fmt.Errorf("in-flight item %d missing: %w", index, errValueNotSet)
+		}
+		// Preserve historical corruption semantics: irrecoverably malformed
+		// payloads are dropped with a warning, without losing other entries.
+		valid := true
+		if _, _, err = pq.encoding.Unmarshal(raw); err != nil {
+			pq.logger.Warn("Failed unmarshalling item", zap.String(zapKey, oldKey), zap.Error(err))
+			valid = false
+		}
+
+		updated := proto.Clone(&pq.metadata).(*PersistentMetadata)
+		if updated.WriteIndex == ^uint64(0) {
+			return fmt.Errorf("queue write index exhausted")
+		}
+		pending := make([]uint64, 0, len(updated.CurrentlyDispatchedItems))
+		removed := false
+		for _, dispatched := range updated.CurrentlyDispatchedItems {
+			if dispatched == index && !removed {
+				removed = true
+				continue
+			}
+			pending = append(pending, dispatched)
+		}
+		if !removed {
+			return fmt.Errorf("in-flight item %d missing from recovery metadata", index)
+		}
+		updated.CurrentlyDispatchedItems = pending
+		var newKey string
+		if valid {
+			newKey = getItemKey(updated.WriteIndex)
+			updated.WriteIndex++
+		}
+		metadataBytes, err := proto.Marshal(updated)
+		if err != nil {
+			return fmt.Errorf("marshal recovered metadata: %w", err)
+		}
+
+		// The storage backend's Batch must be transactional for crash atomicity.
+		// An ambiguous Batch error is fatal to initialization: re-open and
+		// inspect durable metadata instead of mutating it and continuing.
+		ops := []*storage.Operation{
+			storage.SetOperation(metadataKey, metadataBytes),
+			storage.DeleteOperation(oldKey),
+		}
+		if valid {
+			ops = append(ops, storage.SetOperation(newKey, raw))
+		}
+		if err = pq.client.Batch(ctx, ops...); err != nil {
+			return fmt.Errorf("atomically move in-flight item %d: %w", index, err)
+		}
+		pq.metadata = *updated
+	}
+	return nil
+}
+
+// itemDispatchingFinish removes the item from the list of currently dispatched items and deletes it from the persistent queue
+func (pq *persistentQueue[T]) itemDispatchingFinish(ctx context.Context, index uint64) error {
+	lenCDI := len(pq.metadata.CurrentlyDispatchedItems)
+	for i := range lenCDI {
+		if pq.metadata.CurrentlyDispatchedItems[i] == index {
+			pq.metadata.CurrentlyDispatchedItems[i] = pq.metadata.CurrentlyDispatchedItems[lenCDI-1]
+			pq.metadata.CurrentlyDispatchedItems = pq.metadata.CurrentlyDispatchedItems[:lenCDI-1]
+			break
+		}
+	}
+
+	// Ensure the used size are in sync when queue is drained.
+	if pq.requestSize() == 0 {
+		pq.metadata.BytesSize = 0
+		pq.metadata.ItemsSize = 0
+	}
+
+	metadataBytes, err := proto.Marshal(&pq.metadata)
+	if err != nil {
+		return err
+	}
+
+	setOp := storage.SetOperation(metadataKey, metadataBytes)
+	deleteOp := storage.DeleteOperation(getItemKey(index))
+	err = pq.client.Batch(ctx, setOp, deleteOp)
+	if err == nil {
+		// Everything ok, exit
+		return nil
+	}
+
+	// got an error, try to gracefully handle it
+	pq.logger.Warn("Failed updating currently dispatched items, trying to delete the item first",
+		zap.Error(err))
+
+	if err = pq.client.Batch(ctx, deleteOp); err != nil {
+		// Return an error here, as this indicates an issue with the underlying storage medium
+		return fmt.Errorf("failed deleting item from queue, got error from storage: %w", err)
+	}
+
+	if err = pq.client.Batch(ctx, setOp); err != nil {
+		// even if this fails, we still have the right dispatched items in memory
+		// at worst, we'll have the wrong list in storage, and we'll discard the nonexistent items during startup
+		return fmt.Errorf("failed updating currently dispatched items, but deleted item successfully: %w", err)
+	}
+
+	return nil
+}
+
+func toStorageClient(ctx context.Context, storageID configstorage.ID, host component.Host, ownerID component.ID, signal pipeline.Signal) (storage.Client, error) {
+	return storageID.GetStorageClient(ctx, component.KindExporter, host, ownerID, signal.String())
+}
+
+func getItemKey(index uint64) string {
+	return strconv.FormatUint(index, 10)
+}
+
+func bytesToItemIndex(buf []byte) (uint64, error) {
+	if buf == nil {
+		return uint64(0), errValueNotSet
+	}
+	// The sizeof uint64 in binary is 8.
+	if len(buf) < 8 {
+		return 0, errInvalidValue
+	}
+	return binary.LittleEndian.Uint64(buf), nil
+}
+
+func bytesToItemIndexArray(buf []byte) ([]uint64, error) {
+	if len(buf) == 0 {
+		return nil, nil
+	}
+	// Exactly four count bytes followed by exactly count uint64s.
+	// Validate the available bytes before allocation to avoid integer
+	// overflow or trusting a forged count from the persistent store.
+	if len(buf) < 4 {
+		return nil, errInvalidValue
+	}
+	payloadBytes := len(buf) - 4
+	count := uint64(binary.LittleEndian.Uint32(buf))
+	if payloadBytes%8 != 0 || count != uint64(payloadBytes/8) {
+		return nil, errInvalidValue
+	}
+	// Preserve the original nil-slice contract for a correctly encoded
+	// zero-count array. A zero count with trailing bytes is rejected above.
+	if count == 0 {
+		return nil, nil
+	}
+	val := make([]uint64, int(count))
+	buf = buf[4:]
+	for i := range val {
+		val[i] = binary.LittleEndian.Uint64(buf)
+		buf = buf[8:]
+	}
+	return val, nil
+}
+
+type indexDone struct {
+	index     uint64
+	itemsSize int64
+	bytesSize int64
+	queue     interface {
+		onDone(uint64, int64, int64, error)
+	}
+}
+
+func (id *indexDone) reset(index uint64, itemsSize, bytesSize int64, queue interface {
+	onDone(uint64, int64, int64, error)
+},
+) {
+	id.index = index
+	id.itemsSize = itemsSize
+	id.bytesSize = bytesSize
+	id.queue = queue
+}
+
+func (id *indexDone) OnDone(err error) {
+	id.queue.onDone(id.index, id.itemsSize, id.bytesSize, err)
+}

@@ -1,0 +1,223 @@
+name: OTel 16236 R8 engineering legacy metadata RED GREEN
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - .github/workflows/otel-16236-r8.yml
+      - tests/opentelemetry/16236/r8/axg_metadata_presence_test.go
+      - tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+permissions:
+  contents: read
+jobs:
+  r8-engineering-real-filestorage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Fetch exact upstream; freeze source and historical regression hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r8_engineering_evidence"
+          mkdir -p "$out"
+          printf '%s\n' "$GITHUB_SHA" > "$out/internal_run_head.txt"
+          git init -q /tmp/otel-r8
+          git -C /tmp/otel-r8 remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-r8 fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r8 checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-r8 rev-parse HEAD)" = 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r8 rev-parse HEAD > "$out/upstream_head.txt"
+          q=/tmp/otel-r8/exporter/exporterhelper/internal/queue
+          test "$(sha256sum "$q/persistent_queue.go" | cut -d' ' -f1)" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          src=tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+          r6=tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go
+          r7=tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go
+          ta=tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go
+          # R8 classifies original versus remediated candidate using recorded hashes.
+          test "$(sha256sum "$r6" | cut -d' ' -f1)" = e1ff29373e36588e283cda892a7ae8515e9d653775c4692905859a60d35891b7
+          test "$(sha256sum "$r7" | cut -d' ' -f1)" = 363c77238fc49c7148a4b575521a3ccaca4b13beaa979f5ae8e6f54023f87305
+          sha256sum "$src" "$r6" "$r7" "$ta" tests/opentelemetry/16236/r8/axg_metadata_presence_test.go > "$out/source_hashes.sha256"
+          cp "$src" "$q/persistent_queue.go"
+          for f in \
+            tests/opentelemetry/16236/axg_recovery_contract_test.go \
+            tests/opentelemetry/16236/r2/axg_recovery_r2_test.go \
+            tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go \
+            tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go \
+            tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go \
+            tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go \
+            tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go
+          do
+            cp "$f" "$q/$(basename "$f")"
+          done
+          gofmt -w "$q"/axg*test.go
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Resolve exact real Contrib file_storage dependency
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r8_engineering_evidence
+          go version > "$out/go_version.txt"
+          go -C /tmp/otel-r8/exporter/exporterhelper get github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage@v0.165.0 > "$out/module_get.log" 2>&1
+          go -C /tmp/otel-r8/exporter/exporterhelper list -m github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage > "$out/contrib_version.txt"
+          go -C /tmp/otel-r8/exporter/exporterhelper list -m go.etcd.io/bbolt > "$out/bbolt_version.txt"
+          grep -qx 'github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0' "$out/contrib_version.txt"
+      - name: Execute unchanged original upstream package with historical fixtures
+        shell: bash
+        run: |
+          set +e
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r8_engineering_evidence
+          timeout 450s go -C /tmp/otel-r8/exporter/exporterhelper test -count=1 -v -timeout=7m ./internal/queue > "$out/full_original.log" 2>&1
+          code=$?
+          printf '%s\n' "$code" > "$out/full_original.exit"
+          tail -45 "$out/full_original.log"
+          exit 0
+      - name: Independently re-run historical R5 R6 reliability
+        shell: bash
+        run: |
+          set +e
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r8_engineering_evidence
+          timeout 410s go -C /tmp/otel-r8/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGR(5|6)' ./internal/queue > "$out/historical_r5_r6.log" 2>&1
+          code=$?
+          printf '%s\n' "$code" > "$out/historical_r5_r6.exit"
+          tail -40 "$out/historical_r5_r6.log"
+          exit 0
+      - name: Install exact unchanged engineering R7 and original TA R6 plus new TA R7
+        shell: bash
+        run: |
+          set -euo pipefail
+          q=/tmp/otel-r8/exporter/exporterhelper/internal/queue
+          cp tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go "$q/axg_legacy_fail_closed_test.go"
+          cp tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go "$q/axg_ta_r6_independent_requalification_test.go"
+          cp tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go "$q/axg_ta_r7_independent_test.go"
+          cp tests/opentelemetry/16236/r8/axg_metadata_presence_test.go "$q/axg_metadata_presence_test.go"
+          gofmt -w "$q/axg_legacy_fail_closed_test.go" "$q/axg_ta_r6_independent_requalification_test.go" "$q/axg_ta_r7_independent_test.go" "$q/axg_metadata_presence_test.go"
+      - name: Execute original R6 defect test and R7 engineering controls cold-start
+        shell: bash
+        run: |
+          set +e
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r8_engineering_evidence
+          timeout 300s go -C /tmp/otel-r8/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning$|^TestAXGR7' ./internal/queue > "$out/previous_r6_and_r7.log" 2>&1
+          code=$?
+          printf '%s\n' "$code" > "$out/previous_r6_and_r7.exit"
+          tail -60 "$out/previous_r6_and_r7.log"
+          exit 0
+      - name: Execute distinct TA R7 adversarial tests on real bbolt
+        shell: bash
+        run: |
+          set +e
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r8_engineering_evidence
+          timeout 300s go -C /tmp/otel-r8/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGTAR7' ./internal/queue > "$out/ta_r7_new.log" 2>&1
+          code=$?
+          printf '%s\n' "$code" > "$out/ta_r7_new.exit"
+          tail -90 "$out/ta_r7_new.log"
+          exit 0
+      - name: Execute new R8 actual Contrib controls
+        shell: bash
+        run: |
+          set +e
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r8_engineering_evidence
+          timeout 300s go -C /tmp/otel-r8/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGR8' ./internal/queue > "$out/r8_focused.log" 2>&1
+          code=$?
+          printf '%s\n' "$code" > "$out/r8_focused.exit"
+          tail -90 "$out/r8_focused.log"
+          exit 0
+      - name: Machine classify R8 RED or GREEN without waiving upstream failures
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r8_engineering_evidence
+          export OUT="$out"
+          python3 - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          p=Path(os.environ['OUT'])
+          def read(name):
+              f=p/name
+              return f.read_text(errors='replace') if f.exists() else ''
+          def failures(name):
+              return [s.strip() for s in re.findall(r'(?m)^\s*--- FAIL:\s+([^\n(]+)', read(name))]
+          def status(name):
+              return read(name).strip() or 'NOT_RUN'
+          candidate_path=Path('tests/opentelemetry/16236/r2/persistent_queue_candidate.go')
+          import hashlib
+          candidate_sha=hashlib.sha256(candidate_path.read_bytes()).hexdigest()
+          known={'TestPersistentQueue_CorruptedData','TestPersistentQueue_CorruptedData/corrupted_metadata','TestPersistentQueue_CorruptedData/corrupted_everything'}
+          data={
+            'mission':'AXG-OTEL-16236-R8-LEGACY-ENGINEERING-20261114',
+            'internal_run_head':status('internal_run_head.txt'),
+            'candidate_sha256':candidate_sha,
+            'upstream_head':status('upstream_head.txt'),
+            'contrib_version':status('contrib_version.txt'),
+            'bbolt_version':status('bbolt_version.txt'),
+            'full_original_exit':status('full_original.exit'),
+            'full_original_failures':failures('full_original.log'),
+            'historical_r5_r6_exit':status('historical_r5_r6.exit'),
+            'previous_r6_and_r7_exit':status('previous_r6_and_r7.exit'),
+            'new_ta_r7_exit':status('ta_r7_new.exit'),
+            'new_ta_r7_failures':failures('ta_r7_new.log'),
+            'r8_exit':status('r8_focused.exit'),
+            'r8_failures':failures('r8_focused.log'),
+            'upstream_policy_accepted':False,
+            'independent_R8_signoff':False,
+          }
+          original_known=set(data['full_original_failures'])==known and len(data['full_original_failures'])==3 and data['full_original_exit']=='1'
+          base=(data['upstream_head']=='572057cde7e9bbe3aed6e5e3e8f16290d487f7d0' and
+                data['contrib_version'].endswith(' v0.165.0') and
+                original_known and data['historical_r5_r6_exit']=='0' and data['previous_r6_and_r7_exit']=='0')
+          old='4b362e244ec5365ee6bfd5e5499bcba4be03078339fc3733943e2c8f71060d93'
+          ta_fails=set(data['new_ta_r7_failures'])
+          expected_ta=['TestAXGTAR7EmptyButPresentLegacyIndices/empty_both',
+                       'TestAXGTAR7TrailingGarbageInDispatchArrayFailClosed',
+                       'TestAXGTAR7OrphanNumericPayloadWithoutAnyMetadata']
+          if base and candidate_sha==old and data['new_ta_r7_exit']=='1' and data['r8_exit']=='1' and all(x in ta_fails for x in expected_ta):
+              data['verdict']='R8_EXPECTED_RED'
+          elif base and candidate_sha!=old and data['new_ta_r7_exit']=='0' and data['r8_exit']=='0':
+              data['verdict']='R8_ENGINEERING_PASS_SCOPED_UPSTREAM_POLICY_BLOCK'
+          else:
+              data['verdict']='R8_REVISE'
+          (p/'result.json').write_text(json.dumps(data,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(data,sort_keys=True))
+          PY
+      - name: SHA-256 manifest for full raw logs and machine results
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r8_engineering_evidence
+          find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -printf '%f\n' | sort | xargs -r sha256sum > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+      - name: Upload all raw logs and hashes as evidence artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r8-metadata-engineering
+          path: tests/opentelemetry/16236/r8_engineering_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce explicit expected RED or scoped GREEN
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r8_engineering_evidence/result.json')
+          if not p.exists(): raise SystemExit('R8_REVISE: missing classified result')
+          v=json.loads(p.read_text())['verdict']
+          if v not in ('R8_EXPECTED_RED','R8_ENGINEERING_PASS_SCOPED_UPSTREAM_POLICY_BLOCK'):
+              raise SystemExit('R8_REVISE: unanticipated failures')
+          print(v+'; original upstream package remains FAIL, no merge or publication')
+          PY

@@ -1,0 +1,166 @@
+name: OTel 16236 R5 corrupt qmv0 fail-closed engineering
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - 'tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go'
+      - 'tests/opentelemetry/16236/r2/persistent_queue_candidate.go'
+      - '.github/workflows/otel-16236-r5.yml'
+permissions:
+  contents: read
+jobs:
+  qmv0-integrity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 22
+    steps:
+      - name: Checkout internal branch with no persistent token
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Pin actual upstream exact source and fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r5_evidence"
+          mkdir -p "$out"
+          printf '%s\n' "$GITHUB_SHA" > "$out/internal_head.txt"
+          git init -q /tmp/otel-r5
+          git -C /tmp/otel-r5 remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-r5 fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r5 checkout -q --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-r5 rev-parse HEAD)" = 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r5 rev-parse HEAD > "$out/upstream_head.txt"
+          q=/tmp/otel-r5/exporter/exporterhelper/internal/queue
+          test "$(sha256sum "$q/persistent_queue.go" | cut -d' ' -f1)" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          sha256sum "$q/persistent_queue.go" > "$out/upstream_source_sha256.txt"
+          cp tests/opentelemetry/16236/r2/persistent_queue_candidate.go "$q/persistent_queue.go"
+          cp tests/opentelemetry/16236/axg_recovery_contract_test.go "$q/axg_recovery_contract_test.go"
+          cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"
+          cp tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go "$q/axg_bbolt_sigkill_linux_test.go"
+          cp tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go "$q/axg_independent_bbolt_linux_test.go"
+          cp tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go "$q/axg_qmv0_integrity_test.go"
+          gofmt -w "$q/axg_bbolt_sigkill_linux_test.go" "$q/axg_independent_bbolt_linux_test.go" "$q/axg_qmv0_integrity_test.go"
+          sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go > "$out/candidate_sha256.txt"
+          sha256sum tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go > "$out/r5_test_sha256.txt"
+          sha256sum "$q/axg_qmv0_integrity_test.go" > "$out/r5_formatted_test_sha256.txt"
+          git -C /tmp/otel-r5 diff -- exporter/exporterhelper/internal/queue/persistent_queue.go > "$out/candidate_diff.patch"
+      - name: Set up pinned Go 1.26.0
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Pin bbolt v1.5.0 in ephemeral module
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r5_evidence
+          go version | tee "$out/go_version.txt"
+          go -C /tmp/otel-r5/exporter/exporterhelper get go.etcd.io/bbolt@v1.5.0 > "$out/module_install.log" 2>&1
+          go -C /tmp/otel-r5/exporter/exporterhelper list -m go.etcd.io/bbolt | tee "$out/bbolt_version.txt"
+          grep -qx 'go.etcd.io/bbolt v1.5.0' "$out/bbolt_version.txt"
+      - name: Execute actual metadata safety tests on native bbolt
+        shell: bash
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r5_evidence
+          set +e
+          timeout 380s go -C /tmp/otel-r5/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGR5' ./internal/queue > "$out/r5_focused.log" 2>&1
+          code=$?
+          set -e
+          printf '%s\n' "$code" > "$out/r5_focused_exit.txt"
+          tail -110 "$out/r5_focused.log"
+      - name: Run entire upstream queue Go package with native R3/R4/R5 fixtures
+        shell: bash
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r5_evidence
+          set +e
+          timeout 440s go -C /tmp/otel-r5/exporter/exporterhelper test -count=1 -timeout=7m ./internal/queue > "$out/full_package.log" 2>&1
+          code=$?
+          set -e
+          printf '%s\n' "$code" > "$out/full_package_exit.txt"
+          tail -70 "$out/full_package.log"
+      - name: Falsifiable classifier — distinguish original RED from new GREEN
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r5_evidence
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          def read(s):
+              p=Path(s)
+              return p.read_text(errors='replace').strip() if p.is_file() else ''
+          focused=read('r5_focused.log')
+          original='c9705f155cd3c143da236741947689120670d17817c0244e386a4d138f86afce'
+          actual=read('candidate_sha256.txt').split(' ')[0]
+          result={
+              'mission':'AXG-OTEL-16236-R5-QMV0-INTEGRITY-ENGINEERING-20261114',
+              'tested_internal_head':read('internal_head.txt'),
+              'upstream_head':read('upstream_head.txt'),
+              'candidate_source_sha256':actual,
+              'prior_reviewed_r4_candidate_sha256':original,
+              'bbolt_version':read('bbolt_version.txt'),
+              'focused_exit':read('r5_focused_exit.txt'),
+              'full_package_exit':read('full_package_exit.txt'),
+              'red_corrupt_qmv0_test_failed':'--- FAIL: TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk' in focused,
+              'red_read_error_test_failed':'--- FAIL: TestAXGR5MetadataReadErrorFailsClosed' in focused,
+              'red_indices_test_failed':'--- FAIL: TestAXGR5ImpossibleMetadataIndicesFailClosed' in focused,
+              'green_4_marker_count':sum(m in focused for m in [
+                'AXG_R5_CORRUPT_QMV0_FAIL_CLOSED_PRESERVED',
+                'AXG_R5_QMV0_MANUAL_RESTORE_SUCCESS',
+                'AXG_R5_METADATA_IO_ERROR_FAIL_CLOSED',
+                'AXG_R5_IMPOSSIBLE_INDICES_FAIL_CLOSED',
+                'AXG_R5_NEW_EMPTY_QUEUE_CONTROL_PASS'
+              ]),
+          }
+          if (actual==original and result['focused_exit']=='1'
+              and all(result[x] for x in ('red_corrupt_qmv0_test_failed','red_read_error_test_failed','red_indices_test_failed'))):
+              result['verdict']='R5_EXPECTED_METADATA_RED'
+          elif (actual!=original and result['focused_exit']=='0'
+                and result['full_package_exit']=='0' and result['green_4_marker_count']==5
+                and result['upstream_head']=='572057cde7e9bbe3aed6e5e3e8f16290d487f7d0'):
+              result['verdict']='R5_ENGINEERING_PASS_SCOPED'
+          else:
+              result['verdict']='R5_REVISE'
+          Path('result.json').write_text(json.dumps(result,sort_keys=True,indent=2)+'\n')
+          print(json.dumps(result,sort_keys=True))
+          PY
+      - name: Seal complete actual logs, failed and passed
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r5_evidence
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          files=sorted(p for p in Path('.').iterdir() if p.is_file() and p.name!='SHA256SUMS.txt')
+          Path('SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in files))
+          PY
+      - name: Archive source and both negative and positive evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r5-qmv0-metadata-evidence
+          path: tests/opentelemetry/16236/r5_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce explicit classification, no hidden failures
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r5_evidence/result.json')
+          if not p.is_file():
+              raise SystemExit('NO_R5_RESULT')
+          s=json.loads(p.read_text())['verdict']
+          if s not in ('R5_EXPECTED_METADATA_RED','R5_ENGINEERING_PASS_SCOPED'):
+              raise SystemExit('R5_REVISE: no proof of expected RED or complete GREEN; inspect source and logs')
+          print(s)
+          PY

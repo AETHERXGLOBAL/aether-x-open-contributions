@@ -1,0 +1,1 @@
+github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0

@@ -1,0 +1,24 @@
+{
+  "bbolt_module": "go.etcd.io/bbolt v1.5.0",
+  "candidate_sha256": "52e5bc04cbc9cb46f1fe4e3e432a19bacb47c5ff0d44232ac337f557e33e6446",
+  "contrib_module": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "full_original_exit": "1",
+  "full_original_failures": [
+    "TestPersistentQueue_CorruptedData",
+    "TestPersistentQueue_CorruptedData/corrupted_metadata",
+    "TestPersistentQueue_CorruptedData/corrupted_everything"
+  ],
+  "independent_R7_requalification_done": false,
+  "mission": "AXG-OTEL-16236-R7-LEGACY-ENGINEERING-20261114",
+  "r5_r6_exit": "0",
+  "r7_clean_valid_controls": true,
+  "r7_fail_closed_pass_markers": 0,
+  "r7_legacy_exit": "1",
+  "r7_orphan_marker_pass": false,
+  "ta_r6_original_negative_regression_defect_observed": true,
+  "ta_r6_original_negative_regression_exit": "1",
+  "tested_internal_head": "7c15dd3bdcfc9c6bd76efee9a65e1ffc830b78b8",
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "upstream_policy_accepted": false,
+  "verdict": "R7_EXPECTED_LEGACY_RED"
+}

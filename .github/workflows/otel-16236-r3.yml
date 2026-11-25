@@ -1,0 +1,156 @@
+name: OTel 16236 R3 native bbolt SIGKILL
+on:
+  pull_request:
+    paths:
+      - 'tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go'
+      - 'tests/opentelemetry/16236/r2/persistent_queue_candidate.go'
+      - '.github/workflows/otel-16236-r3.yml'
+permissions:
+  contents: read
+jobs:
+  linux-bbolt-process-kill:
+    if: github.event.pull_request.number == 22
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout internal exact source no credentials
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify exact upstream baseline source and test fixture
+        run: |
+          set -euo pipefail
+          mkdir -p tests/opentelemetry/16236/r3_evidence
+          git init -q /tmp/axg-otel-bbolt
+          git -C /tmp/axg-otel-bbolt remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/axg-otel-bbolt fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/axg-otel-bbolt checkout -q --detach FETCH_HEAD
+          head=$(git -C /tmp/axg-otel-bbolt rev-parse HEAD)
+          test "$head" = 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          echo "$head" > tests/opentelemetry/16236/r3_evidence/upstream_head.txt
+          sha256sum /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/persistent_queue.go | tee tests/opentelemetry/16236/r3_evidence/upstream_source_sha256.txt
+          test "$(sha256sum /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/persistent_queue.go | awk '{print $1}')" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          cp tests/opentelemetry/16236/axg_recovery_contract_test.go /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_recovery_contract_test.go
+          cp tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go
+          sha256sum tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go > tests/opentelemetry/16236/r3_evidence/native_fixture_sha256.txt
+          sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go > tests/opentelemetry/16236/r3_evidence/candidate_sha256.txt
+          gofmt -w /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go
+          sha256sum /tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue/axg_bbolt_sigkill_linux_test.go > tests/opentelemetry/16236/r3_evidence/formatted_fixture_sha256.txt
+      - name: Install pinned Go toolchain
+        uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Pin bbolt dependency only in temporary upstream checkout
+        run: |
+          set -euo pipefail
+          go version | tee tests/opentelemetry/16236/r3_evidence/go_version.txt
+          go -C /tmp/axg-otel-bbolt/exporter/exporterhelper get go.etcd.io/bbolt@v1.5.0 > tests/opentelemetry/16236/r3_evidence/dependency_install.log 2>&1
+          go -C /tmp/axg-otel-bbolt/exporter/exporterhelper list -m go.etcd.io/bbolt | tee tests/opentelemetry/16236/r3_evidence/bbolt_module.txt
+          grep -qx 'go.etcd.io/bbolt v1.5.0' tests/opentelemetry/16236/r3_evidence/bbolt_module.txt
+      - name: Baseline RED real process kill immediately after bbolt commit
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r3_evidence
+          set +e
+          timeout 360s go -C /tmp/axg-otel-bbolt/exporter/exporterhelper test -count=1 -v -timeout=5m -run '^TestAXGBboltSIGKILLRecovery$/^qmv0_first_committed$' ./internal/queue > "$out/baseline_native_red.log" 2>&1
+          code=$?
+          set -e
+          echo "$code" > "$out/baseline_native_exit.txt"
+          tail -65 "$out/baseline_native_red.log"
+      - name: Copy internal candidate for native bbolt GREEN
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r3_evidence
+          q=/tmp/axg-otel-bbolt/exporter/exporterhelper/internal/queue
+          cp tests/opentelemetry/16236/r2/persistent_queue_candidate.go "$q/persistent_queue.go"
+          cp tests/opentelemetry/16236/r2/axg_recovery_r2_test.go "$q/axg_recovery_r2_test.go"
+          sha256sum "$q/persistent_queue.go" > "$out/installed_candidate_sha256.txt"
+          test "$(sha256sum tests/opentelemetry/16236/r2/persistent_queue_candidate.go | awk '{print $1}')" = "$(sha256sum "$q/persistent_queue.go" | awk '{print $1}')"
+      - name: Native bbolt three-cut test with real SIGKILL and fresh reopen
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r3_evidence
+          set +e
+          timeout 360s go -C /tmp/axg-otel-bbolt/exporter/exporterhelper test -count=1 -v -timeout=5m -run '^TestAXGBboltSIGKILLRecovery$' ./internal/queue > "$out/candidate_native_green.log" 2>&1
+          code=$?
+          set -e
+          echo "$code" > "$out/candidate_native_exit.txt"
+          tail -110 "$out/candidate_native_green.log"
+      - name: Full existing upstream queue regression with native bbolt test included
+        run: |
+          set -uo pipefail
+          out=tests/opentelemetry/16236/r3_evidence
+          set +e
+          timeout 400s go -C /tmp/axg-otel-bbolt/exporter/exporterhelper test -count=1 -timeout=6m ./internal/queue > "$out/complete_package.log" 2>&1
+          code=$?
+          set -e
+          echo "$code" > "$out/complete_package_exit.txt"
+          tail -85 "$out/complete_package.log"
+      - name: Classify actual native crashes, not test harness exit alone
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r3_evidence
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          def read(n):
+              p=Path(n)
+              return p.read_text().strip() if p.is_file() else None
+          b=read('baseline_native_red.log') or ''
+          c=read('candidate_native_green.log') or ''
+          v={
+              'mission':'AXG-OTEL-16236-R3-NATIVE-BBOLT-SIGKILL-20261114',
+              'upstream_head_expected':'572057cde7e9bbe3aed6e5e3e8f16290d487f7d0',
+              'upstream_head':read('upstream_head.txt'),
+              'native_storage':'go.etcd.io/bbolt v1.5.0; FSync true; same transactional Batch implementation as filestorage; NOT actual contrib extension',
+              'crash_method':'os process SIGKILL after actual bbolt.DB.Update returns committed',
+              'baseline_native_exit':read('baseline_native_exit.txt'),
+              'candidate_native_exit':read('candidate_native_exit.txt'),
+              'full_package_exit':read('complete_package_exit.txt'),
+              'baseline_real_sigkill':'AXG_BBOLT_SIGKILL_CONFIRMED' in b,
+              'candidate_real_sigkill_count':c.count('AXG_BBOLT_SIGKILL_CONFIRMED'),
+              'candidate_preserved_count':c.count('AXG_BBOLT_RESTART_PRESERVED'),
+              'baseline_observed_failure':'--- FAIL: TestAXGBboltSIGKILLRecovery' in b,
+          }
+          v['verdict']='R3_NATIVE_BBOLT_PASS_SCOPED' if (
+              v['upstream_head']==v['upstream_head_expected'] and
+              v['baseline_native_exit']=='1' and v['baseline_real_sigkill'] and v['baseline_observed_failure'] and
+              v['candidate_native_exit']=='0' and v['candidate_real_sigkill_count']==3 and v['candidate_preserved_count']==3 and
+              v['full_package_exit']=='0'
+          ) else 'R3_REVISE'
+          Path('result.json').write_text(json.dumps(v,indent=2,sort_keys=True)+'\n')
+          print(json.dumps(v,sort_keys=True))
+          PY
+      - name: Seal raw evidence
+        if: always()
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r3_evidence
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          paths=sorted(p for p in Path('.').iterdir() if p.is_file() and p.name!='SHA256SUMS.txt')
+          Path('SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in paths))
+          PY
+      - name: Archive all actual native tests, including failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r3-native-bbolt-sigkill
+          path: tests/opentelemetry/16236/r3_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce scope-limited native verdict
+        if: always()
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r3_evidence/result.json')
+          if not p.exists() or json.loads(p.read_text()).get('verdict')!='R3_NATIVE_BBOLT_PASS_SCOPED':
+              raise SystemExit('R3_REVISE: no native qualification; inspect archive and errors')
+          print('R3_NATIVE_BBOLT_PASS_SCOPED: no contrib Collector distribution or independent Test Architect sign-off')
+          PY

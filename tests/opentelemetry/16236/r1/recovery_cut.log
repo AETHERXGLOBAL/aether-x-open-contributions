@@ -1,0 +1,6 @@
+=== RUN   TestAXGRecoveryCutAfterCommittedRetirement
+    axg_recovery_contract_test.go:155: AXG_LOSS_CONFIRMED after committed retirement and restart: want=[11 22 33] got=[33]
+--- FAIL: TestAXGRecoveryCutAfterCommittedRetirement (0.00s)
+FAIL
+FAIL	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.004s
+FAIL

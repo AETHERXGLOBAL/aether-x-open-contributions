@@ -1,0 +1,16 @@
+=== RUN   TestAXGBboltSIGKILLRecovery
+=== RUN   TestAXGBboltSIGKILLRecovery/qmv0_first_committed
+    axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash
+    axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+=== RUN   TestAXGBboltSIGKILLRecovery/qmv0_second_committed
+    axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash_second
+    axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+=== RUN   TestAXGBboltSIGKILLRecovery/legacy_first_committed
+    axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash
+    axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+--- PASS: TestAXGBboltSIGKILLRecovery (0.07s)
+    --- PASS: TestAXGBboltSIGKILLRecovery/qmv0_first_committed (0.03s)
+    --- PASS: TestAXGBboltSIGKILLRecovery/qmv0_second_committed (0.03s)
+    --- PASS: TestAXGBboltSIGKILLRecovery/legacy_first_committed (0.01s)
+PASS
+ok  	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.073s

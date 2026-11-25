@@ -1,0 +1,21 @@
+{
+  "actor": "AETHER TEST ARCHITECT - executed through separately authored independent GitHub Actions workflow",
+  "baseline_missing_ids": true,
+  "baseline_red_exit": "1",
+  "baseline_sigkill_confirmed": true,
+  "bbolt_version": "go.etcd.io/bbolt v1.5.0",
+  "candidate_recovery_count": 3,
+  "candidate_sigkill_count": 3,
+  "collector_extension_tested": false,
+  "full_package_exit": "0",
+  "go_version": "go version go1.26.0 linux/amd64",
+  "independent_native_exit": "0",
+  "injected_failure_rejected": true,
+  "internal_review_head": "77fe44a90775a9b46a5237db684ac8fb20e98bb4",
+  "metadata_corruption_observed": true,
+  "mission": "AXG-OTEL-16236-R3-INDEPENDENT-NATIVE-REQUALIFICATION-20261114",
+  "native_restarts_observed": 8,
+  "power_loss_tested": false,
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "PASS_SCOPED_WITH_EXPLICIT_LIMITATIONS"
+}

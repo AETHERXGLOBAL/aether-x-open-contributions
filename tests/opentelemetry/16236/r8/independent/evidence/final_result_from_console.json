@@ -1,0 +1,29 @@
+{
+  "bbolt_version": "go.etcd.io/bbolt v1.5.0",
+  "contrib_version": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0",
+  "execution_head": "c79f031015244e0d5c7f6d653b36e71bcde4da42",
+  "external_publication_authorized": false,
+  "full_original_exit": "1",
+  "full_original_failures": [
+    "TestPersistentQueue_CorruptedData",
+    "TestPersistentQueue_CorruptedData/corrupted_metadata",
+    "TestPersistentQueue_CorruptedData/corrupted_everything"
+  ],
+  "go_version": "go version go1.26.0 linux/amd64",
+  "historical_r3_r6_exit": "0",
+  "historical_r3_r6_failures": [],
+  "independent_r8_exit": "1",
+  "independent_r8_failures": [
+    "TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers",
+    "TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/orphan_zero",
+    "TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/empty_present_indices",
+    "TestAXGTAR8PlausibleButWrongQmv0RefusesStartup"
+  ],
+  "mission": "AXG-OTEL-16236-R8-INDEPENDENT-METADATA-REQUALIFICATION-20261114",
+  "original_contract_conflict_preserved": true,
+  "unchanged_regressions_exit": "0",
+  "unchanged_regressions_failures": [],
+  "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "upstream_maintainer_contract_approved": false,
+  "verdict": "REVISE"
+}

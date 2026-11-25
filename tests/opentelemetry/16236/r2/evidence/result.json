@@ -1,0 +1,11 @@
+{
+  "baseline_actual_loss": true,
+  "baseline_exit": "1",
+  "candidate_focused_exit": "0",
+  "candidate_marker": true,
+  "candidate_package_exit": "0",
+  "mission": "AXG-OTEL-PERSISTENT-RECOVERY-R2-20261114",
+  "upstream_head_expected": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0",
+  "verdict": "R2_CANDIDATE_GREEN_SCOPED",
+  "verification_scope": "synthetic atomic storage client and actual upstream queue Go tests; NOT bbolt process-kill; candidate is NOT upstream-submitted"
+}

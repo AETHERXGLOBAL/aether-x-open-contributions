@@ -1,0 +1,1020 @@
+﻿2026-11-14T01:59:06.5564813Z Current runner version: '2.338.2'
+2026-11-14T01:59:06.5592641Z ##[group]Runner Image Provisioner
+2026-11-14T01:59:06.5593511Z Hosted Compute Agent
+2026-11-14T01:59:06.5594087Z Version: 20261103.629
+2026-11-14T01:59:06.5594839Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-14T01:59:06.5595619Z Build Date: 2026-11-03T17:26:59Z
+2026-11-14T01:59:06.5596280Z Worker ID: {15236ee6-96c5-46a8-9463-f45e2673c4cc}
+2026-11-14T01:59:06.5597068Z Region: us-east-1
+2026-11-14T01:59:06.5597976Z Cloud: AWS
+2026-11-14T01:59:06.5598558Z ##[endgroup]
+2026-11-14T01:59:06.5600117Z ##[group]Operating System
+2026-11-14T01:59:06.5600762Z Ubuntu
+2026-11-14T01:59:06.5601291Z 24.04.5
+2026-11-14T01:59:06.5601782Z LTS
+2026-11-14T01:59:06.5602293Z ##[endgroup]
+2026-11-14T01:59:06.5602876Z ##[group]Runner Image
+2026-11-14T01:59:06.5603494Z Image: ubuntu-24.04
+2026-11-14T01:59:06.5604055Z Version: 20261111.127.1
+2026-11-14T01:59:06.5605491Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-14T01:59:06.5607510Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+2026-11-14T01:59:06.5608595Z ##[endgroup]
+2026-11-14T01:59:06.5609738Z ##[group]GITHUB_TOKEN Permissions
+2026-11-14T01:59:06.5612001Z Contents: read
+2026-11-14T01:59:06.5612580Z Metadata: read
+2026-11-14T01:59:06.5613163Z ##[endgroup]
+2026-11-14T01:59:06.5615353Z Secret source: Actions
+2026-11-14T01:59:06.5616273Z Cache mode: write
+2026-11-14T01:59:06.5617535Z Prepare workflow directory
+2026-11-14T01:59:06.5953134Z Prepare all required actions
+2026-11-14T01:59:06.6005827Z Getting action download info
+2026-11-14T01:59:06.7863770Z Download action repository 'actions/checkout@11d5960a326750d5838078e36cf38b85af677262' (SHA:11d5960a326750d5838078e36cf38b85af677262)
+2026-11-14T01:59:08.8263285Z Download action repository 'actions/setup-go@v6' (SHA:924ae3a1cded613372ab5595356fb5720e22ba16)
+2026-11-14T01:59:08.9648968Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-14T01:59:09.2370586Z Complete job name: r8-independent-real-contrib
+2026-11-14T01:59:09.3028506Z ##[group]Run actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+2026-11-14T01:59:09.3029300Z with:
+2026-11-14T01:59:09.3029590Z   persist-credentials: false
+2026-11-14T01:59:09.3030064Z   repository: AETHERXGLOBAL/aether-x-open-contributions
+2026-11-14T01:59:09.3032222Z   token: ***
+2026-11-14T01:59:09.3032470Z   ssh-strict: true
+2026-11-14T01:59:09.3032765Z   ssh-user: git
+2026-11-14T01:59:09.3033016Z   clean: true
+2026-11-14T01:59:09.3033308Z   sparse-checkout-cone-mode: true
+2026-11-14T01:59:09.3033650Z   fetch-depth: 1
+2026-11-14T01:59:09.3033898Z   fetch-tags: false
+2026-11-14T01:59:09.3034193Z   show-progress: true
+2026-11-14T01:59:09.3034471Z   lfs: false
+2026-11-14T01:59:09.3034742Z   submodules: false
+2026-11-14T01:59:09.3035017Z   set-safe-directory: true
+2026-11-14T01:59:09.3035316Z   allow-unsafe-pr-checkout: false
+2026-11-14T01:59:09.3035767Z ##[endgroup]
+2026-11-14T01:59:12.2964928Z Syncing repository: AETHERXGLOBAL/aether-x-open-contributions
+2026-11-14T01:59:12.2966598Z ##[group]Getting Git version info
+2026-11-14T01:59:12.2967518Z Working directory is '/home/runner/work/aether-x-open-contributions/aether-x-open-contributions'
+2026-11-14T01:59:12.2968586Z [command]/usr/bin/git version
+2026-11-14T01:59:12.5305039Z git version 2.56.1
+2026-11-14T01:59:12.5319714Z ##[endgroup]
+2026-11-14T01:59:12.5330752Z Temporarily overriding HOME='/home/runner/work/_temp/3cf7731b-24a2-4a45-9b61-e4b9959302c6' before making global git config changes
+2026-11-14T01:59:12.5331541Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T01:59:12.5334745Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aether-x-open-contributions/aether-x-open-contributions
+2026-11-14T01:59:12.5663199Z Deleting the contents of '/home/runner/work/aether-x-open-contributions/aether-x-open-contributions'
+2026-11-14T01:59:12.5666374Z ##[group]Initializing the repository
+2026-11-14T01:59:12.5670799Z [command]/usr/bin/git init /home/runner/work/aether-x-open-contributions/aether-x-open-contributions
+2026-11-14T01:59:12.6090564Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-14T01:59:12.6091140Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-14T01:59:12.6091620Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-14T01:59:12.6092121Z hint: call:
+2026-11-14T01:59:12.6092366Z hint:
+2026-11-14T01:59:12.6092716Z hint: 	git config --global init.defaultBranch <name>
+2026-11-14T01:59:12.6093057Z hint:
+2026-11-14T01:59:12.6093538Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-14T01:59:12.6094075Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-14T01:59:12.6094501Z hint:
+2026-11-14T01:59:12.6094835Z hint: 	git branch -m <name>
+2026-11-14T01:59:12.6095199Z hint:
+2026-11-14T01:59:12.6095575Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-14T01:59:12.6100054Z Initialized empty Git repository in /home/runner/work/aether-x-open-contributions/aether-x-open-contributions/.git/
+2026-11-14T01:59:12.6108956Z [command]/usr/bin/git remote add origin https://github.com/AETHERXGLOBAL/aether-x-open-contributions
+2026-11-14T01:59:12.6163091Z ##[endgroup]
+2026-11-14T01:59:12.6163790Z ##[group]Disabling automatic garbage collection
+2026-11-14T01:59:12.6166246Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-14T01:59:12.6189275Z ##[endgroup]
+2026-11-14T01:59:12.6189856Z ##[group]Setting up auth
+2026-11-14T01:59:12.6194429Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T01:59:12.6220774Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T01:59:12.9758122Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T01:59:12.9783450Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T01:59:12.9935515Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T01:59:12.9960937Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T01:59:13.0112415Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-14T01:59:13.0139190Z ##[endgroup]
+2026-11-14T01:59:13.0139603Z ##[group]Fetching the repository
+2026-11-14T01:59:13.0149969Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +5df51a2a1bcd0804ebcac408da43888cbcca72b2:refs/remotes/origin/evidence/otel-queue-recovery-16236-r1-20261113
+2026-11-14T01:59:13.3783360Z From https://github.com/AETHERXGLOBAL/aether-x-open-contributions
+2026-11-14T01:59:13.3784086Z  * [new ref]         5df51a2a1bcd0804ebcac408da43888cbcca72b2 -> origin/evidence/otel-queue-recovery-16236-r1-20261113
+2026-11-14T01:59:13.3786524Z ##[endgroup]
+2026-11-14T01:59:13.3787285Z ##[group]Determining the checkout info
+2026-11-14T01:59:13.3789407Z ##[endgroup]
+2026-11-14T01:59:13.3794432Z [command]/usr/bin/git sparse-checkout disable
+2026-11-14T01:59:13.3858338Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-14T01:59:13.3915348Z ##[group]Checking out the ref
+2026-11-14T01:59:13.3919209Z [command]/usr/bin/git checkout --progress --force -B evidence/otel-queue-recovery-16236-r1-20261113 refs/remotes/origin/evidence/otel-queue-recovery-16236-r1-20261113
+2026-11-14T01:59:13.4060862Z Switched to a new branch 'evidence/otel-queue-recovery-16236-r1-20261113'
+2026-11-14T01:59:13.4066552Z branch 'evidence/otel-queue-recovery-16236-r1-20261113' set up to track 'origin/evidence/otel-queue-recovery-16236-r1-20261113'.
+2026-11-14T01:59:13.4069557Z ##[endgroup]
+2026-11-14T01:59:13.4105598Z [command]/usr/bin/git log -1 --format=%H
+2026-11-14T01:59:13.4124067Z 5df51a2a1bcd0804ebcac408da43888cbcca72b2
+2026-11-14T01:59:13.4131950Z ##[group]Removing auth
+2026-11-14T01:59:13.4135439Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T01:59:13.4161291Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T01:59:13.4321473Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T01:59:13.4340472Z http.https://github.com/.extraheader
+2026-11-14T01:59:13.4344827Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-14T01:59:13.4368290Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T01:59:13.4515611Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T01:59:13.4536810Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T01:59:13.4684590Z ##[endgroup]
+2026-11-14T01:59:13.4867964Z ##[group]Run actions/setup-go@v6
+2026-11-14T01:59:13.4868275Z with:
+2026-11-14T01:59:13.4868551Z   go-version: 1.26.0
+2026-11-14T01:59:13.4868781Z   cache: false
+2026-11-14T01:59:13.4869032Z   check-latest: false
+2026-11-14T01:59:13.4871000Z   token: ***
+2026-11-14T01:59:13.4871235Z ##[endgroup]
+2026-11-14T01:59:13.6211277Z Setup go version spec 1.26.0
+2026-11-14T01:59:13.6233823Z Attempting to download 1.26.0...
+2026-11-14T01:59:14.1466403Z matching 1.26.0...
+2026-11-14T01:59:14.1526492Z Acquiring 1.26.0 from https://github.com/actions/go-versions/releases/download/1.26.0-21889650668/go-1.26.0-linux-x64.tar.gz
+2026-11-14T01:59:14.6812719Z Extracting Go...
+2026-11-14T01:59:14.6992466Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/9c1f6e5c-aa08-4f2f-8517-d9835c28cc6c -f /home/runner/work/_temp/6a84d8c0-3a2c-4d22-94a2-6a2bd5ea90d4
+2026-11-14T01:59:15.9658653Z Successfully extracted go to /home/runner/work/_temp/9c1f6e5c-aa08-4f2f-8517-d9835c28cc6c
+2026-11-14T01:59:15.9659371Z Adding to the cache ...
+2026-11-14T01:59:18.6183911Z Successfully cached go to /opt/hostedtoolcache/go/1.26.0/x64
+2026-11-14T01:59:18.6184643Z Added go to the path
+2026-11-14T01:59:18.6186618Z Successfully set up Go version 1.26.0
+2026-11-14T01:59:18.6362618Z go version go1.26.0 linux/amd64
+2026-11-14T01:59:18.6362951Z 
+2026-11-14T01:59:18.6363292Z ##[group]go env
+2026-11-14T01:59:19.7796565Z AR='ar'
+2026-11-14T01:59:19.7796897Z CC='gcc'
+2026-11-14T01:59:19.7797381Z CGO_CFLAGS='-O2 -g'
+2026-11-14T01:59:19.7797667Z CGO_CPPFLAGS=''
+2026-11-14T01:59:19.7797940Z CGO_CXXFLAGS='-O2 -g'
+2026-11-14T01:59:19.7798191Z CGO_ENABLED='1'
+2026-11-14T01:59:19.7798413Z CGO_FFLAGS='-O2 -g'
+2026-11-14T01:59:19.7798624Z CGO_LDFLAGS='-O2 -g'
+2026-11-14T01:59:19.7798879Z CXX='g++'
+2026-11-14T01:59:19.7799116Z GCCGO='gccgo'
+2026-11-14T01:59:19.7799418Z GO111MODULE=''
+2026-11-14T01:59:19.7799632Z GOAMD64='v1'
+2026-11-14T01:59:19.7799834Z GOARCH='amd64'
+2026-11-14T01:59:19.7800069Z GOAUTH='netrc'
+2026-11-14T01:59:19.7800291Z GOBIN=''
+2026-11-14T01:59:19.7800528Z GOCACHE='/home/runner/.cache/go-build'
+2026-11-14T01:59:19.7800804Z GOCACHEPROG=''
+2026-11-14T01:59:19.7801009Z GODEBUG=''
+2026-11-14T01:59:19.7801240Z GOENV='/home/runner/.config/go/env'
+2026-11-14T01:59:19.7801519Z GOEXE=''
+2026-11-14T01:59:19.7801756Z GOEXPERIMENT=''
+2026-11-14T01:59:19.7801988Z GOFIPS140='off'
+2026-11-14T01:59:19.7802206Z GOFLAGS=''
+2026-11-14T01:59:19.7803001Z GOGCCFLAGS='-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=0 -ffile-prefix-map=/tmp/go-build1035180473=/tmp/go-build -gno-record-gcc-switches'
+2026-11-14T01:59:19.7803546Z GOHOSTARCH='amd64'
+2026-11-14T01:59:19.7803763Z GOHOSTOS='linux'
+2026-11-14T01:59:19.7804007Z GOINSECURE=''
+2026-11-14T01:59:19.7804231Z GOMOD='/dev/null'
+2026-11-14T01:59:19.7804518Z GOMODCACHE='/home/runner/go/pkg/mod'
+2026-11-14T01:59:19.7804798Z GONOPROXY=''
+2026-11-14T01:59:19.7805002Z GONOSUMDB=''
+2026-11-14T01:59:19.7805280Z GOOS='linux'
+2026-11-14T01:59:19.7805505Z GOPATH='/home/runner/go'
+2026-11-14T01:59:19.7805929Z GOPRIVATE=''
+2026-11-14T01:59:19.7806318Z GOPROXY='https://proxy.golang.org,direct'
+2026-11-14T01:59:19.7806630Z GOROOT='/opt/hostedtoolcache/go/1.26.0/x64'
+2026-11-14T01:59:19.7806956Z GOSUMDB='sum.golang.org'
+2026-11-14T01:59:19.7807388Z GOTELEMETRY='local'
+2026-11-14T01:59:19.7807675Z GOTELEMETRYDIR='/home/runner/.config/go/telemetry'
+2026-11-14T01:59:19.7807988Z GOTMPDIR=''
+2026-11-14T01:59:19.7808218Z GOTOOLCHAIN='local'
+2026-11-14T01:59:19.7808536Z GOTOOLDIR='/opt/hostedtoolcache/go/1.26.0/x64/pkg/tool/linux_amd64'
+2026-11-14T01:59:19.7808853Z GOVCS=''
+2026-11-14T01:59:19.7809058Z GOVERSION='go1.26.0'
+2026-11-14T01:59:19.7809317Z GOWORK=''
+2026-11-14T01:59:19.7809538Z PKG_CONFIG='pkg-config'
+2026-11-14T01:59:19.7809688Z 
+2026-11-14T01:59:19.7810065Z ##[endgroup]
+2026-11-14T01:59:19.7933181Z ##[group]Run set -euo pipefail
+2026-11-14T01:59:19.7933717Z [36;1mset -euo pipefail[0m
+2026-11-14T01:59:19.7934132Z [36;1mout="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r8_ta_evidence"[0m
+2026-11-14T01:59:19.7934481Z [36;1mmkdir -p "$out"[0m
+2026-11-14T01:59:19.7934844Z [36;1mprintf '%s\n' "$GITHUB_SHA" > "$out/independent_execution_head.txt"[0m
+2026-11-14T01:59:19.7935190Z [36;1mgo version > "$out/go_version.txt"[0m
+2026-11-14T01:59:19.7935481Z [36;1mgit init -q /tmp/otel-ta-r8[0m
+2026-11-14T01:59:19.7935954Z [36;1mgit -C /tmp/otel-ta-r8 remote add origin https://github.com/open-telemetry/opentelemetry-collector.git[0m
+2026-11-14T01:59:19.7936514Z [36;1mgit -C /tmp/otel-ta-r8 fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0[0m
+2026-11-14T01:59:19.7936953Z [36;1mgit -C /tmp/otel-ta-r8 checkout --quiet --detach FETCH_HEAD[0m
+2026-11-14T01:59:19.7937736Z [36;1mtest "$(git -C /tmp/otel-ta-r8 rev-parse HEAD)" = "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0"[0m
+2026-11-14T01:59:19.7938233Z [36;1mprintf '%s\n' '572057cde7e9bbe3aed6e5e3e8f16290d487f7d0' > "$out/upstream_head.txt"[0m
+2026-11-14T01:59:19.7938748Z [36;1mq=/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue[0m
+2026-11-14T01:59:19.7939310Z [36;1mtest "$(sha256sum "$q/persistent_queue.go" | cut -d' ' -f1)" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4[0m
+2026-11-14T01:59:19.7939843Z [36;1msrc=tests/opentelemetry/16236/r2/persistent_queue_candidate.go[0m
+2026-11-14T01:59:19.7940273Z [36;1mr6=tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go[0m
+2026-11-14T01:59:19.7940741Z [36;1mr7=tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go[0m
+2026-11-14T01:59:19.7941180Z [36;1mr8=tests/opentelemetry/16236/r8/axg_metadata_presence_test.go[0m
+2026-11-14T01:59:19.7941731Z [36;1mtest "$(sha256sum "$src" | cut -d' ' -f1)" = 200cb460efa44879827f9074edb911276a3ff1f7ca2f51a4d44c2f5ba844506c[0m
+2026-11-14T01:59:19.7942294Z [36;1mtest "$(sha256sum "$r6" | cut -d' ' -f1)" = e1ff29373e36588e283cda892a7ae8515e9d653775c4692905859a60d35891b7[0m
+2026-11-14T01:59:19.7942827Z [36;1mtest "$(sha256sum "$r7" | cut -d' ' -f1)" = e994907ab702f68415e113b7dc948595f7a9a61437da85cec867439956a9dfd5[0m
+2026-11-14T01:59:19.7943381Z [36;1mtest "$(sha256sum "$r8" | cut -d' ' -f1)" = 8431c66f8d8745e7e13a134151f7542619c735762b91924eecbb98aed7ce28cf[0m
+2026-11-14T01:59:19.7944114Z [36;1msha256sum "$src" "$r6" "$r7" "$r8" tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go > "$out/source_hashes.sha256"[0m
+2026-11-14T01:59:19.7944746Z [36;1mcp "$src" "$q/persistent_queue.go"[0m
+2026-11-14T01:59:19.7945173Z [36;1mfor f in \[0m
+2026-11-14T01:59:19.7945577Z [36;1m  tests/opentelemetry/16236/axg_recovery_contract_test.go \[0m
+2026-11-14T01:59:19.7945990Z [36;1m  tests/opentelemetry/16236/r2/axg_recovery_r2_test.go \[0m
+2026-11-14T01:59:19.7946383Z [36;1m  tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go \[0m
+2026-11-14T01:59:19.7946814Z [36;1m  tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go \[0m
+2026-11-14T01:59:19.7947441Z [36;1m  tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go \[0m
+2026-11-14T01:59:19.7947915Z [36;1m  tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go \[0m
+2026-11-14T01:59:19.7948331Z [36;1m  tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go[0m
+2026-11-14T01:59:19.7948706Z [36;1mdo cp "$f" "$q/$(basename "$f")"; done[0m
+2026-11-14T01:59:19.7949019Z [36;1mgofmt -w "$q"/axg*test.go[0m
+2026-11-14T01:59:20.1230511Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:20.1231080Z env:
+2026-11-14T01:59:20.1231357Z   GOTOOLCHAIN: local
+2026-11-14T01:59:20.1231602Z ##[endgroup]
+2026-11-14T01:59:20.7236495Z From https://github.com/open-telemetry/opentelemetry-collector
+2026-11-14T01:59:20.7237054Z  * branch            572057cde7e9bbe3aed6e5e3e8f16290d487f7d0 -> FETCH_HEAD
+2026-11-14T01:59:20.8331061Z ##[group]Run set -euo pipefail
+2026-11-14T01:59:20.8331402Z [36;1mset -euo pipefail[0m
+2026-11-14T01:59:20.8331687Z [36;1mout=tests/opentelemetry/16236/r8_ta_evidence[0m
+2026-11-14T01:59:20.8332359Z [36;1mgo -C /tmp/otel-ta-r8/exporter/exporterhelper get github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage@v0.165.0 > "$out/module_get.log" 2>&1[0m
+2026-11-14T01:59:20.8333289Z [36;1mgo -C /tmp/otel-ta-r8/exporter/exporterhelper list -m github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage > "$out/contrib_version.txt"[0m
+2026-11-14T01:59:20.8334039Z [36;1mgo -C /tmp/otel-ta-r8/exporter/exporterhelper list -m go.etcd.io/bbolt > "$out/bbolt_version.txt"[0m
+2026-11-14T01:59:20.8334701Z [36;1mgrep -qx 'github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0' "$out/contrib_version.txt"[0m
+2026-11-14T01:59:20.8335392Z [36;1mgrep -qx 'go.etcd.io/bbolt v1.5.0' "$out/bbolt_version.txt"[0m
+2026-11-14T01:59:20.8361625Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:20.8361951Z env:
+2026-11-14T01:59:20.8362172Z   GOTOOLCHAIN: local
+2026-11-14T01:59:20.8362461Z ##[endgroup]
+2026-11-14T01:59:23.5700197Z ##[group]Run set +e
+2026-11-14T01:59:23.5700499Z [36;1mset +e[0m
+2026-11-14T01:59:23.5700808Z [36;1mout=tests/opentelemetry/16236/r8_ta_evidence[0m
+2026-11-14T01:59:23.5701357Z [36;1mtimeout 450s go -C /tmp/otel-ta-r8/exporter/exporterhelper test -count=1 -v -timeout=7m ./internal/queue > "$out/full_original.log" 2>&1[0m
+2026-11-14T01:59:23.5701904Z [36;1mcode=$?[0m
+2026-11-14T01:59:23.5702176Z [36;1mprintf '%s\n' "$code" > "$out/full_original.exit"[0m
+2026-11-14T01:59:23.5702505Z [36;1mcat "$out/full_original.log"[0m
+2026-11-14T01:59:23.5702774Z [36;1mexit 0[0m
+2026-11-14T01:59:23.5729950Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:23.5730303Z env:
+2026-11-14T01:59:23.5730639Z   GOTOOLCHAIN: local
+2026-11-14T01:59:23.5730878Z ##[endgroup]
+2026-11-14T01:59:51.4096302Z go: downloading google.golang.org/protobuf v1.36.12
+2026-11-14T01:59:51.4096950Z go: downloading github.com/stretchr/testify v1.12.1
+2026-11-14T01:59:51.4097753Z go: downloading go.opentelemetry.io/otel/sdk/metric v1.47.0
+2026-11-14T01:59:51.4098246Z go: downloading go.opentelemetry.io/otel/sdk v1.47.0
+2026-11-14T01:59:51.4098651Z go: downloading github.com/google/uuid v1.6.0
+2026-11-14T01:59:51.4099048Z go: downloading google.golang.org/grpc v1.85.0
+2026-11-14T01:59:51.4099398Z go: downloading go.yaml.in/yaml/v3 v3.0.6
+2026-11-14T01:59:51.4099760Z go: downloading github.com/go-viper/mapstructure/v2 v2.5.0
+2026-11-14T01:59:51.4100498Z go: downloading github.com/gobwas/glob v0.2.3
+2026-11-14T01:59:51.4100970Z go: downloading github.com/knadh/koanf/maps v0.1.3
+2026-11-14T01:59:51.4101382Z go: downloading github.com/knadh/koanf/providers/confmap v1.0.1
+2026-11-14T01:59:51.4101814Z go: downloading github.com/knadh/koanf/v2 v2.4.1
+2026-11-14T01:59:51.4102158Z go: downloading github.com/go-logr/logr v1.4.4
+2026-11-14T01:59:51.4102484Z go: downloading go.opentelemetry.io/otel/log v1.47.0
+2026-11-14T01:59:51.4102821Z go: downloading github.com/go-logr/stdr v1.2.2
+2026-11-14T01:59:51.4103138Z go: downloading go.opentelemetry.io/auto/sdk v1.2.1
+2026-11-14T01:59:51.4103519Z go: downloading github.com/mitchellh/copystructure v1.2.0
+2026-11-14T01:59:51.4103868Z go: downloading github.com/mitchellh/reflectwalk v1.0.2
+2026-11-14T01:59:51.4104294Z go: downloading google.golang.org/genproto/googleapis/rpc v0.0.0-20260817212433-ac3dfec99bb1
+2026-11-14T01:59:51.4104719Z === RUN   TestAsyncMemoryQueue
+2026-11-14T01:59:51.4105002Z --- PASS: TestAsyncMemoryQueue (0.00s)
+2026-11-14T01:59:51.4105323Z === RUN   TestAsyncMemoryQueueBlocking
+2026-11-14T01:59:51.4105825Z --- PASS: TestAsyncMemoryQueueBlocking (0.49s)
+2026-11-14T01:59:51.4106185Z === RUN   TestAsyncMemoryWaitForResultQueueBlocking
+2026-11-14T01:59:51.4106596Z --- PASS: TestAsyncMemoryWaitForResultQueueBlocking (0.86s)
+2026-11-14T01:59:51.4106957Z === RUN   TestAsyncMemoryQueueBlockingCancelled
+2026-11-14T01:59:51.4107476Z --- PASS: TestAsyncMemoryQueueBlockingCancelled (1.00s)
+2026-11-14T01:59:51.4107877Z === RUN   TestAsyncMemoryQueueReleasesReferenceOnDone
+2026-11-14T01:59:51.4108352Z --- PASS: TestAsyncMemoryQueueReleasesReferenceOnDone (0.00s)
+2026-11-14T01:59:51.4108755Z === RUN   TestAsyncMemoryWaitForResultQueueTakesNoReference
+2026-11-14T01:59:51.4109169Z --- PASS: TestAsyncMemoryWaitForResultQueueTakesNoReference (0.00s)
+2026-11-14T01:59:51.4109644Z === RUN   TestAsyncMemoryWaitForResultQueueCancelledNotConsumed
+2026-11-14T01:59:51.4110089Z --- PASS: TestAsyncMemoryWaitForResultQueueCancelledNotConsumed (0.21s)
+2026-11-14T01:59:51.4110514Z === RUN   TestAXGR5FileStorageActualExtensionRestartNoLoss
+2026-11-14T01:59:51.4111027Z     axg_actual_filestorage_test.go:90: AXG_R5_REAL_FILESTORAGE_QMV0_RESTART_PASS
+2026-11-14T01:59:51.4111468Z --- PASS: TestAXGR5FileStorageActualExtensionRestartNoLoss (0.01s)
+2026-11-14T01:59:51.4111883Z === RUN   TestAXGR5FileStorageActualExtensionLegacyMigration
+2026-11-14T01:59:51.4112457Z     axg_actual_filestorage_test.go:111: AXG_R5_REAL_FILESTORAGE_LEGACY_PASS
+2026-11-14T01:59:51.4113106Z --- PASS: TestAXGR5FileStorageActualExtensionLegacyMigration (0.00s)
+2026-11-14T01:59:51.4113585Z === RUN   TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed
+2026-11-14T01:59:51.4114106Z     axg_actual_filestorage_test.go:145: AXG_R5_REAL_FILESTORAGE_CORRUPT_QMV0_FAIL_CLOSED
+2026-11-14T01:59:51.4114567Z --- PASS: TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed (0.00s)
+2026-11-14T01:59:51.4114973Z === RUN   TestAXGBboltChild
+2026-11-14T01:59:51.4115328Z     axg_bbolt_sigkill_linux_test.go:112: subprocess-only test
+2026-11-14T01:59:51.4115662Z --- SKIP: TestAXGBboltChild (0.00s)
+2026-11-14T01:59:51.4115957Z === RUN   TestAXGBboltSIGKILLRecovery
+2026-11-14T01:59:51.4116293Z === RUN   TestAXGBboltSIGKILLRecovery/qmv0_first_committed
+2026-11-14T01:59:51.4116777Z     axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash
+2026-11-14T01:59:51.4117646Z     axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+2026-11-14T01:59:51.4118066Z === RUN   TestAXGBboltSIGKILLRecovery/qmv0_second_committed
+2026-11-14T01:59:51.4118553Z     axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash_second
+2026-11-14T01:59:51.4119062Z     axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+2026-11-14T01:59:51.4119479Z === RUN   TestAXGBboltSIGKILLRecovery/legacy_first_committed
+2026-11-14T01:59:51.4119933Z     axg_bbolt_sigkill_linux_test.go:217: AXG_BBOLT_SIGKILL_CONFIRMED mode=crash
+2026-11-14T01:59:51.4120536Z     axg_bbolt_sigkill_linux_test.go:218: AXG_BBOLT_RESTART_PRESERVED ids=[11 22 33]
+2026-11-14T01:59:51.4120946Z --- PASS: TestAXGBboltSIGKILLRecovery (0.02s)
+2026-11-14T01:59:51.4121366Z     --- PASS: TestAXGBboltSIGKILLRecovery/qmv0_first_committed (0.01s)
+2026-11-14T01:59:51.4121839Z     --- PASS: TestAXGBboltSIGKILLRecovery/qmv0_second_committed (0.01s)
+2026-11-14T01:59:51.4122297Z     --- PASS: TestAXGBboltSIGKILLRecovery/legacy_first_committed (0.01s)
+2026-11-14T01:59:51.4122729Z === RUN   TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness
+2026-11-14T01:59:51.4123260Z === RUN   TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_false
+2026-11-14T01:59:51.4123988Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=1 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4124765Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=2 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4125513Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=3 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4126297Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=false iteration=4 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4127050Z === RUN   TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_true
+2026-11-14T01:59:51.4127895Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=1 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4128686Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=2 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4129395Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=3 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4130108Z     axg_independent_bbolt_linux_test.go:64: AXG_INDEPENDENT_RESTART_OK legacy=true iteration=4 logical=[11 22 33] physical=[11 22 33]
+2026-11-14T01:59:51.4130722Z --- PASS: TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness (0.01s)
+2026-11-14T01:59:51.4131329Z     --- PASS: TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_false (0.00s)
+2026-11-14T01:59:51.4131945Z     --- PASS: TestAXGIndependentNativeRepeatRestartAndPhysicalUniqueness/legacy_true (0.00s)
+2026-11-14T01:59:51.4132448Z === RUN   TestAXGIndependentPreCommitWriteFailurePreservesDurableItems
+2026-11-14T01:59:51.4133445Z     axg_independent_bbolt_linux_test.go:93: AXG_INDEPENDENT_FAILED_MOVE_REJECTED error=atomically move in-flight item 0: injected pre-commit full disk during in-flight move: the storage extension has run out of available space
+2026-11-14T01:59:51.4134442Z     axg_independent_bbolt_linux_test.go:100: AXG_INDEPENDENT_PRECOMMIT_ROLLBACK_OK: injected error, no missing/duplicate physical items
+2026-11-14T01:59:51.4135024Z --- PASS: TestAXGIndependentPreCommitWriteFailurePreservesDurableItems (0.00s)
+2026-11-14T01:59:51.4135533Z === RUN   TestAXGIndependentCorruptedMetadataCharacterization
+2026-11-14T01:59:51.4136518Z     axg_independent_bbolt_linux_test.go:124: AXG_INDEPENDENT_METADATA_CORRUPTION_OUTCOME err=persistent queue metadata unreadable; refusing index reset: invalid consolidated queue metadata encoding: proto: cannot parse invalid wire-format data read=0 write=0
+2026-11-14T01:59:51.4137529Z --- PASS: TestAXGIndependentCorruptedMetadataCharacterization (0.00s)
+2026-11-14T01:59:51.4137989Z === RUN   TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk
+2026-11-14T01:59:51.4138434Z     axg_qmv0_integrity_test.go:51: AXG_R5_CORRUPT_QMV0_FAIL_CLOSED_PRESERVED
+2026-11-14T01:59:51.4138878Z     axg_qmv0_integrity_test.go:62: AXG_R5_QMV0_MANUAL_RESTORE_SUCCESS
+2026-11-14T01:59:51.4139321Z --- PASS: TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk (0.00s)
+2026-11-14T01:59:51.4139702Z === RUN   TestAXGR5MetadataReadErrorFailsClosed
+2026-11-14T01:59:51.4140139Z     axg_qmv0_integrity_test.go:95: AXG_R5_METADATA_IO_ERROR_FAIL_CLOSED
+2026-11-14T01:59:51.4140596Z --- PASS: TestAXGR5MetadataReadErrorFailsClosed (0.00s)
+2026-11-14T01:59:51.4140958Z === RUN   TestAXGR5ImpossibleMetadataIndicesFailClosed
+2026-11-14T01:59:51.4141396Z     axg_qmv0_integrity_test.go:121: AXG_R5_IMPOSSIBLE_INDICES_FAIL_CLOSED
+2026-11-14T01:59:51.4141819Z --- PASS: TestAXGR5ImpossibleMetadataIndicesFailClosed (0.00s)
+2026-11-14T01:59:51.4142215Z === RUN   TestAXGR5MissingMetadataStillInitializesNewQueue
+2026-11-14T01:59:51.4142677Z     axg_qmv0_integrity_test.go:134: AXG_R5_NEW_EMPTY_QUEUE_CONTROL_PASS
+2026-11-14T01:59:51.4143085Z --- PASS: TestAXGR5MissingMetadataStillInitializesNewQueue (0.00s)
+2026-11-14T01:59:51.4143500Z === RUN   TestAXGR6RealFileStorageInjectedPrecommitENOSPC
+2026-11-14T01:59:51.4144030Z     axg_real_filestorage_reliability_test.go:120: AXG_R6_CONTRIB_PRECOMMIT_FULL_FAIL_CLOSED_PRESERVED
+2026-11-14T01:59:51.4144510Z --- PASS: TestAXGR6RealFileStorageInjectedPrecommitENOSPC (0.00s)
+2026-11-14T01:59:51.4144908Z === RUN   TestAXGR6RealFileStorageAmbiguousErrorAfterCommit
+2026-11-14T01:59:51.4145553Z     axg_real_filestorage_reliability_test.go:141: AXG_R6_CONTRIB_POSTCOMMIT_AMBIGUOUS_REOPEN_PRESERVED
+2026-11-14T01:59:51.4146126Z --- PASS: TestAXGR6RealFileStorageAmbiguousErrorAfterCommit (0.00s)
+2026-11-14T01:59:51.4146529Z === RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries
+2026-11-14T01:59:51.4146950Z === RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed
+2026-11-14T01:59:51.4147727Z     axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=acked_first_is_not_replayed expected=[22 33]
+2026-11-14T01:59:51.4148285Z === RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed
+2026-11-14T01:59:51.4148961Z     axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=unacked_first_may_be_replayed expected=[11 22 33]
+2026-11-14T01:59:51.4149477Z === NAME  TestAXGR6AckedVsUnackedDeliveryBoundaries
+2026-11-14T01:59:51.4150098Z     axg_real_filestorage_reliability_test.go:174: AXG_R6_NO_EXACTLY_ONCE_CLAIM: unacknowledged delivery replays by design
+2026-11-14T01:59:51.4150599Z --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries (0.00s)
+2026-11-14T01:59:51.4151098Z     --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed (0.00s)
+2026-11-14T01:59:51.4151723Z     --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed (0.00s)
+2026-11-14T01:59:51.4152161Z === RUN   TestAXGR6DurableFullCapacityAfterRecovery
+2026-11-14T01:59:51.4152761Z     axg_real_filestorage_reliability_test.go:200: AXG_R6_FULL_CAPACITY_RESTART_PRESERVED_AND_REJECTED_NEW_OFFER
+2026-11-14T01:59:51.4153252Z --- PASS: TestAXGR6DurableFullCapacityAfterRecovery (0.00s)
+2026-11-14T01:59:51.4153615Z === RUN   TestAXGR6ExtensionChildSIGKILL
+2026-11-14T01:59:51.4154052Z     axg_real_filestorage_reliability_test.go:206: subprocess-only test
+2026-11-14T01:59:51.4154419Z --- SKIP: TestAXGR6ExtensionChildSIGKILL (0.00s)
+2026-11-14T01:59:51.4154767Z === RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL
+2026-11-14T01:59:51.4155146Z === RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0
+2026-11-14T01:59:51.4155649Z     axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+2026-11-14T01:59:51.4156242Z     axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=qmv0
+2026-11-14T01:59:51.4156716Z === RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy
+2026-11-14T01:59:51.4157367Z     axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+2026-11-14T01:59:51.4157950Z     axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=legacy
+2026-11-14T01:59:51.4158415Z --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL (0.02s)
+2026-11-14T01:59:51.4158904Z     --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0 (0.01s)
+2026-11-14T01:59:51.4159387Z     --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy (0.01s)
+2026-11-14T01:59:51.4160238Z === RUN   TestAXGRecoveryUninterruptedControl
+2026-11-14T01:59:51.4160741Z     axg_recovery_contract_test.go:133: AXG_CONTROL_OK observed_ids=[11 22 33]
+2026-11-14T01:59:51.4161153Z --- PASS: TestAXGRecoveryUninterruptedControl (0.00s)
+2026-11-14T01:59:51.4161528Z === RUN   TestAXGRecoveryCutAfterCommittedRetirement
+2026-11-14T01:59:51.4161969Z     axg_recovery_contract_test.go:157: AXG_CRASH_RECOVERY_SAFE ids=[11 22 33]
+2026-11-14T01:59:51.4162369Z --- PASS: TestAXGRecoveryCutAfterCommittedRetirement (0.00s)
+2026-11-14T01:59:51.4162758Z === RUN   TestAXGRecoveryTwoInterruptedCommits
+2026-11-14T01:59:51.4163130Z     axg_recovery_r2_test.go:47: AXG_CUT_1_COMMITTED
+2026-11-14T01:59:51.4163481Z     axg_recovery_r2_test.go:47: AXG_CUT_2_COMMITTED
+2026-11-14T01:59:51.4163882Z     axg_recovery_r2_test.go:50: AXG_REPEATED_CRASH_SAFE
+2026-11-14T01:59:51.4164212Z --- PASS: TestAXGRecoveryTwoInterruptedCommits (0.00s)
+2026-11-14T01:59:51.4164569Z === RUN   TestAXGRecoveryLegacyCommittedCut
+2026-11-14T01:59:51.4164943Z     axg_recovery_r2_test.go:66: AXG_LEGACY_CRASH_SAFE
+2026-11-14T01:59:51.4165277Z --- PASS: TestAXGRecoveryLegacyCommittedCut (0.00s)
+2026-11-14T01:59:51.4165633Z === RUN   TestAXGRecoveryRejectsUncommittedBatchFailure
+2026-11-14T01:59:51.4166009Z     axg_recovery_r2_test.go:96: AXG_ERROR_FAIL_CLOSED
+2026-11-14T01:59:51.4166387Z --- PASS: TestAXGRecoveryRejectsUncommittedBatchFailure (0.00s)
+2026-11-14T01:59:51.4166829Z === RUN   TestCondSignalDoesNotBlockBehindCanceledWaiters
+2026-11-14T01:59:51.4167378Z === PAUSE TestCondSignalDoesNotBlockBehindCanceledWaiters
+2026-11-14T01:59:51.4167732Z === RUN   TestCondSignalAccounting
+2026-11-14T01:59:51.4168016Z === PAUSE TestCondSignalAccounting
+2026-11-14T01:59:51.4168321Z === RUN   TestCondCancellationNotification
+2026-11-14T01:59:51.4168644Z === PAUSE TestCondCancellationNotification
+2026-11-14T01:59:51.4169013Z === RUN   TestBlockedOfferCancellationDoesNotConsumeCapacityNotification
+2026-11-14T01:59:51.4169529Z === RUN   TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/memory
+2026-11-14T01:59:51.4170083Z === RUN   TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/persistent
+2026-11-14T01:59:51.4170630Z --- PASS: TestBlockedOfferCancellationDoesNotConsumeCapacityNotification (0.00s)
+2026-11-14T01:59:51.4171238Z     --- PASS: TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/memory (0.00s)
+2026-11-14T01:59:51.4171850Z     --- PASS: TestBlockedOfferCancellationDoesNotConsumeCapacityNotification/persistent (0.00s)
+2026-11-14T01:59:51.4172378Z === RUN   TestMemoryQueue
+2026-11-14T01:59:51.4172641Z --- PASS: TestMemoryQueue (0.00s)
+2026-11-14T01:59:51.4172930Z === RUN   TestMemoryQueueBlockingCancelled
+2026-11-14T01:59:51.4173278Z --- PASS: TestMemoryQueueBlockingCancelled (0.00s)
+2026-11-14T01:59:51.4173618Z === RUN   TestMemoryQueueDrainWhenShutdown
+2026-11-14T01:59:51.4173952Z --- PASS: TestMemoryQueueDrainWhenShutdown (0.00s)
+2026-11-14T01:59:51.4174264Z === RUN   TestMemoryQueueOfferInvalidSize
+2026-11-14T01:59:51.4174588Z --- PASS: TestMemoryQueueOfferInvalidSize (0.00s)
+2026-11-14T01:59:51.4174952Z === RUN   TestMemoryQueueRejectOverCapacityElements
+2026-11-14T01:59:51.4175315Z --- PASS: TestMemoryQueueRejectOverCapacityElements (0.00s)
+2026-11-14T01:59:51.4175666Z === RUN   TestMemoryQueueOfferZeroSize
+2026-11-14T01:59:51.4175974Z --- PASS: TestMemoryQueueOfferZeroSize (0.00s)
+2026-11-14T01:59:51.4176301Z === RUN   TestMemoryQueueOverflow
+2026-11-14T01:59:51.4176608Z --- PASS: TestMemoryQueueOverflow (0.00s)
+2026-11-14T01:59:51.4176923Z === RUN   TestMemoryQueueWaitForResultPassErrorBack
+2026-11-14T01:59:51.4177504Z --- PASS: TestMemoryQueueWaitForResultPassErrorBack (0.00s)
+2026-11-14T01:59:51.4177898Z === RUN   TestMemoryQueueWaitForResultCancelIncomingRequest
+2026-11-14T01:59:51.4178294Z --- PASS: TestMemoryQueueWaitForResultCancelIncomingRequest (0.10s)
+2026-11-14T01:59:51.4178749Z === RUN   TestMemoryQueueWaitForResultCancelBeforeAccepted
+2026-11-14T01:59:51.4179150Z --- PASS: TestMemoryQueueWaitForResultCancelBeforeAccepted (0.11s)
+2026-11-14T01:59:51.4179658Z === RUN   TestMemoryQueueWaitForResultSizeAndCapacity
+2026-11-14T01:59:51.4180037Z --- PASS: TestMemoryQueueWaitForResultSizeAndCapacity (0.01s)
+2026-11-14T01:59:51.4180385Z === RUN   TestLinkedQueueQueued
+2026-11-14T01:59:51.4180694Z === RUN   TestLinkedQueueQueued/sole_element
+2026-11-14T01:59:51.4181042Z === RUN   TestLinkedQueueQueued/head_after_popping_the_previous_one
+2026-11-14T01:59:51.4181421Z === RUN   TestLinkedQueueQueued/still_queued_behind_others
+2026-11-14T01:59:51.4181753Z --- PASS: TestLinkedQueueQueued (0.00s)
+2026-11-14T01:59:51.4182127Z     --- PASS: TestLinkedQueueQueued/sole_element (0.00s)
+2026-11-14T01:59:51.4182601Z     --- PASS: TestLinkedQueueQueued/head_after_popping_the_previous_one (0.00s)
+2026-11-14T01:59:51.4183061Z     --- PASS: TestLinkedQueueQueued/still_queued_behind_others (0.00s)
+2026-11-14T01:59:51.4183413Z === RUN   TestObsQueueRegistrationRollback
+2026-11-14T01:59:51.4183737Z --- PASS: TestObsQueueRegistrationRollback (0.00s)
+2026-11-14T01:59:51.4184082Z === RUN   TestNewExporterObsMetricsError
+2026-11-14T01:59:51.4184417Z --- PASS: TestNewExporterObsMetricsError (0.00s)
+2026-11-14T01:59:51.4184811Z === RUN   TestExporterObsMetricsUnsupportedMetric
+2026-11-14T01:59:51.4185151Z --- PASS: TestExporterObsMetricsUnsupportedMetric (0.00s)
+2026-11-14T01:59:51.4185662Z === RUN   TestExporterObsMetricsAttributeCompatibility
+2026-11-14T01:59:51.4186077Z --- PASS: TestExporterObsMetricsAttributeCompatibility (0.00s)
+2026-11-14T01:59:51.4186507Z === RUN   TestObsQueueLogsSizeCapacity
+2026-11-14T01:59:51.4186869Z --- PASS: TestObsQueueLogsSizeCapacity (0.00s)
+2026-11-14T01:59:51.4187334Z === RUN   TestObsQueueLogsFailure
+2026-11-14T01:59:51.4187647Z --- PASS: TestObsQueueLogsFailure (0.00s)
+2026-11-14T01:59:51.4187972Z === RUN   TestObsQueueTracesSizeCapacity
+2026-11-14T01:59:51.4188310Z --- PASS: TestObsQueueTracesSizeCapacity (0.00s)
+2026-11-14T01:59:51.4188622Z === RUN   TestObsQueueTracesFailure
+2026-11-14T01:59:51.4188910Z --- PASS: TestObsQueueTracesFailure (0.00s)
+2026-11-14T01:59:51.4189231Z === RUN   TestObsQueueMetrics
+2026-11-14T01:59:51.4189515Z --- PASS: TestObsQueueMetrics (0.00s)
+2026-11-14T01:59:51.4189805Z === RUN   TestObsQueueMetricsFailure
+2026-11-14T01:59:51.4190135Z --- PASS: TestObsQueueMetricsFailure (0.00s)
+2026-11-14T01:59:51.4190417Z === RUN   TestObsQueueProfiles
+2026-11-14T01:59:51.4190715Z --- PASS: TestObsQueueProfiles (0.00s)
+2026-11-14T01:59:51.4191022Z === RUN   TestObsQueueProfilesFailure
+2026-11-14T01:59:51.4191496Z --- PASS: TestObsQueueProfilesFailure (0.00s)
+2026-11-14T01:59:51.4191816Z === RUN   TestObsQueueLogsBatchSize
+2026-11-14T01:59:51.4192113Z --- PASS: TestObsQueueLogsBatchSize (0.00s)
+2026-11-14T01:59:51.4192421Z === RUN   TestObsQueueTracesBatchSize
+2026-11-14T01:59:51.4192742Z --- PASS: TestObsQueueTracesBatchSize (0.00s)
+2026-11-14T01:59:51.4193079Z === RUN   TestObsQueueMetricsBatchSize
+2026-11-14T01:59:51.4193393Z --- PASS: TestObsQueueMetricsBatchSize (0.00s)
+2026-11-14T01:59:51.4193711Z === RUN   TestObsQueueProfilesBatchSize
+2026-11-14T01:59:51.4194038Z --- PASS: TestObsQueueProfilesBatchSize (0.00s)
+2026-11-14T01:59:51.4194374Z === RUN   TestObsQueueEnqueueSpanAttributes
+2026-11-14T01:59:51.4194667Z === PAUSE TestObsQueueEnqueueSpanAttributes
+2026-11-14T01:59:51.4194993Z === RUN   TestPersistentQueue_FullCapacity
+2026-11-14T01:59:51.4195324Z === RUN   TestPersistentQueue_FullCapacity/requests_capacity
+2026-11-14T01:59:51.4195737Z === RUN   TestPersistentQueue_FullCapacity/items_capacity
+2026-11-14T01:59:51.4196088Z === RUN   TestPersistentQueue_FullCapacity/bytes_capacity
+2026-11-14T01:59:51.4196413Z --- PASS: TestPersistentQueue_FullCapacity (0.00s)
+2026-11-14T01:59:51.4196894Z     --- PASS: TestPersistentQueue_FullCapacity/requests_capacity (0.00s)
+2026-11-14T01:59:51.4197496Z     --- PASS: TestPersistentQueue_FullCapacity/items_capacity (0.00s)
+2026-11-14T01:59:51.4197947Z     --- PASS: TestPersistentQueue_FullCapacity/bytes_capacity (0.00s)
+2026-11-14T01:59:51.4198588Z === RUN   TestPersistentQueue_Shutdown
+2026-11-14T01:59:51.4198884Z --- PASS: TestPersistentQueue_Shutdown (0.00s)
+2026-11-14T01:59:51.4199235Z === RUN   TestPersistentQueue_ConsumersProducers
+2026-11-14T01:59:51.4199610Z === RUN   TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_1
+2026-11-14T01:59:51.4200061Z === RUN   TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_1
+2026-11-14T01:59:51.4200503Z === RUN   TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_3
+2026-11-14T01:59:51.4200932Z === RUN   TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_100
+2026-11-14T01:59:51.4201379Z === RUN   TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_100
+2026-11-14T01:59:51.4201778Z --- PASS: TestPersistentQueue_ConsumersProducers (0.05s)
+2026-11-14T01:59:51.4202291Z     --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_1 (0.01s)
+2026-11-14T01:59:51.4202841Z     --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_1 (0.01s)
+2026-11-14T01:59:51.4203375Z     --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_3 (0.01s)
+2026-11-14T01:59:51.4203916Z     --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_1_#consumers:_100 (0.01s)
+2026-11-14T01:59:51.4204450Z     --- PASS: TestPersistentQueue_ConsumersProducers/#messages:_100_#consumers:_100 (0.01s)
+2026-11-14T01:59:51.4204849Z === RUN   TestPersistentBlockingQueue
+2026-11-14T01:59:51.4205185Z === RUN   TestPersistentBlockingQueue/requests_based
+2026-11-14T01:59:51.4205513Z === RUN   TestPersistentBlockingQueue/items_based
+2026-11-14T01:59:51.4205865Z --- PASS: TestPersistentBlockingQueue (3.36s)
+2026-11-14T01:59:51.4206248Z     --- PASS: TestPersistentBlockingQueue/requests_based (1.73s)
+2026-11-14T01:59:51.4206658Z     --- PASS: TestPersistentBlockingQueue/items_based (1.63s)
+2026-11-14T01:59:51.4207004Z === RUN   TestToStorageClient
+2026-11-14T01:59:51.4207468Z === RUN   TestToStorageClient/obtain_storage_extension_by_name
+2026-11-14T01:59:51.4207872Z === RUN   TestToStorageClient/fail_on_not_existing_storage_extension
+2026-11-14T01:59:51.4208242Z === RUN   TestToStorageClient/invalid_extension_type
+2026-11-14T01:59:51.4208680Z === RUN   TestToStorageClient/fail_on_error_getting_storage_client_from_extension
+2026-11-14T01:59:51.4209082Z --- PASS: TestToStorageClient (0.00s)
+2026-11-14T01:59:51.4209472Z     --- PASS: TestToStorageClient/obtain_storage_extension_by_name (0.00s)
+2026-11-14T01:59:51.4210013Z     --- PASS: TestToStorageClient/fail_on_not_existing_storage_extension (0.00s)
+2026-11-14T01:59:51.4210469Z     --- PASS: TestToStorageClient/invalid_extension_type (0.00s)
+2026-11-14T01:59:51.4210971Z     --- PASS: TestToStorageClient/fail_on_error_getting_storage_client_from_extension (0.00s)
+2026-11-14T01:59:51.4211384Z === RUN   TestInvalidStorageExtensionType
+2026-11-14T01:59:51.4211698Z --- PASS: TestInvalidStorageExtensionType (0.00s)
+2026-11-14T01:59:51.4212053Z === RUN   TestPersistentQueue_StopAfterBadStart
+2026-11-14T01:59:51.4212418Z --- PASS: TestPersistentQueue_StopAfterBadStart (0.00s)
+2026-11-14T01:59:51.4212737Z === RUN   TestPersistentQueue_CorruptedData
+2026-11-14T01:59:51.4213081Z === RUN   TestPersistentQueue_CorruptedData/corrupted_no_items
+2026-11-14T01:59:51.4213446Z === RUN   TestPersistentQueue_CorruptedData/corrupted_all_items
+2026-11-14T01:59:51.4213805Z === RUN   TestPersistentQueue_CorruptedData/corrupted_some_items
+2026-11-14T01:59:51.4214195Z === RUN   TestPersistentQueue_CorruptedData/corrupted_metadata
+2026-11-14T01:59:51.4214582Z     persistent_queue_test.go:283: 
+2026-11-14T01:59:51.4215200Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/persistent_queue_test.go:283
+2026-11-14T01:59:51.4216109Z         	            				/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/persistent_queue_test.go:274
+2026-11-14T01:59:51.4216983Z         	            				/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/persistent_queue_test.go:618
+2026-11-14T01:59:51.4217697Z         	Error:      	Received unexpected error:
+2026-11-14T01:59:51.4218941Z         	            	failed recovering persistent queue: persistent queue metadata unreadable; refusing index reset: invalid consolidated queue metadata encoding: proto: cannot parse invalid wire-format data
+2026-11-14T01:59:51.4219712Z         	Test:       	TestPersistentQueue_CorruptedData/corrupted_metadata
+2026-11-14T01:59:51.4220135Z === RUN   TestPersistentQueue_CorruptedData/corrupted_everything
+2026-11-14T01:59:51.4220489Z     persistent_queue_test.go:283: 
+2026-11-14T01:59:51.4221084Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/persistent_queue_test.go:283
+2026-11-14T01:59:51.4222221Z         	            				/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/persistent_queue_test.go:274
+2026-11-14T01:59:51.4223419Z         	            				/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/persistent_queue_test.go:618
+2026-11-14T01:59:51.4224037Z         	Error:      	Received unexpected error:
+2026-11-14T01:59:51.4225641Z         	            	failed recovering persistent queue: persistent queue metadata unreadable; refusing index reset: invalid consolidated queue metadata encoding: proto: cannot parse invalid wire-format data
+2026-11-14T01:59:51.4226842Z         	Test:       	TestPersistentQueue_CorruptedData/corrupted_everything
+2026-11-14T01:59:51.4227567Z --- FAIL: TestPersistentQueue_CorruptedData (0.00s)
+2026-11-14T01:59:51.4228215Z     --- PASS: TestPersistentQueue_CorruptedData/corrupted_no_items (0.00s)
+2026-11-14T01:59:51.4229118Z     --- PASS: TestPersistentQueue_CorruptedData/corrupted_all_items (0.00s)
+2026-11-14T01:59:51.4229697Z     --- PASS: TestPersistentQueue_CorruptedData/corrupted_some_items (0.00s)
+2026-11-14T01:59:51.4230287Z     --- FAIL: TestPersistentQueue_CorruptedData/corrupted_metadata (0.00s)
+2026-11-14T01:59:51.4230752Z     --- FAIL: TestPersistentQueue_CorruptedData/corrupted_everything (0.00s)
+2026-11-14T01:59:51.4231184Z === RUN   TestPersistentQueue_CurrentlyProcessedItems
+2026-11-14T01:59:51.4231560Z --- PASS: TestPersistentQueue_CurrentlyProcessedItems (0.00s)
+2026-11-14T01:59:51.4231922Z === RUN   TestPersistentQueueStartWithNonDispatched
+2026-11-14T01:59:51.4232338Z --- PASS: TestPersistentQueueStartWithNonDispatched (0.00s)
+2026-11-14T01:59:51.4232742Z === RUN   TestPersistentQueueStartWithNonDispatchedConcurrent
+2026-11-14T01:59:51.4233172Z --- PASS: TestPersistentQueueStartWithNonDispatchedConcurrent (0.00s)
+2026-11-14T01:59:51.4233676Z === RUN   TestPersistentQueue_PutCloseReadClose
+2026-11-14T01:59:51.4234021Z --- PASS: TestPersistentQueue_PutCloseReadClose (0.00s)
+2026-11-14T01:59:51.4234405Z === RUN   TestItemIndexMarshaling
+2026-11-14T01:59:51.4234702Z === RUN   TestItemIndexMarshaling/#elements:0
+2026-11-14T01:59:51.4235016Z === RUN   TestItemIndexMarshaling/#elements:1
+2026-11-14T01:59:51.4235369Z === RUN   TestItemIndexMarshaling/#elements:18446744073709551615
+2026-11-14T01:59:51.4235713Z --- PASS: TestItemIndexMarshaling (0.00s)
+2026-11-14T01:59:51.4236104Z     --- PASS: TestItemIndexMarshaling/#elements:0 (0.00s)
+2026-11-14T01:59:51.4236481Z     --- PASS: TestItemIndexMarshaling/#elements:1 (0.00s)
+2026-11-14T01:59:51.4236896Z     --- PASS: TestItemIndexMarshaling/#elements:18446744073709551615 (0.00s)
+2026-11-14T01:59:51.4237511Z === RUN   TestItemIndexArrayMarshaling
+2026-11-14T01:59:51.4237857Z === RUN   TestItemIndexArrayMarshaling/#elements:[0_1_2]
+2026-11-14T01:59:51.4238229Z === RUN   TestItemIndexArrayMarshaling/#elements:[]
+2026-11-14T01:59:51.4238578Z === RUN   TestItemIndexArrayMarshaling/#elements:[]#01
+2026-11-14T01:59:51.4238908Z --- PASS: TestItemIndexArrayMarshaling (0.00s)
+2026-11-14T01:59:51.4239339Z     --- PASS: TestItemIndexArrayMarshaling/#elements:[0_1_2] (0.00s)
+2026-11-14T01:59:51.4239769Z     --- PASS: TestItemIndexArrayMarshaling/#elements:[] (0.00s)
+2026-11-14T01:59:51.4240217Z     --- PASS: TestItemIndexArrayMarshaling/#elements:[]#01 (0.00s)
+2026-11-14T01:59:51.4240627Z === RUN   TestPersistentQueue_ShutdownWhileConsuming
+2026-11-14T01:59:51.4241060Z --- PASS: TestPersistentQueue_ShutdownWhileConsuming (0.00s)
+2026-11-14T01:59:51.4241451Z === RUN   TestPersistentQueue_StorageFull
+2026-11-14T01:59:51.4241773Z --- PASS: TestPersistentQueue_StorageFull (0.00s)
+2026-11-14T01:59:51.4242139Z === RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling
+2026-11-14T01:59:51.4242555Z === RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/no_errors
+2026-11-14T01:59:51.4243083Z === RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_transaction,_success_afterwards
+2026-11-14T01:59:51.4243711Z === RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_second_transaction
+2026-11-14T01:59:51.4244289Z === RUN   TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_third_transaction
+2026-11-14T01:59:51.4244782Z --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling (0.00s)
+2026-11-14T01:59:51.4245300Z     --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/no_errors (0.00s)
+2026-11-14T01:59:51.4245954Z     --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_transaction,_success_afterwards (0.00s)
+2026-11-14T01:59:51.4246698Z     --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_second_transaction (0.00s)
+2026-11-14T01:59:51.4247552Z     --- PASS: TestPersistentQueue_ItemDispatchingFinish_ErrorHandling/error_on_first_and_third_transaction (0.00s)
+2026-11-14T01:59:51.4248108Z === RUN   TestPersistentQueue_ItemsCapacityUsageRestoredOnShutdown
+2026-11-14T01:59:51.4248545Z --- PASS: TestPersistentQueue_ItemsCapacityUsageRestoredOnShutdown (0.00s)
+2026-11-14T01:59:51.4248956Z === RUN   TestPersistentQueue_ItemsCapacityIsAlwyasRecorder
+2026-11-14T01:59:51.4249353Z --- PASS: TestPersistentQueue_ItemsCapacityIsAlwyasRecorder (0.00s)
+2026-11-14T01:59:51.4249760Z === RUN   TestPersistentQueue_RequestCapacityLessAfterRestart
+2026-11-14T01:59:51.4250145Z --- PASS: TestPersistentQueue_RequestCapacityLessAfterRestart (0.00s)
+2026-11-14T01:59:51.4250588Z === RUN   TestPersistentQueue_RestoredUsedSizeIsCorrectedOnDrain
+2026-11-14T01:59:51.4251026Z --- PASS: TestPersistentQueue_RestoredUsedSizeIsCorrectedOnDrain (0.00s)
+2026-11-14T01:59:51.4251459Z === CONT  TestCondSignalDoesNotBlockBehindCanceledWaiters
+2026-11-14T01:59:51.4251819Z === CONT  TestObsQueueEnqueueSpanAttributes
+2026-11-14T01:59:51.4252124Z === RUN   TestObsQueueEnqueueSpanAttributes/traces
+2026-11-14T01:59:51.4252559Z === RUN   TestObsQueueEnqueueSpanAttributes/traces/success
+2026-11-14T01:59:51.4252883Z === CONT  TestCondSignalAccounting
+2026-11-14T01:59:51.4253166Z === RUN   TestCondSignalAccounting/1
+2026-11-14T01:59:51.4253484Z === CONT  TestCondCancellationNotification
+2026-11-14T01:59:51.4253842Z === RUN   TestCondCancellationNotification/cancel_then_signal
+2026-11-14T01:59:51.4254195Z === RUN   TestCondSignalAccounting/3
+2026-11-14T01:59:51.4254543Z --- PASS: TestCondSignalDoesNotBlockBehindCanceledWaiters (0.00s)
+2026-11-14T01:59:51.4254956Z === RUN   TestCondCancellationNotification/signal_then_cancel
+2026-11-14T01:59:51.4255317Z --- PASS: TestCondSignalAccounting (0.00s)
+2026-11-14T01:59:51.4255653Z     --- PASS: TestCondSignalAccounting/1 (0.00s)
+2026-11-14T01:59:51.4256004Z     --- PASS: TestCondSignalAccounting/3 (0.00s)
+2026-11-14T01:59:51.4256366Z === RUN   TestCondCancellationNotification/mixed_cancel_then_signal
+2026-11-14T01:59:51.4256796Z === RUN   TestObsQueueEnqueueSpanAttributes/traces/failure
+2026-11-14T01:59:51.4257400Z === RUN   TestCondCancellationNotification/cancel_then_signal_without_live_waiters
+2026-11-14T01:59:51.4257873Z === RUN   TestCondCancellationNotification/cancel_then_signal_overflowing_buffer
+2026-11-14T01:59:51.4258295Z --- PASS: TestCondCancellationNotification (0.00s)
+2026-11-14T01:59:51.4258720Z     --- PASS: TestCondCancellationNotification/cancel_then_signal (0.00s)
+2026-11-14T01:59:51.4259172Z     --- PASS: TestCondCancellationNotification/signal_then_cancel (0.00s)
+2026-11-14T01:59:51.4259761Z     --- PASS: TestCondCancellationNotification/mixed_cancel_then_signal (0.00s)
+2026-11-14T01:59:51.4260327Z     --- PASS: TestCondCancellationNotification/cancel_then_signal_without_live_waiters (0.00s)
+2026-11-14T01:59:51.4260904Z     --- PASS: TestCondCancellationNotification/cancel_then_signal_overflowing_buffer (0.00s)
+2026-11-14T01:59:51.4261324Z === RUN   TestObsQueueEnqueueSpanAttributes/metrics
+2026-11-14T01:59:51.4261683Z === RUN   TestObsQueueEnqueueSpanAttributes/metrics/success
+2026-11-14T01:59:51.4262068Z === RUN   TestObsQueueEnqueueSpanAttributes/metrics/failure
+2026-11-14T01:59:51.4262411Z === RUN   TestObsQueueEnqueueSpanAttributes/logs
+2026-11-14T01:59:51.4262753Z === RUN   TestObsQueueEnqueueSpanAttributes/logs/success
+2026-11-14T01:59:51.4263116Z === RUN   TestObsQueueEnqueueSpanAttributes/logs/failure
+2026-11-14T01:59:51.4263500Z === RUN   TestObsQueueEnqueueSpanAttributes/profiles
+2026-11-14T01:59:51.4263880Z === RUN   TestObsQueueEnqueueSpanAttributes/profiles/success
+2026-11-14T01:59:51.4264250Z === RUN   TestObsQueueEnqueueSpanAttributes/profiles/failure
+2026-11-14T01:59:51.4264601Z --- PASS: TestObsQueueEnqueueSpanAttributes (0.00s)
+2026-11-14T01:59:51.4265002Z     --- PASS: TestObsQueueEnqueueSpanAttributes/traces (0.00s)
+2026-11-14T01:59:51.4265598Z         --- PASS: TestObsQueueEnqueueSpanAttributes/traces/success (0.00s)
+2026-11-14T01:59:51.4266135Z         --- PASS: TestObsQueueEnqueueSpanAttributes/traces/failure (0.00s)
+2026-11-14T01:59:51.4266583Z     --- PASS: TestObsQueueEnqueueSpanAttributes/metrics (0.00s)
+2026-11-14T01:59:51.4267106Z         --- PASS: TestObsQueueEnqueueSpanAttributes/metrics/success (0.00s)
+2026-11-14T01:59:51.4267770Z         --- PASS: TestObsQueueEnqueueSpanAttributes/metrics/failure (0.00s)
+2026-11-14T01:59:51.4268232Z     --- PASS: TestObsQueueEnqueueSpanAttributes/logs (0.00s)
+2026-11-14T01:59:51.4268719Z         --- PASS: TestObsQueueEnqueueSpanAttributes/logs/success (0.00s)
+2026-11-14T01:59:51.4269212Z         --- PASS: TestObsQueueEnqueueSpanAttributes/logs/failure (0.00s)
+2026-11-14T01:59:51.4269670Z     --- PASS: TestObsQueueEnqueueSpanAttributes/profiles (0.00s)
+2026-11-14T01:59:51.4270177Z         --- PASS: TestObsQueueEnqueueSpanAttributes/profiles/success (0.00s)
+2026-11-14T01:59:51.4270725Z         --- PASS: TestObsQueueEnqueueSpanAttributes/profiles/failure (0.00s)
+2026-11-14T01:59:51.4271061Z FAIL
+2026-11-14T01:59:51.4271422Z FAIL	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	6.283s
+2026-11-14T01:59:51.4271757Z FAIL
+2026-11-14T01:59:51.4297770Z ##[group]Run set +e
+2026-11-14T01:59:51.4298046Z [36;1mset +e[0m
+2026-11-14T01:59:51.4298334Z [36;1mout=tests/opentelemetry/16236/r8_ta_evidence[0m
+2026-11-14T01:59:51.4298959Z [36;1mtimeout 420s go -C /tmp/otel-ta-r8/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGR(3|4|5|6)' ./internal/queue > "$out/historical_r3_r6.log" 2>&1[0m
+2026-11-14T01:59:51.4299498Z [36;1mcode=$?[0m
+2026-11-14T01:59:51.4299765Z [36;1mprintf '%s\n' "$code" > "$out/historical_r3_r6.exit"[0m
+2026-11-14T01:59:51.4300080Z [36;1mcat "$out/historical_r3_r6.log"[0m
+2026-11-14T01:59:51.4300355Z [36;1mexit 0[0m
+2026-11-14T01:59:51.4328521Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:51.4328854Z env:
+2026-11-14T01:59:51.4329149Z   GOTOOLCHAIN: local
+2026-11-14T01:59:51.4329397Z ##[endgroup]
+2026-11-14T01:59:51.8924709Z === RUN   TestAXGR5FileStorageActualExtensionRestartNoLoss
+2026-11-14T01:59:51.8925894Z     axg_actual_filestorage_test.go:90: AXG_R5_REAL_FILESTORAGE_QMV0_RESTART_PASS
+2026-11-14T01:59:51.8926402Z --- PASS: TestAXGR5FileStorageActualExtensionRestartNoLoss (0.00s)
+2026-11-14T01:59:51.8926850Z === RUN   TestAXGR5FileStorageActualExtensionLegacyMigration
+2026-11-14T01:59:51.8927522Z     axg_actual_filestorage_test.go:111: AXG_R5_REAL_FILESTORAGE_LEGACY_PASS
+2026-11-14T01:59:51.8928006Z --- PASS: TestAXGR5FileStorageActualExtensionLegacyMigration (0.00s)
+2026-11-14T01:59:51.8928597Z === RUN   TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed
+2026-11-14T01:59:51.8929338Z     axg_actual_filestorage_test.go:145: AXG_R5_REAL_FILESTORAGE_CORRUPT_QMV0_FAIL_CLOSED
+2026-11-14T01:59:51.8929831Z --- PASS: TestAXGR5FileStorageActualExtensionCorruptQmv0FailClosed (0.00s)
+2026-11-14T01:59:51.8930291Z === RUN   TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk
+2026-11-14T01:59:51.8930741Z     axg_qmv0_integrity_test.go:51: AXG_R5_CORRUPT_QMV0_FAIL_CLOSED_PRESERVED
+2026-11-14T01:59:51.8931204Z     axg_qmv0_integrity_test.go:62: AXG_R5_QMV0_MANUAL_RESTORE_SUCCESS
+2026-11-14T01:59:51.8931609Z --- PASS: TestAXGR5CorruptQmv0FailsClosedAndPreservesDisk (0.00s)
+2026-11-14T01:59:51.8932035Z === RUN   TestAXGR5MetadataReadErrorFailsClosed
+2026-11-14T01:59:51.8932455Z     axg_qmv0_integrity_test.go:95: AXG_R5_METADATA_IO_ERROR_FAIL_CLOSED
+2026-11-14T01:59:51.8932831Z --- PASS: TestAXGR5MetadataReadErrorFailsClosed (0.00s)
+2026-11-14T01:59:51.8933214Z === RUN   TestAXGR5ImpossibleMetadataIndicesFailClosed
+2026-11-14T01:59:51.8933646Z     axg_qmv0_integrity_test.go:121: AXG_R5_IMPOSSIBLE_INDICES_FAIL_CLOSED
+2026-11-14T01:59:51.8934041Z --- PASS: TestAXGR5ImpossibleMetadataIndicesFailClosed (0.00s)
+2026-11-14T01:59:51.8934468Z === RUN   TestAXGR5MissingMetadataStillInitializesNewQueue
+2026-11-14T01:59:51.8934895Z     axg_qmv0_integrity_test.go:134: AXG_R5_NEW_EMPTY_QUEUE_CONTROL_PASS
+2026-11-14T01:59:51.8935339Z --- PASS: TestAXGR5MissingMetadataStillInitializesNewQueue (0.00s)
+2026-11-14T01:59:51.8935737Z === RUN   TestAXGR6RealFileStorageInjectedPrecommitENOSPC
+2026-11-14T01:59:51.8936248Z     axg_real_filestorage_reliability_test.go:120: AXG_R6_CONTRIB_PRECOMMIT_FULL_FAIL_CLOSED_PRESERVED
+2026-11-14T01:59:51.8936740Z --- PASS: TestAXGR6RealFileStorageInjectedPrecommitENOSPC (0.00s)
+2026-11-14T01:59:51.8937480Z === RUN   TestAXGR6RealFileStorageAmbiguousErrorAfterCommit
+2026-11-14T01:59:51.8938032Z     axg_real_filestorage_reliability_test.go:141: AXG_R6_CONTRIB_POSTCOMMIT_AMBIGUOUS_REOPEN_PRESERVED
+2026-11-14T01:59:51.8938527Z --- PASS: TestAXGR6RealFileStorageAmbiguousErrorAfterCommit (0.00s)
+2026-11-14T01:59:51.8938947Z === RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries
+2026-11-14T01:59:51.8939373Z === RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed
+2026-11-14T01:59:51.8940044Z     axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=acked_first_is_not_replayed expected=[22 33]
+2026-11-14T01:59:51.8940589Z === RUN   TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed
+2026-11-14T01:59:51.8941346Z     axg_real_filestorage_reliability_test.go:171: AXG_R6_ACK_BOUNDARY_OK case=unacked_first_may_be_replayed expected=[11 22 33]
+2026-11-14T01:59:51.8941851Z === NAME  TestAXGR6AckedVsUnackedDeliveryBoundaries
+2026-11-14T01:59:51.8942414Z     axg_real_filestorage_reliability_test.go:174: AXG_R6_NO_EXACTLY_ONCE_CLAIM: unacknowledged delivery replays by design
+2026-11-14T01:59:51.8942931Z --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries (0.00s)
+2026-11-14T01:59:51.8943431Z     --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/acked_first_is_not_replayed (0.00s)
+2026-11-14T01:59:51.8944023Z     --- PASS: TestAXGR6AckedVsUnackedDeliveryBoundaries/unacked_first_may_be_replayed (0.00s)
+2026-11-14T01:59:51.8944473Z === RUN   TestAXGR6DurableFullCapacityAfterRecovery
+2026-11-14T01:59:51.8945009Z     axg_real_filestorage_reliability_test.go:200: AXG_R6_FULL_CAPACITY_RESTART_PRESERVED_AND_REJECTED_NEW_OFFER
+2026-11-14T01:59:51.8945599Z --- PASS: TestAXGR6DurableFullCapacityAfterRecovery (0.00s)
+2026-11-14T01:59:51.8945955Z === RUN   TestAXGR6ExtensionChildSIGKILL
+2026-11-14T01:59:51.8946422Z     axg_real_filestorage_reliability_test.go:206: subprocess-only test
+2026-11-14T01:59:51.8946814Z --- SKIP: TestAXGR6ExtensionChildSIGKILL (0.00s)
+2026-11-14T01:59:51.8947315Z === RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL
+2026-11-14T01:59:51.8947689Z === RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0
+2026-11-14T01:59:51.8948194Z     axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+2026-11-14T01:59:51.8948872Z     axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=qmv0
+2026-11-14T01:59:51.8949314Z === RUN   TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy
+2026-11-14T01:59:51.8949851Z     axg_real_filestorage_reliability_test.go:258: AXG_R6_ACTUAL_CONTRIB_PROCESS_SIGKILL_CONFIRMED
+2026-11-14T01:59:51.8950413Z     axg_real_filestorage_reliability_test.go:260: AXG_R6_REAL_CONTRIB_SIGKILL_RECOVERED case=legacy
+2026-11-14T01:59:51.8950860Z --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL (0.02s)
+2026-11-14T01:59:51.8951348Z     --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/qmv0 (0.01s)
+2026-11-14T01:59:51.8951818Z     --- PASS: TestAXGR6ActualFileStoragePostCommitSIGKILL/legacy (0.01s)
+2026-11-14T01:59:51.8952152Z PASS
+2026-11-14T01:59:51.8952491Z ok  	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.044s
+2026-11-14T01:59:51.8977891Z ##[group]Run set -euo pipefail
+2026-11-14T01:59:51.8978216Z [36;1mset -euo pipefail[0m
+2026-11-14T01:59:51.8978517Z [36;1mq=/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue[0m
+2026-11-14T01:59:51.8978997Z [36;1mcp tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go "$q/"[0m
+2026-11-14T01:59:51.8979483Z [36;1mcp tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go "$q/"[0m
+2026-11-14T01:59:51.8979969Z [36;1mcp tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go "$q/"[0m
+2026-11-14T01:59:51.8980383Z [36;1mcp tests/opentelemetry/16236/r8/axg_metadata_presence_test.go "$q/"[0m
+2026-11-14T01:59:51.8980820Z [36;1mcp tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go "$q/"[0m
+2026-11-14T01:59:51.8981214Z [36;1mgofmt -w "$q"/axg*test.go[0m
+2026-11-14T01:59:51.9009614Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:51.9009938Z env:
+2026-11-14T01:59:51.9010313Z   GOTOOLCHAIN: local
+2026-11-14T01:59:51.9010553Z ##[endgroup]
+2026-11-14T01:59:51.9174423Z ##[group]Run set +e
+2026-11-14T01:59:51.9174852Z [36;1mset +e[0m
+2026-11-14T01:59:51.9175209Z [36;1mout=tests/opentelemetry/16236/r8_ta_evidence[0m
+2026-11-14T01:59:51.9176207Z [36;1mtimeout 420s go -C /tmp/otel-ta-r8/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^(TestAXGTAR6|TestAXGTAR7|TestAXGR7|TestAXGR8)' ./internal/queue > "$out/unchanged_regressions.log" 2>&1[0m
+2026-11-14T01:59:51.9177633Z [36;1mcode=$?[0m
+2026-11-14T01:59:51.9178027Z [36;1mprintf '%s\n' "$code" > "$out/unchanged_regressions.exit"[0m
+2026-11-14T01:59:51.9178508Z [36;1mcat "$out/unchanged_regressions.log"[0m
+2026-11-14T01:59:51.9178857Z [36;1mexit 0[0m
+2026-11-14T01:59:51.9204588Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:51.9204925Z env:
+2026-11-14T01:59:51.9205209Z   GOTOOLCHAIN: local
+2026-11-14T01:59:51.9205486Z ##[endgroup]
+2026-11-14T01:59:53.3866814Z === RUN   TestAXGR7LegacyMetadataMustFailClosed
+2026-11-14T01:59:53.3867776Z === RUN   TestAXGR7LegacyMetadataMustFailClosed/invalid_read_index
+2026-11-14T01:59:53.3868468Z     axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=invalid_read_index
+2026-11-14T01:59:53.3868943Z === RUN   TestAXGR7LegacyMetadataMustFailClosed/invalid_write_index
+2026-11-14T01:59:53.3869475Z     axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=invalid_write_index
+2026-11-14T01:59:53.3869978Z === RUN   TestAXGR7LegacyMetadataMustFailClosed/missing_read_index
+2026-11-14T01:59:53.3870474Z     axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=missing_read_index
+2026-11-14T01:59:53.3870973Z === RUN   TestAXGR7LegacyMetadataMustFailClosed/missing_write_index
+2026-11-14T01:59:53.3871537Z     axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=missing_write_index
+2026-11-14T01:59:53.3871988Z === RUN   TestAXGR7LegacyMetadataMustFailClosed/read_after_write
+2026-11-14T01:59:53.3872517Z     axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=read_after_write
+2026-11-14T01:59:53.3873155Z === RUN   TestAXGR7LegacyMetadataMustFailClosed/trailing_bytes_in_read_index
+2026-11-14T01:59:53.3873771Z     axg_legacy_fail_closed_test.go:59: AXG_R7_LEGACY_FAIL_CLOSED_PASS case=trailing_bytes_in_read_index
+2026-11-14T01:59:53.3874220Z --- PASS: TestAXGR7LegacyMetadataMustFailClosed (0.01s)
+2026-11-14T01:59:53.3874694Z     --- PASS: TestAXGR7LegacyMetadataMustFailClosed/invalid_read_index (0.00s)
+2026-11-14T01:59:53.3875205Z     --- PASS: TestAXGR7LegacyMetadataMustFailClosed/invalid_write_index (0.00s)
+2026-11-14T01:59:53.3875704Z     --- PASS: TestAXGR7LegacyMetadataMustFailClosed/missing_read_index (0.00s)
+2026-11-14T01:59:53.3876228Z     --- PASS: TestAXGR7LegacyMetadataMustFailClosed/missing_write_index (0.00s)
+2026-11-14T01:59:53.3876720Z     --- PASS: TestAXGR7LegacyMetadataMustFailClosed/read_after_write (0.00s)
+2026-11-14T01:59:53.3877729Z     --- PASS: TestAXGR7LegacyMetadataMustFailClosed/trailing_bytes_in_read_index (0.00s)
+2026-11-14T01:59:53.3878268Z === RUN   TestAXGR7NewQueueAndValidLegacyStillWork
+2026-11-14T01:59:53.3878694Z === RUN   TestAXGR7NewQueueAndValidLegacyStillWork/clean_new
+2026-11-14T01:59:53.3879264Z     axg_legacy_fail_closed_test.go:79: AXG_R7_CLEAN_QUEUE_CONTROL_PASS
+2026-11-14T01:59:53.3879680Z === RUN   TestAXGR7NewQueueAndValidLegacyStillWork/valid_legacy
+2026-11-14T01:59:53.3880119Z     axg_legacy_fail_closed_test.go:95: AXG_R7_VALID_LEGACY_CONTROL_PASS
+2026-11-14T01:59:53.3880534Z --- PASS: TestAXGR7NewQueueAndValidLegacyStillWork (0.00s)
+2026-11-14T01:59:53.3880991Z     --- PASS: TestAXGR7NewQueueAndValidLegacyStillWork/clean_new (0.00s)
+2026-11-14T01:59:53.3881528Z     --- PASS: TestAXGR7NewQueueAndValidLegacyStillWork/valid_legacy (0.00s)
+2026-11-14T01:59:53.3881981Z === RUN   TestAXGR7OrphanedLegacyDispatchMarkerMustNotBecomeNewQueue
+2026-11-14T01:59:53.3882477Z     axg_legacy_fail_closed_test.go:121: AXG_R7_ORPHAN_DISPATCH_MARKER_FAIL_CLOSED
+2026-11-14T01:59:53.3883110Z --- PASS: TestAXGR7OrphanedLegacyDispatchMarkerMustNotBecomeNewQueue (0.00s)
+2026-11-14T01:59:53.3883608Z === RUN   TestAXGR8AbsentIndexWithNumericRequestBeyondZeroFailsClosed
+2026-11-14T01:59:53.3884064Z     axg_metadata_presence_test.go:35: AXG_R8_ORPHAN_1024_BLOCKED
+2026-11-14T01:59:53.3884514Z --- PASS: TestAXGR8AbsentIndexWithNumericRequestBeyondZeroFailsClosed (0.00s)
+2026-11-14T01:59:53.3884988Z === RUN   TestAXGR8PresentEmptyLegacyDispatchMarkerNotNewQueue
+2026-11-14T01:59:53.3885463Z     axg_metadata_presence_test.go:57: AXG_R8_PRESENT_EMPTY_DI_BLOCKED
+2026-11-14T01:59:53.3885902Z --- PASS: TestAXGR8PresentEmptyLegacyDispatchMarkerNotNewQueue (0.00s)
+2026-11-14T01:59:53.3886320Z === RUN   TestAXGR8EmptyConsolidatedMetadataHasNoOrphans
+2026-11-14T01:59:53.3886758Z     axg_metadata_presence_test.go:77: AXG_R8_EMPTY_QMV0_CONTROL_PASS
+2026-11-14T01:59:53.3887353Z --- PASS: TestAXGR8EmptyConsolidatedMetadataHasNoOrphans (0.00s)
+2026-11-14T01:59:53.3887826Z === RUN   TestAXGR8LegacyDispatchZeroCountWithTrailingGarbageFailsClosed
+2026-11-14T01:59:53.3888347Z     axg_metadata_presence_test.go:102: AXG_R8_ZERO_COUNT_TRAILING_DI_BLOCKED
+2026-11-14T01:59:53.3888848Z --- PASS: TestAXGR8LegacyDispatchZeroCountWithTrailingGarbageFailsClosed (0.00s)
+2026-11-14T01:59:53.3889268Z === RUN   TestAXGTAR6CleanNewQueueControl
+2026-11-14T01:59:53.3889712Z     axg_ta_r6_independent_requalification_test.go:58: AXG_TA_R6_CLEAN_CONTROL_PASS
+2026-11-14T01:59:53.3890122Z --- PASS: TestAXGTAR6CleanNewQueueControl (0.00s)
+2026-11-14T01:59:53.3890476Z === RUN   TestAXGTAR6RepeatedRealContribReopen
+2026-11-14T01:59:53.3890815Z === RUN   TestAXGTAR6RepeatedRealContribReopen/legacy_false
+2026-11-14T01:59:53.3891348Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=1
+2026-11-14T01:59:53.3891945Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=2
+2026-11-14T01:59:53.3892511Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=3
+2026-11-14T01:59:53.3893084Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=4
+2026-11-14T01:59:53.3893727Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=false cycle=5
+2026-11-14T01:59:53.3894188Z === RUN   TestAXGTAR6RepeatedRealContribReopen/legacy_true
+2026-11-14T01:59:53.3894689Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=1
+2026-11-14T01:59:53.3895241Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=2
+2026-11-14T01:59:53.3895846Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=3
+2026-11-14T01:59:53.3896391Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=4
+2026-11-14T01:59:53.3896967Z     axg_ta_r6_independent_requalification_test.go:96: AXG_TA_R6_REOPEN_PASS legacy=true cycle=5
+2026-11-14T01:59:53.3897671Z --- PASS: TestAXGTAR6RepeatedRealContribReopen (0.01s)
+2026-11-14T01:59:53.3898117Z     --- PASS: TestAXGTAR6RepeatedRealContribReopen/legacy_false (0.00s)
+2026-11-14T01:59:53.3898608Z     --- PASS: TestAXGTAR6RepeatedRealContribReopen/legacy_true (0.00s)
+2026-11-14T01:59:53.3899024Z === RUN   TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning
+2026-11-14T01:59:53.3899838Z     axg_ta_r6_independent_requalification_test.go:135: AXG_TA_R6_LEGACY_OBSERVED init_error=invalid legacy queue metadata: read/write indices must each be exactly 8 bytes physical=[11]
+2026-11-14T01:59:53.3900512Z --- PASS: TestAXGTAR6CorruptLegacyMustFailClosedWithoutOrphaning (0.00s)
+2026-11-14T01:59:53.3901260Z === RUN   TestAXGTAR7EmptyButPresentLegacyIndices
+2026-11-14T01:59:53.3901632Z === RUN   TestAXGTAR7EmptyButPresentLegacyIndices/empty_ri
+2026-11-14T01:59:53.3902004Z === RUN   TestAXGTAR7EmptyButPresentLegacyIndices/empty_wi
+2026-11-14T01:59:53.3902385Z === RUN   TestAXGTAR7EmptyButPresentLegacyIndices/empty_both
+2026-11-14T01:59:53.3902842Z --- PASS: TestAXGTAR7EmptyButPresentLegacyIndices (0.00s)
+2026-11-14T01:59:53.3903333Z     --- PASS: TestAXGTAR7EmptyButPresentLegacyIndices/empty_ri (0.00s)
+2026-11-14T01:59:53.3903803Z     --- PASS: TestAXGTAR7EmptyButPresentLegacyIndices/empty_wi (0.00s)
+2026-11-14T01:59:53.3904268Z     --- PASS: TestAXGTAR7EmptyButPresentLegacyIndices/empty_both (0.00s)
+2026-11-14T01:59:53.3904673Z === RUN   TestAXGTAR7OversizedDispatchCountFailClosed
+2026-11-14T01:59:53.3905058Z --- PASS: TestAXGTAR7OversizedDispatchCountFailClosed (0.00s)
+2026-11-14T01:59:53.3905560Z === RUN   TestAXGTAR7TrailingGarbageInDispatchArrayFailClosed
+2026-11-14T01:59:53.3906030Z --- PASS: TestAXGTAR7TrailingGarbageInDispatchArrayFailClosed (0.00s)
+2026-11-14T01:59:53.3906489Z === RUN   TestAXGTAR7OrphanNumericPayloadWithoutAnyMetadata
+2026-11-14T01:59:53.3906924Z --- PASS: TestAXGTAR7OrphanNumericPayloadWithoutAnyMetadata (0.00s)
+2026-11-14T01:59:53.3907578Z === RUN   TestAXGTAR7RestartAfterConsolidatedMetadataBeforeLegacyCleanup
+2026-11-14T01:59:53.3908188Z --- PASS: TestAXGTAR7RestartAfterConsolidatedMetadataBeforeLegacyCleanup (0.00s)
+2026-11-14T01:59:53.3908677Z PASS
+2026-11-14T01:59:53.3909065Z ok  	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.040s
+2026-11-14T01:59:53.3935249Z ##[group]Run set +e
+2026-11-14T01:59:53.3935577Z [36;1mset +e[0m
+2026-11-14T01:59:53.3935846Z [36;1mout=tests/opentelemetry/16236/r8_ta_evidence[0m
+2026-11-14T01:59:53.3936441Z [36;1mtimeout 420s go -C /tmp/otel-ta-r8/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^TestAXGTAR8' ./internal/queue > "$out/independent_r8.log" 2>&1[0m
+2026-11-14T01:59:53.3936951Z [36;1mcode=$?[0m
+2026-11-14T01:59:53.3937429Z [36;1mprintf '%s\n' "$code" > "$out/independent_r8.exit"[0m
+2026-11-14T01:59:53.3937750Z [36;1mcat "$out/independent_r8.log"[0m
+2026-11-14T01:59:53.3938079Z [36;1mexit 0[0m
+2026-11-14T01:59:53.3964845Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:53.3965184Z env:
+2026-11-14T01:59:53.3965435Z   GOTOOLCHAIN: local
+2026-11-14T01:59:53.3965847Z ##[endgroup]
+2026-11-14T01:59:53.8438933Z === RUN   TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers
+2026-11-14T01:59:53.8439872Z === RUN   TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/orphan_zero
+2026-11-14T01:59:53.8440764Z     axg_ta_r8_independent_test.go:82: AXG_TA_R8_DATA_LOSS_REPRO case=orphan_zero init=nil offer=<nil> original=11 final="41"
+2026-11-14T01:59:53.8441517Z     axg_ta_r8_independent_test.go:84: 
+2026-11-14T01:59:53.8442338Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/axg_ta_r8_independent_test.go:84
+2026-11-14T01:59:53.8442965Z         	Error:      	Not equal: 
+2026-11-14T01:59:53.8443402Z         	            	expected: []byte{0x31, 0x31}
+2026-11-14T01:59:53.8443840Z         	            	actual  : []byte{0x34, 0x31}
+2026-11-14T01:59:53.8444176Z         	            	
+2026-11-14T01:59:53.8444479Z         	            	Diff:
+2026-11-14T01:59:53.8444872Z         	            	--- Expected
+2026-11-14T01:59:53.8445212Z         	            	+++ Actual
+2026-11-14T01:59:53.8445578Z         	            	@@ -1,3 +1,3 @@
+2026-11-14T01:59:53.8445963Z         	            	 ([]uint8) (len=2) {
+2026-11-14T01:59:53.8446524Z         	            	- 00000000  31 31                                             |11|
+2026-11-14T01:59:53.8447111Z         	            	+ 00000000  34 31                                             |41|
+2026-11-14T01:59:53.8447782Z         	            	 }
+2026-11-14T01:59:53.8448244Z         	Test:       	TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/orphan_zero
+2026-11-14T01:59:53.8448902Z         	Messages:   	DURABLE PAYLOAD OVERWRITTEN: storage.Client without Walker silently reset indices
+2026-11-14T01:59:53.8449403Z === RUN   TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/empty_present_indices
+2026-11-14T01:59:53.8450093Z     axg_ta_r8_independent_test.go:82: AXG_TA_R8_DATA_LOSS_REPRO case=empty_present_indices init=nil offer=<nil> original=11 final="41"
+2026-11-14T01:59:53.8450612Z     axg_ta_r8_independent_test.go:84: 
+2026-11-14T01:59:53.8451215Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/axg_ta_r8_independent_test.go:84
+2026-11-14T01:59:53.8451671Z         	Error:      	Not equal: 
+2026-11-14T01:59:53.8452081Z         	            	expected: []byte{0x31, 0x31}
+2026-11-14T01:59:53.8452513Z         	            	actual  : []byte{0x34, 0x31}
+2026-11-14T01:59:53.8452848Z         	            	
+2026-11-14T01:59:53.8453157Z         	            	Diff:
+2026-11-14T01:59:53.8453485Z         	            	--- Expected
+2026-11-14T01:59:53.8453826Z         	            	+++ Actual
+2026-11-14T01:59:53.8454165Z         	            	@@ -1,3 +1,3 @@
+2026-11-14T01:59:53.8454538Z         	            	 ([]uint8) (len=2) {
+2026-11-14T01:59:53.8455099Z         	            	- 00000000  31 31                                             |11|
+2026-11-14T01:59:53.8455675Z         	            	+ 00000000  34 31                                             |41|
+2026-11-14T01:59:53.8456085Z         	            	 }
+2026-11-14T01:59:53.8456564Z         	Test:       	TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/empty_present_indices
+2026-11-14T01:59:53.8457571Z         	Messages:   	DURABLE PAYLOAD OVERWRITTEN: storage.Client without Walker silently reset indices
+2026-11-14T01:59:53.8458085Z --- FAIL: TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers (0.00s)
+2026-11-14T01:59:53.8458573Z     --- FAIL: TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/orphan_zero (0.00s)
+2026-11-14T01:59:53.8459165Z     --- FAIL: TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/empty_present_indices (0.00s)
+2026-11-14T01:59:53.8459602Z === RUN   TestAXGTAR8NonWalkerCleanQueueControl
+2026-11-14T01:59:53.8459991Z --- PASS: TestAXGTAR8NonWalkerCleanQueueControl (0.00s)
+2026-11-14T01:59:53.8460411Z === RUN   TestAXGTAR8WalkErrorFailsClosedBeforeWrite
+2026-11-14T01:59:53.8460752Z     axg_ta_r8_independent_test.go:108: 
+2026-11-14T01:59:53.8461356Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/axg_ta_r8_independent_test.go:108
+2026-11-14T01:59:53.8461960Z         	Error:      	An error is expected but got nil.
+2026-11-14T01:59:53.8462377Z         	Test:       	TestAXGTAR8WalkErrorFailsClosedBeforeWrite
+2026-11-14T01:59:53.8462797Z --- FAIL: TestAXGTAR8WalkErrorFailsClosedBeforeWrite (0.00s)
+2026-11-14T01:59:53.8463184Z === RUN   TestAXGTAR8PlausibleButWrongQmv0RefusesStartup
+2026-11-14T01:59:53.8463716Z     axg_ta_r8_independent_test.go:129: AXG_TA_R8_PLAUSIBLE_QMV0_READ_WITHOUT_PAYLOAD init=<nil>
+2026-11-14T01:59:53.8464131Z     axg_ta_r8_independent_test.go:131: 
+2026-11-14T01:59:53.8464718Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/axg_ta_r8_independent_test.go:131
+2026-11-14T01:59:53.8465232Z         	Error:      	An error is expected but got nil.
+2026-11-14T01:59:53.8465831Z         	Test:       	TestAXGTAR8PlausibleButWrongQmv0RefusesStartup
+2026-11-14T01:59:53.8466363Z         	Messages:   	plausible qmv0 must not certify a missing durable request
+2026-11-14T01:59:53.8466787Z --- FAIL: TestAXGTAR8PlausibleButWrongQmv0RefusesStartup (0.00s)
+2026-11-14T01:59:53.8467709Z === RUN   TestAXGTAR8WalkerScanCardinality
+2026-11-14T01:59:53.8468184Z     axg_ta_r8_independent_test.go:147: AXG_TA_R8_WALK_SCAN keys_seeded=256 keys_visited=0
+2026-11-14T01:59:53.8468609Z     axg_ta_r8_independent_test.go:148: 
+2026-11-14T01:59:53.8469195Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/axg_ta_r8_independent_test.go:148
+2026-11-14T01:59:53.8469725Z         	Error:      	"0" is not greater than or equal to "256"
+2026-11-14T01:59:53.8470120Z         	Test:       	TestAXGTAR8WalkerScanCardinality
+2026-11-14T01:59:53.8470568Z         	Messages:   	legacy fallback must scan the entire namespace
+2026-11-14T01:59:53.8471039Z --- FAIL: TestAXGTAR8WalkerScanCardinality (0.02s)
+2026-11-14T01:59:53.8471397Z === RUN   TestAXGTAR8RealFileStorageNamespaceIsolation
+2026-11-14T01:59:53.8471742Z     axg_ta_r8_independent_test.go:162: 
+2026-11-14T01:59:53.8472314Z         	Error Trace:	/tmp/otel-ta-r8/exporter/exporterhelper/internal/queue/axg_ta_r8_independent_test.go:162
+2026-11-14T01:59:53.8472845Z         	Error:      	Should NOT be empty, but was []
+2026-11-14T01:59:53.8473286Z         	Test:       	TestAXGTAR8RealFileStorageNamespaceIsolation
+2026-11-14T01:59:53.8473688Z --- FAIL: TestAXGTAR8RealFileStorageNamespaceIsolation (0.00s)
+2026-11-14T01:59:53.8474019Z FAIL
+2026-11-14T01:59:53.8474385Z FAIL	go.opentelemetry.io/collector/exporter/exporterhelper/internal/queue	0.039s
+2026-11-14T01:59:53.8474805Z FAIL
+2026-11-14T01:59:53.8502004Z ##[group]Run set -euo pipefail
+2026-11-14T01:59:53.8502442Z [36;1mset -euo pipefail[0m
+2026-11-14T01:59:53.8502749Z [36;1mout=tests/opentelemetry/16236/r8_ta_evidence[0m
+2026-11-14T01:59:53.8503056Z [36;1mmkdir -p "$out"[0m
+2026-11-14T01:59:53.8503300Z [36;1mexport OUT="$out"[0m
+2026-11-14T01:59:53.8503573Z [36;1mpython3 - <<'PY'[0m
+2026-11-14T01:59:53.8503832Z [36;1mimport json,os,re[0m
+2026-11-14T01:59:53.8504101Z [36;1mfrom pathlib import Path[0m
+2026-11-14T01:59:53.8504393Z [36;1mp=Path(os.environ['OUT'])[0m
+2026-11-14T01:59:53.8504649Z [36;1mdef s(name):[0m
+2026-11-14T01:59:53.8504864Z [36;1m    f=p/name[0m
+2026-11-14T01:59:53.8505270Z [36;1m    return f.read_text(errors='replace').strip() if f.exists() else 'NOT_RUN'[0m
+2026-11-14T01:59:53.8505781Z [36;1mdef failures(name):[0m
+2026-11-14T01:59:53.8506081Z [36;1m    v=s(name)[0m
+2026-11-14T01:59:53.8506412Z [36;1m    return [x.strip() for x in re.findall(r'(?m)^\s*--- FAIL:\s+([^\n(]+)', v)][0m
+2026-11-14T01:59:53.8506853Z [36;1md={[0m
+2026-11-14T01:59:53.8507635Z [36;1m    'mission':'AXG-OTEL-16236-R8-INDEPENDENT-METADATA-REQUALIFICATION-20261114',[0m
+2026-11-14T01:59:53.8508141Z [36;1m    'execution_head':s('independent_execution_head.txt'),[0m
+2026-11-14T01:59:53.8508512Z [36;1m    'upstream_head':s('upstream_head.txt'),[0m
+2026-11-14T01:59:53.8508817Z [36;1m    'go_version':s('go_version.txt'),[0m
+2026-11-14T01:59:53.8509147Z [36;1m    'contrib_version':s('contrib_version.txt'),[0m
+2026-11-14T01:59:53.8509675Z [36;1m    'bbolt_version':s('bbolt_version.txt'),[0m
+2026-11-14T01:59:53.8510005Z [36;1m    'full_original_exit':s('full_original.exit'),[0m
+2026-11-14T01:59:53.8510404Z [36;1m    'full_original_failures':failures('full_original.log'),[0m
+2026-11-14T01:59:53.8510777Z [36;1m    'historical_r3_r6_exit':s('historical_r3_r6.exit'),[0m
+2026-11-14T01:59:53.8511166Z [36;1m    'historical_r3_r6_failures':failures('historical_r3_r6.log'),[0m
+2026-11-14T01:59:53.8511626Z [36;1m    'unchanged_regressions_exit':s('unchanged_regressions.exit'),[0m
+2026-11-14T01:59:53.8512039Z [36;1m    'unchanged_regressions_failures':failures('unchanged_regressions.log'),[0m
+2026-11-14T01:59:53.8512436Z [36;1m    'independent_r8_exit':s('independent_r8.exit'),[0m
+2026-11-14T01:59:53.8512864Z [36;1m    'independent_r8_failures':failures('independent_r8.log'),[0m
+2026-11-14T01:59:53.8513352Z [36;1m    'upstream_maintainer_contract_approved':False,[0m
+2026-11-14T01:59:53.8513699Z [36;1m    'external_publication_authorized':False,[0m
+2026-11-14T01:59:53.8513980Z [36;1m}[0m
+2026-11-14T01:59:53.8514499Z [36;1mknown={'TestPersistentQueue_CorruptedData','TestPersistentQueue_CorruptedData/corrupted_metadata','TestPersistentQueue_CorruptedData/corrupted_everything'}[0m
+2026-11-14T01:59:53.8515219Z [36;1md['original_contract_conflict_preserved']=(d['full_original_exit']=='1' and set(d['full_original_failures'])==known)[0m
+2026-11-14T01:59:53.8515957Z [36;1md['verdict']='REVISE' if (d['independent_r8_exit']!='0' or d['unchanged_regressions_exit']!='0' or d['historical_r3_r6_exit']!='0' or d['full_original_exit']!='0') else 'PASS_SCOPED'[0m
+2026-11-14T01:59:53.8516752Z [36;1mif 'NOT_RUN' in (d['full_original_exit'],d['independent_r8_exit'],d['unchanged_regressions_exit'],d['historical_r3_r6_exit']): d['verdict']='BLOCKED'[0m
+2026-11-14T01:59:53.8517502Z [36;1m(p/'result.json').write_text(json.dumps(d,indent=2,sort_keys=True)+'\n')[0m
+2026-11-14T01:59:53.8517878Z [36;1mprint(json.dumps(d,sort_keys=True))[0m
+2026-11-14T01:59:53.8518148Z [36;1mPY[0m
+2026-11-14T01:59:53.8544911Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:53.8545255Z env:
+2026-11-14T01:59:53.8545644Z   GOTOOLCHAIN: local
+2026-11-14T01:59:53.8545884Z ##[endgroup]
+2026-11-14T01:59:53.8787546Z {"bbolt_version": "go.etcd.io/bbolt v1.5.0", "contrib_version": "github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0", "execution_head": "5df51a2a1bcd0804ebcac408da43888cbcca72b2", "external_publication_authorized": false, "full_original_exit": "1", "full_original_failures": ["TestPersistentQueue_CorruptedData", "TestPersistentQueue_CorruptedData/corrupted_metadata", "TestPersistentQueue_CorruptedData/corrupted_everything"], "go_version": "go version go1.26.0 linux/amd64", "historical_r3_r6_exit": "0", "historical_r3_r6_failures": [], "independent_r8_exit": "1", "independent_r8_failures": ["TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers", "TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/orphan_zero", "TestAXGTAR8NonWalkerUnsafeOrphanAndEmptyMarkers/empty_present_indices", "TestAXGTAR8WalkErrorFailsClosedBeforeWrite", "TestAXGTAR8PlausibleButWrongQmv0RefusesStartup", "TestAXGTAR8WalkerScanCardinality", "TestAXGTAR8RealFileStorageNamespaceIsolation"], "mission": "AXG-OTEL-16236-R8-INDEPENDENT-METADATA-REQUALIFICATION-20261114", "original_contract_conflict_preserved": true, "unchanged_regressions_exit": "0", "unchanged_regressions_failures": [], "upstream_head": "572057cde7e9bbe3aed6e5e3e8f16290d487f7d0", "upstream_maintainer_contract_approved": false, "verdict": "REVISE"}
+2026-11-14T01:59:53.8841379Z ##[group]Run set -euo pipefail
+2026-11-14T01:59:53.8841716Z [36;1mset -euo pipefail[0m
+2026-11-14T01:59:53.8842021Z [36;1mcd tests/opentelemetry/16236/r8_ta_evidence[0m
+2026-11-14T01:59:53.8842497Z [36;1mfind . -maxdepth 1 -type f ! -name SHA256SUMS.txt -printf '%f\n' | sort | xargs -r sha256sum > SHA256SUMS.txt[0m
+2026-11-14T01:59:53.8842933Z [36;1msha256sum -c SHA256SUMS.txt[0m
+2026-11-14T01:59:53.8865966Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:53.8866404Z env:
+2026-11-14T01:59:53.8866652Z   GOTOOLCHAIN: local
+2026-11-14T01:59:53.8866902Z ##[endgroup]
+2026-11-14T01:59:53.8943845Z bbolt_version.txt: OK
+2026-11-14T01:59:53.8944234Z contrib_version.txt: OK
+2026-11-14T01:59:53.8944682Z full_original.exit: OK
+2026-11-14T01:59:53.8944928Z full_original.log: OK
+2026-11-14T01:59:53.8945151Z go_version.txt: OK
+2026-11-14T01:59:53.8945539Z historical_r3_r6.exit: OK
+2026-11-14T01:59:53.8945811Z historical_r3_r6.log: OK
+2026-11-14T01:59:53.8946360Z independent_execution_head.txt: OK
+2026-11-14T01:59:53.8946705Z independent_r8.exit: OK
+2026-11-14T01:59:53.8947004Z independent_r8.log: OK
+2026-11-14T01:59:53.8947458Z module_get.log: OK
+2026-11-14T01:59:53.8947776Z result.json: OK
+2026-11-14T01:59:53.8948077Z source_hashes.sha256: OK
+2026-11-14T01:59:53.8948350Z unchanged_regressions.exit: OK
+2026-11-14T01:59:53.8948633Z unchanged_regressions.log: OK
+2026-11-14T01:59:53.8948900Z upstream_head.txt: OK
+2026-11-14T01:59:53.8994169Z ##[group]Run actions/upload-artifact@v4
+2026-11-14T01:59:53.8994546Z with:
+2026-11-14T01:59:53.8994846Z   name: axg-otel-16236-r8-test-architect-independent
+2026-11-14T01:59:53.8995201Z   path: tests/opentelemetry/16236/r8_ta_evidence/
+2026-11-14T01:59:53.8995491Z   retention-days: 30
+2026-11-14T01:59:53.8995725Z   if-no-files-found: error
+2026-11-14T01:59:53.8996018Z   compression-level: 6
+2026-11-14T01:59:53.8996257Z   overwrite: false
+2026-11-14T01:59:53.8996502Z   include-hidden-files: false
+2026-11-14T01:59:53.8996764Z env:
+2026-11-14T01:59:53.8996985Z   GOTOOLCHAIN: local
+2026-11-14T01:59:53.8997550Z ##[endgroup]
+2026-11-14T01:59:54.0246348Z (node:7420) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-14T01:59:54.0247018Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-14T01:59:54.0317442Z With the provided path, there will be 17 files uploaded
+2026-11-14T01:59:54.0334650Z Artifact name is valid!
+2026-11-14T01:59:54.0335002Z Root directory input is valid!
+2026-11-14T01:59:54.3166332Z Beginning upload of artifact content to blob storage
+2026-11-14T01:59:54.3439034Z (node:7420) [DEP0169] DeprecationWarning: `url.parse()` behavior is not standardized and prone to errors that have security implications. Use the WHATWG URL API instead. CVEs are not issued for `url.parse()` vulnerabilities.
+2026-11-14T01:59:54.3889244Z Uploaded bytes 11529
+2026-11-14T01:59:54.4054039Z Finished uploading artifact content to blob storage!
+2026-11-14T01:59:54.4054611Z SHA256 digest of uploaded artifact zip is 6e60c9f78242e77a9b1d15084ede99d67343c20da677d25f273491f81950470c
+2026-11-14T01:59:54.4055270Z Finalizing artifact upload
+2026-11-14T01:59:54.7081098Z Artifact axg-otel-16236-r8-test-architect-independent.zip successfully finalized. Artifact ID 14092732821
+2026-11-14T01:59:54.7081998Z Artifact axg-otel-16236-r8-test-architect-independent has been successfully uploaded! Final size is 11529 bytes. Artifact ID is 14092732821
+2026-11-14T01:59:54.7086873Z Artifact download URL: https://github.com/AETHERXGLOBAL/aether-x-open-contributions/actions/runs/43543717153/artifacts/14092732821
+2026-11-14T01:59:54.7184785Z ##[group]Run python3 - <<'PY'
+2026-11-14T01:59:54.7185122Z [36;1mpython3 - <<'PY'[0m
+2026-11-14T01:59:54.7185576Z [36;1mimport json[0m
+2026-11-14T01:59:54.7185878Z [36;1mfrom pathlib import Path[0m
+2026-11-14T01:59:54.7186240Z [36;1mp=Path('tests/opentelemetry/16236/r8_ta_evidence/result.json')[0m
+2026-11-14T01:59:54.7186679Z [36;1mif not p.is_file(): raise SystemExit("BLOCKED: evidence result missing")[0m
+2026-11-14T01:59:54.7187086Z [36;1mx=json.loads(p.read_text())[0m
+2026-11-14T01:59:54.7187884Z [36;1mprint("INDEPENDENT_R8_VERDICT="+x['verdict'])[0m
+2026-11-14T01:59:54.7188245Z [36;1mif x['verdict']!='PASS_SCOPED':[0m
+2026-11-14T01:59:54.7188704Z [36;1m    raise SystemExit("R8 independent/original-suite gate remains non-green; preserve failures")[0m
+2026-11-14T01:59:54.7189279Z [36;1mPY[0m
+2026-11-14T01:59:54.7216550Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-14T01:59:54.7216919Z env:
+2026-11-14T01:59:54.7217382Z   GOTOOLCHAIN: local
+2026-11-14T01:59:54.7217662Z ##[endgroup]
+2026-11-14T01:59:54.7438436Z R8 independent/original-suite gate remains non-green; preserve failures
+2026-11-14T01:59:54.7438857Z INDEPENDENT_R8_VERDICT=REVISE
+2026-11-14T01:59:54.7482986Z ##[error]Process completed with exit code 1.
+2026-11-14T01:59:54.7682855Z Post job cleanup.
+2026-11-14T01:59:54.8320443Z [command]/usr/bin/git version
+2026-11-14T01:59:54.8383700Z git version 2.56.1
+2026-11-14T01:59:54.8410272Z Temporarily overriding HOME='/home/runner/work/_temp/1c9b79b3-49f0-4686-974e-baa44f3294c9' before making global git config changes
+2026-11-14T01:59:54.8411147Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-14T01:59:54.8414368Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/aether-x-open-contributions/aether-x-open-contributions
+2026-11-14T01:59:54.8445218Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-14T01:59:54.8470619Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-14T01:59:54.8638636Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-14T01:59:54.8667853Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-14T01:59:54.8835775Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-14T01:59:54.8859688Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-14T01:59:54.9151340Z Cleaning up orphan processes
+2026-11-14T01:59:54.9385998Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@11d5960a326750d5838078e36cf38b85af677262, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

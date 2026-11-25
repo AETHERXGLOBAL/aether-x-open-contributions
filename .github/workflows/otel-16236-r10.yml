@@ -1,0 +1,216 @@
+name: OTel 16236 R10 full qmv0 pending integrity and unresolved capabilities
+on:
+  push:
+    branches:
+      - evidence/otel-queue-recovery-16236-r1-20261113
+    paths:
+      - .github/workflows/otel-16236-r10.yml
+      - tests/opentelemetry/16236/r10/axg_qmv0_inventory_test.go
+      - tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+permissions:
+  contents: read
+jobs:
+  r10-qmv0-all-pending-failclosed:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.26.0'
+          cache: false
+      - name: Freeze original upstream and all exact independent tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          out="$GITHUB_WORKSPACE/tests/opentelemetry/16236/r10_evidence"
+          mkdir -p "$out"
+          printf '%s\n' "$GITHUB_SHA" > "$out/run_head.txt"
+          go version > "$out/go_version.txt"
+          git init -q /tmp/otel-r10
+          git -C /tmp/otel-r10 remote add origin https://github.com/open-telemetry/opentelemetry-collector.git
+          git -C /tmp/otel-r10 fetch --depth 1 origin 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r10 checkout --quiet --detach FETCH_HEAD
+          test "$(git -C /tmp/otel-r10 rev-parse HEAD)" = 572057cde7e9bbe3aed6e5e3e8f16290d487f7d0
+          git -C /tmp/otel-r10 rev-parse HEAD > "$out/upstream_head.txt"
+          q=/tmp/otel-r10/exporter/exporterhelper/internal/queue
+          test "$(sha256sum "$q/persistent_queue.go" | awk '{print $1}')" = c43eb30c537d6f11a04d23e2502ddf43f6aacb10a0c4b39a2da2069363339bc4
+          sha256sum "$q/persistent_queue.go" > "$out/upstream_source_hash.txt"
+          test "$(sha256sum tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go | awk '{print $1}')" = 2a5ea725923b3a36a4a00af06bf05a21d45eb37cc2718d4a549bd9e2c8eaf3c8
+          test "$(sha256sum tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go | awk '{print $1}')" = e994907ab702f68415e113b7dc948595f7a9a61437da85cec867439956a9dfd5
+          test "$(sha256sum tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go | awk '{print $1}')" = e1ff29373e36588e283cda892a7ae8515e9d653775c4692905859a60d35891b7
+          src=tests/opentelemetry/16236/r2/persistent_queue_candidate.go
+          sha256sum "$src" > "$out/candidate_sha256.txt"
+          sha256sum tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go > "$out/r9_test_sha256.txt"
+          sha256sum tests/opentelemetry/16236/r10/axg_qmv0_inventory_test.go > "$out/r10_test_sha256.txt"
+          test "$(git hash-object tests/opentelemetry/16236/r9/independent/axg_ta_r9_independent_test.go)" = da58cdec582045b1506a5b992bca7132105ba84c
+          sha256sum \
+            tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go > "$out/independent_fixture_hashes.txt"
+          cp "$src" "$q/persistent_queue.go"
+          for f in \
+            tests/opentelemetry/16236/axg_recovery_contract_test.go \
+            tests/opentelemetry/16236/r2/axg_recovery_r2_test.go \
+            tests/opentelemetry/16236/r3/axg_bbolt_sigkill_linux_test.go \
+            tests/opentelemetry/16236/r4/axg_independent_bbolt_linux_test.go \
+            tests/opentelemetry/16236/r5/axg_qmv0_integrity_test.go \
+            tests/opentelemetry/16236/r5/axg_actual_filestorage_test.go \
+            tests/opentelemetry/16236/r6/axg_real_filestorage_reliability_test.go
+          do cp "$f" "$q/$(basename "$f")"; done
+          gofmt -w "$q"/axg*test.go
+      - name: Resolve exact real Contrib file_storage and bbolt
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r10_evidence
+          go -C /tmp/otel-r10/exporter/exporterhelper get github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage@v0.165.0 > "$out/module_get.log" 2>&1
+          go -C /tmp/otel-r10/exporter/exporterhelper list -m github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage > "$out/contrib_version.txt"
+          go -C /tmp/otel-r10/exporter/exporterhelper list -m go.etcd.io/bbolt > "$out/bbolt_version.txt"
+          grep -qx 'github.com/open-telemetry/opentelemetry-collector-contrib/extension/storage/filestorage v0.165.0' "$out/contrib_version.txt"
+          grep -qx 'go.etcd.io/bbolt v1.5.0' "$out/bbolt_version.txt"
+      - name: Execute unchanged full original Go package
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_evidence
+          timeout 450s go -C /tmp/otel-r10/exporter/exporterhelper test -count=1 -v -timeout=7m ./internal/queue > "$out/full_original.log" 2>&1
+          echo "$?" > "$out/full_original.exit"
+          tail -60 "$out/full_original.log"
+          exit 0
+      - name: Add unchanged independent TA regression fixtures and new R9 engineering tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          q=/tmp/otel-r10/exporter/exporterhelper/internal/queue
+          for f in \
+            tests/opentelemetry/16236/r6/axg_ta_r6_independent_requalification_test.go \
+            tests/opentelemetry/16236/r7/axg_legacy_fail_closed_test.go \
+            tests/opentelemetry/16236/r7/independent/axg_ta_r7_independent_test.go \
+            tests/opentelemetry/16236/r8/axg_metadata_presence_test.go \
+            tests/opentelemetry/16236/r8/independent/axg_ta_r8_independent_test.go \
+            tests/opentelemetry/16236/r9/axg_nonwalker_integrity_test.go \
+            tests/opentelemetry/16236/r9/independent/axg_ta_r9_independent_test.go \
+            tests/opentelemetry/16236/r10/axg_qmv0_inventory_test.go
+          do cp "$f" "$q/$(basename "$f")"; done
+          gofmt -w "$q"/axg*test.go
+      - name: Execute historical R5 R6 R7 R8 targeted tests
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_evidence
+          timeout 410s go -C /tmp/otel-r10/exporter/exporterhelper test -count=1 -v -timeout=6m -run '^(TestAXGR(5|6|7|8)|TestAXGTAR6|TestAXGTAR7)' ./internal/queue > "$out/historical.log" 2>&1
+          echo "$?" > "$out/historical.exit"
+          tail -55 "$out/historical.log"
+          exit 0
+      - name: Re-run exact unchanged independent R8 adversarial tests
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_evidence
+          timeout 310s go -C /tmp/otel-r10/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGTAR8' ./internal/queue > "$out/independent_r8.log" 2>&1
+          echo "$?" > "$out/independent_r8.exit"
+          tail -90 "$out/independent_r8.log"
+          exit 0
+      - name: Execute new R9 non-Walker and qmv0 controls
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_evidence
+          timeout 310s go -C /tmp/otel-r10/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGR9' ./internal/queue > "$out/r9_focused.log" 2>&1
+          echo "$?" > "$out/r9_focused.exit"
+          tail -95 "$out/r9_focused.log"
+          exit 0
+      - name: Run unchanged independently authored R9 adversarial cases
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_evidence
+          timeout 290s go -C /tmp/otel-r10/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGTAR9' ./internal/queue > "$out/ta_r9.log" 2>&1
+          echo "$?" > "$out/ta_r9.exit"
+          tail -80 "$out/ta_r9.log"
+          exit 0
+      - name: Run R10 new real-file_storage qmv0 inventory tests
+        shell: bash
+        run: |
+          set +e
+          out=tests/opentelemetry/16236/r10_evidence
+          timeout 290s go -C /tmp/otel-r10/exporter/exporterhelper test -count=1 -v -timeout=4m -run '^TestAXGR10' ./internal/queue > "$out/r10_focused.log" 2>&1
+          echo "$?" > "$out/r10_focused.exit"
+          tail -80 "$out/r10_focused.log"
+          exit 0
+      - name: Classify R10 pending inventory independently from outstanding 3 TA failures
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          out=tests/opentelemetry/16236/r10_evidence
+          export OUT="$out"
+          python3 - <<'PY'
+          import json,os,re,hashlib
+          from pathlib import Path
+          p=Path(os.environ['OUT'])
+          def s(n):
+              f=p/n
+              return f.read_text(errors='replace').strip() if f.exists() else "NOT_RUN"
+          def fails(n):
+              return [a.strip() for a in re.findall(r'(?m)^\s*--- FAIL:\s+([^\n(]+)',s(n))]
+          old={"TestPersistentQueue_CorruptedData","TestPersistentQueue_CorruptedData/corrupted_metadata","TestPersistentQueue_CorruptedData/corrupted_everything"}
+          remaining={"TestAXGTAR9NonWalkerEmptyPresentNumericSlotMustNotOverwrite",
+                     "TestAXGTAR9NonWalkerPresentEmptyLegacyMarkersMustReject",
+                     "TestAXGTAR9ConcurrentWriterSharedNamespaceMustNotLoseRequest"}
+          code=Path('tests/opentelemetry/16236/r2/persistent_queue_candidate.go')
+          v={
+             "mission":"AXG-OTEL-16236-R10-QMV0-PENDING-REQUALIFICATION-20261114",
+             "tested_head":s('run_head.txt'),"upstream_head":s('upstream_head.txt'),
+             "candidate_sha256":hashlib.sha256(code.read_bytes()).hexdigest(),
+             "contrib":s('contrib_version.txt'),"bbolt":s('bbolt_version.txt'),
+             "full_original_exit":s('full_original.exit'),"full_original_failures":fails('full_original.log'),
+             "historical_exit":s('historical.exit'),"r9_engineering_exit":s('r9_focused.exit'),
+             "ta_r9_exit":s('ta_r9.exit'),"ta_r9_failures":fails('ta_r9.log'),
+             "r10_exit":s('r10_focused.exit'),"r10_failures":fails('r10_focused.log'),
+             "upstream_contract_approved":False,"multiwriter_safe":False,"nonwalker_ownership_proven":False,
+             "distinct_R10_independent_reviewer_signed_off":False,
+          }
+          base=(v["upstream_head"]=="572057cde7e9bbe3aed6e5e3e8f16290d487f7d0"
+                and v["contrib"].endswith(" v0.165.0") and v["bbolt"]=="go.etcd.io/bbolt v1.5.0"
+                and v["historical_exit"]=="0" and v["r9_engineering_exit"]=="0"
+                and v["full_original_exit"]=="1" and set(v["full_original_failures"])==old
+                and len(v["full_original_failures"])==3)
+          if base and v["r10_exit"]=="0" and v["ta_r9_exit"]=="1" and set(v["ta_r9_failures"])==remaining and len(v["ta_r9_failures"])==3:
+              v["verdict"]="R10_QMV0_PARTIAL_PASS_THREE_INDEPENDENT_BLOCKERS"
+          else:
+              v["verdict"]="R10_REVISE"
+          (p/"result.json").write_text(json.dumps(v,indent=2,sort_keys=True)+"\n")
+          print(json.dumps(v,sort_keys=True))
+          PY
+      - name: Seal raw logs and exact machine result with SHA-256
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tests/opentelemetry/16236/r10_evidence
+          find . -maxdepth 1 -type f ! -name SHA256SUMS.txt -printf '%f\n' | sort | xargs -r sha256sum > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
+      - name: Upload full original evidence, including negative failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: axg-otel-16236-r10-qmv0-inventory
+          path: tests/opentelemetry/16236/r10_evidence/
+          retention-days: 30
+          if-no-files-found: error
+      - name: Enforce precise partial result with 3 unclosed independent blockers
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('tests/opentelemetry/16236/r10_evidence/result.json')
+          if not p.exists(): raise SystemExit('R10_REVISE: no result')
+          verdict=json.loads(p.read_text())['verdict']
+          print(verdict + '; no merge, no upstream publication, no all-backend safety claim')
+          if verdict!="R10_QMV0_PARTIAL_PASS_THREE_INDEPENDENT_BLOCKERS":
+              raise SystemExit('R10_REVISE: investigate full original logs')
+          PY
