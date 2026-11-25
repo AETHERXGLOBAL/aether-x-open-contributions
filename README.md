@@ -6,6 +6,14 @@
 
 We publish the outcomes and limits of our participation in independent open-source projects. Each example links to its original upstream record. **Participation is not the same as an accepted patch, product adoption, commercial relationship, or vendor endorsement.**
 
+## Verified AETHER-authored upstream merge — 25 November 2026
+
+**[Apache DataFusion Ballista PR #2775](https://github.com/apache/datafusion-ballista/pull/2775) was merged upstream** by maintainer `andygrove` at `2026-11-24T23:54:56Z` (25 November, Cairo); merge commit [`9c0e89fa`](https://github.com/apache/datafusion-ballista/commit/9c0e89fafe136973445072719198e0801f92b29d). This **AETHER-authored, one-file** Rust fix preserves private default executor `TempDir` ownership/permissions and adds a focused regression. [Maintainer final approval](https://github.com/apache/datafusion-ballista/pull/2775#pullrequestreview-6041830869) and [13/13 successful **fork** CI jobs](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45079848161) are source-linked; fork CI is not an upstream PR status check.
+
+**25 November verified featured total: 3 AETHER-authored upstream PRs merged** — useful-actions #1534, #1536 and Ballista #2775. The `OPEN/UNMERGED` description and totals in the dated **10/17 November historical snapshots below** are intentionally unchanged and no longer describe Ballista's current status. This does not imply an Apache/ASF endorsement, commercial partnership, certified product or downstream release.
+
+[**Dated evidence and attribution boundaries**](docs/STATUS_UPDATE_2026-11-25_APACHE_BALLISTA_2775.md) · [Achievement index](achievements/README.md).
+
 ## Engineering highlights — verified 10 November 2026
 
 | Work and primary record | Verified outcome | Attribution / remaining gate |
