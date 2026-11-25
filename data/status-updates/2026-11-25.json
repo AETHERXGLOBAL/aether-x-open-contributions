@@ -1,0 +1,48 @@
+{
+  "schema_version": "AX-PUBLIC-STATUS-UPDATE-v1",
+  "snapshot_date": "2026-11-25",
+  "publisher": "AETHER X GLOBAL",
+  "historical_catalog_snapshot": "2026-11-03",
+  "scope": "New dated source-verified outcome for already known PR #2775; historical status snapshots, source IDs and participation counts remain unchanged.",
+  "records": [
+    {
+      "id": "APACHE-BALLISTA-2775",
+      "kind": "authored_pull_request",
+      "project": "apache/datafusion-ballista",
+      "source_url": "https://github.com/apache/datafusion-ballista/pull/2775",
+      "status": "MERGED_AUTHORED_PR",
+      "as_of": "2026-11-25",
+      "submitter_account": "aetherxeg-source",
+      "organization": "AETHER X GLOBAL",
+      "head_repository": "AETHERXGLOBAL/datafusion-ballista",
+      "head_commit": "69a66f0f6a8d9919ee7a2b81e7461af733e47738",
+      "merged": true,
+      "merged_at_utc": "2026-11-24T23:54:56Z",
+      "merged_by": "andygrove",
+      "merge_commit_sha": "9c0e89fafe136973445072719198e0801f92b29d",
+      "changed_files": 1,
+      "changed_file": "ballista/executor/src/executor_process.rs",
+      "maintainer_final_review": "APPROVED on 2026-11-24T15:08:29Z",
+      "evidence_urls": [
+        "https://github.com/apache/datafusion-ballista/pull/2775",
+        "https://github.com/apache/datafusion-ballista/pull/2775#pullrequestreview-6041830869",
+        "https://github.com/apache/datafusion-ballista/commit/9c0e89fafe136973445072719198e0801f92b29d",
+        "https://github.com/apache/datafusion-ballista/issues/2767",
+        "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45079848161",
+        "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45077568489"
+      ],
+      "fork_ci": {
+        "event": "workflow_dispatch",
+        "run_id": 45079848161,
+        "result": "COMPLETED_SUCCESS",
+        "jobs_passed": 13,
+        "jobs_total": 13,
+        "tested_head": "69a66f0f6a8d9919ee7a2b81e7461af733e47738",
+        "boundary": "Manual fork GitHub Actions, not an upstream PR status check"
+      },
+      "negative_evidence": "Earlier 45077568489 fork run failed 3 ballista-chaos jobs on prior commit; resolved by incorporating upstream main.",
+      "related_issue_2936": "OPEN_SEPARATE_FOLLOW_UP_NOT_PART_OF_2775",
+      "description": "AETHER-authored one-file Rust fix retaining private executor TempDir lifetime and adding a Unix regression was approved by Apache maintainer Andy Grove and merged upstream. No Apache/ASF endorsement, partnership, certification, release or product adoption is implied."
+    }
+  ]
+}

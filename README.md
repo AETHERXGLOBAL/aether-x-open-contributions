@@ -6,6 +6,14 @@
 
 We publish the outcomes and limits of our participation in independent open-source projects. Each example links to its original upstream record. **Participation is not the same as an accepted patch, product adoption, commercial relationship, or vendor endorsement.**
 
+## Verified AETHER-authored upstream merge — 25 November 2026
+
+**[Apache DataFusion Ballista PR #2775](https://github.com/apache/datafusion-ballista/pull/2775) was merged upstream** by maintainer `andygrove` at `2026-11-24T23:54:56Z` (25 November, Cairo); merge commit [`9c0e89fa`](https://github.com/apache/datafusion-ballista/commit/9c0e89fafe136973445072719198e0801f92b29d). This **AETHER-authored, one-file** Rust fix preserves private default executor `TempDir` ownership/permissions and adds a focused regression. [Maintainer final approval](https://github.com/apache/datafusion-ballista/pull/2775#pullrequestreview-6041830869) and [13/13 successful **fork** CI jobs](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45079848161) are source-linked; fork CI is not an upstream PR status check.
+
+**25 November verified featured total: 3 AETHER-authored upstream PRs merged** — useful-actions #1534, #1536 and Ballista #2775. The `OPEN/UNMERGED` description and totals in the dated **10/17 November historical snapshots below** are intentionally unchanged and no longer describe Ballista's current status. This does not imply an Apache/ASF endorsement, commercial partnership, certified product or downstream release.
+
+[**Dated evidence and attribution boundaries**](docs/STATUS_UPDATE_2026-11-25_APACHE_BALLISTA_2775.md) · [Achievement index](achievements/README.md).
+
 ## Engineering highlights — verified 10 November 2026
 
 | Work and primary record | Verified outcome | Attribution / remaining gate |
@@ -19,6 +27,14 @@ We publish the outcomes and limits of our participation in independent open-sour
 **Dated evidence — 13 Nov 2026:** [gVisor #16723: CUDA discovery test follow-up](docs/STATUS_UPDATE_2026-11-13_GVISOR_16723.md). [Upstream participant AlanFokCo ran AETHER's proposed negative/positive controls](https://github.com/google/gvisor/issues/16723#issuecomment-6844027148), confirming the private-FD discovery gap but reporting **fail-closed**, not silently corrupting, behavior in the tested workload. The test, harness and patch are upstream participant work, **not** AETHER-authored or Google-endorsed. Historical C01-13 remains unchanged.
 
 Other source-linked cases include an [OpenTelemetry native regression candidate](tests/opentelemetry/README.md), a [Redis native RED/GREEN test candidate](tests/redis/15930/README.md), and an [earlier Cloudflare review](docs/STATUS_UPDATE_2026-11-09.md) preceding a third-party-authored merged fix. The strongest supported outcome and original author are stated separately for each case.
+
+## Verified positive outcomes — 17 November 2026
+
+- **2 AETHER-authored, upstream-merged PRs:** [useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534) and [#1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536), documenting an ExecSurface listing/example and its version update.
+- **3 distinct upstream-authored merged fixes with bounded AETHER review/test involvement:** [Redis #15930](https://github.com/redis/redis/pull/15930) (author explicitly credited the AOF regression path), [Cloudflare #16612](https://github.com/cloudflare/workers-sdk/pull/16612) (related credential-propagation review; causation not established), and [NVIDIA/aicr #3539](https://github.com/NVIDIA/aicr/pull/3539) (reviewer recognized an additional test gap, **not** included in the merge).
+- **1 upstream-executed technical control:** [gVisor #16723](https://github.com/google/gvisor/issues/16723), confirming a CUDA private-FD discovery miss and **fail-closed** behavior in that tested case, not a merged fix.
+
+[**View the dated primary-source evidence, actual authors, exact limits and open PR gates**](docs/VERIFIED_POSITIVE_OUTCOMES_2026-11-17.md) · [Detailed achievements](achievements/README.md). These categories are **not additive accepted AETHER code contributions**; there is no claimed institutional endorsement, partnership or product adoption. Historical counts remain unchanged.
 
 ## Current status: outcomes before activity totals
 

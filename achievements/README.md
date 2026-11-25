@@ -2,6 +2,19 @@
 
 **Snapshot:** 2026-11-03. Original upstream authors retain full credit for their own code and tests.
 
+## 25 November 2026 — Apache Ballista #2775 accepted and merged upstream
+
+- **[Apache DataFusion Ballista #2775](https://github.com/apache/datafusion-ballista/pull/2775) — `MERGED_AUTHORED_PR`.** GitHub author: `aetherxeg-source`; accepted and merged by maintainer `andygrove` on 24 November 2026 at 23:54 UTC (25 November in Cairo); [upstream merge commit `9c0e89fa`](https://github.com/apache/datafusion-ballista/commit/9c0e89fafe136973445072719198e0801f92b29d).
+- **Engineering content:** one Rust file `ballista/executor/src/executor_process.rs`; hold the default `TempDir` guard during executor lifetime, enforce private Unix `0700`, and add an async lifecycle/cleanup test in the existing `mod tests`.
+- **Evidence:** [maintainer final APPROVED review](https://github.com/apache/datafusion-ballista/pull/2775#pullrequestreview-6041830869) · [final manual fork Ballista Rust CI — 13/13 jobs successful](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45079848161) · [dated verified record and earlier negative CI evidence](../docs/STATUS_UPDATE_2026-11-25_APACHE_BALLISTA_2775.md).
+- **Scope boundary:** this is a direct AETHER-authored upstream merge, unlike code merged under third-party authorship. It does not establish an Apache/ASF endorsement, partnership, certification, downstream release or customer use. Historical 3/17 November counts and states below remain preserved as dated observations.
+
+## 17 November 2026 — verified positive outcomes (dated update)
+
+**Two AETHER-authored external PRs merged:** [useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534) and [#1536](https://github.com/GuillaumeFalourd/useful-actions/pull/1536). **Distinct upstream outcomes:** Redis #15930 accepted an upstream-author-written AOF regression covering an AETHER-reported test path; Cloudflare workers-sdk #16612 merged an upstream-authored environment-forwarding hardening change following a source-linked AETHER review; NVIDIA/aicr #3539 merged an upstream-authored attestation fix with an AETHER-proposed extra test recognized as nonblocking but **not included**; and a gVisor #16723 participant executed AETHER's proposed CUDA discovery controls, finding a real census miss with **fail-closed**, not silent-corruption, behavior. No partnership, endorsement or merged AETHER code is implied by those third-party outcomes.
+
+[**Read the primary-source-linked 17 November evidence dossier and attribution limits**](../docs/VERIFIED_POSITIVE_OUTCOMES_2026-11-17.md). The 3 November historical snapshot and its original case classifications below are preserved.
+
 ## Our pull requests actually merged
 
 - [useful-actions #1534](https://github.com/GuillaumeFalourd/useful-actions/pull/1534) — merged 2026-09-28, commit `1ab2b4ccac754b4d10b04c6e88829d6d628974bd`.
