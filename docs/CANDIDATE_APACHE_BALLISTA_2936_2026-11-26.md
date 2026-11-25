@@ -46,3 +46,13 @@ Source review found that dedicated Tokio task runtimes can outlive an individual
 The tests are source candidates only. The local execution environment has no rustc, Cargo, rustfmt, protoc, or GitHub CLI and cannot resolve github.com. Available connected tools do not expose workflow dispatch. No runtime, build, formatting, Clippy, CI success or independent review is claimed. The next stage is exact-source execution of the unchanged RED and revised candidate, confirmation of actual original-bug failure (not build failure), all candidate tests and lint, followed by independent review. No automatic PR submission, release or merge.
 
 **Current status: TEST_CANDIDATE_PREPARED / EVIDENCE_PENDING / NOT READY FOR FINAL ACCEPTANCE OR MERGE.**
+
+## First hosted CI execution and formatting delta
+
+Fork Actions re-enabled by Founder; workflow dispatch verified against pinned SHAs:
+- [RED run 45719905225](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45719905225) at `bc9d2cc95c3ca9ff296b722179819fccea8e5d9c`.
+- [Candidate run 45719911744](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45719911744) at `2d04b04b405dc055108391ebd9b05a20e1730e93`.
+- Both runs have unfinished build/test jobs. Lint failed in both; the candidate's [Lint log](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45719911744/job/139575335979) specifically reports seven rustfmt diff hunks across four files, exit 1. Applied those exact hunks only in [formatting successor] (https://github.com/AETHERXGLOBAL/datafusion-ballista/commit/0a9e79d484b912f72437f2ec14f95504d93ca7e6), tree `cba6666412ede92a2b95ee8d6dc824cb83b139ce`. Existing runs remain pinned to their original commits; their eventual results do not certify this successor. No RED regression outcome yet. No independent signoff or upstream PR.
+- Qualification workflow re-pinned to successor, commit `bf193d42e92769f02868c6f7813530c800a1703e`.
+
+Status: CI_STARTED / FORMAT_CORRECTED_UNVERIFIED / EVIDENCE_PENDING.
