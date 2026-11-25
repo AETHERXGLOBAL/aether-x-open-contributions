@@ -29,3 +29,20 @@ Regression source covers pull/push startup, real Flight range read, runtime shut
 **Status:** TEST_CANDIDATE_PREPARED / EVIDENCE_PENDING / NOT READY FOR FINAL ACCEPTANCE OR MERGE.
 
 The qualification workflow records expected commands and pins both trees. It is not a substitute for actual run IDs, exit codes, logs and durable SHA-256 evidence manifests. Those remain pending. The upstream publication gate remains separate; no claim of Apache endorsement, accepted code or completed contribution is made.
+
+## Follow-up checkpoint — dedicated runtime ownership
+
+This checkpoint supersedes only the earlier candidate pointer above; historical candidate/control records are retained.
+
+- [Issue #2936](https://github.com/apache/datafusion-ballista/issues/2936) is assigned to `aetherxeg-source` after the [Founder-authorized take comment](https://github.com/apache/datafusion-ballista/issues/2936#issuecomment-7177097210). No upstream PR is open for this candidate.
+- Reverified upstream HEAD: `a879ad07d204d26df702c681fcb8101dfa1e6c2c`.
+- [Revised candidate HEAD](https://github.com/AETHERXGLOBAL/datafusion-ballista/commit/2d04b04b405dc055108391ebd9b05a20e1730e93): `2d04b04b405dc055108391ebd9b05a20e1730e93`; tree `958441100c6a120556df452a2ab439ff54d4308b`.
+- [Exact diff from upstream](https://github.com/AETHERXGLOBAL/datafusion-ballista/compare/a879ad07d204d26df702c681fcb8101dfa1e6c2c...2d04b04b405dc055108391ebd9b05a20e1730e93): 5 commits, 7 Rust source files, no workflow in upstream patch.
+- [Original-bug control](https://github.com/AETHERXGLOBAL/datafusion-ballista/commit/bc9d2cc95c3ca9ff296b722179819fccea8e5d9c) unchanged.
+- [Re-pinned fork-only qualification workflow](https://github.com/AETHERXGLOBAL/datafusion-ballista/blob/2311053a960d903966a1e08f8e19b17bd3229513/.github/workflows/ax-2936-qualification.yml).
+
+Source review found that dedicated Tokio task runtimes can outlive an individual task during cancellation, including blocking descendants. The owner is now also retained across dedicated runtime destruction on pull and push paths. Added tests use the existing real passthrough ShuffleWriterExec cancellation fixture for two tasks, check caller-owned directories, and use a pending async task plus a blocking child to synchronize a shutdown-boundary regression. Runtime teardown is asynchronous relative to outer runtime drop; the standalone test now waits with a bounded deadline rather than assuming immediate cleanup.
+
+The tests are source candidates only. The local execution environment has no rustc, Cargo, rustfmt, protoc, or GitHub CLI and cannot resolve github.com. Available connected tools do not expose workflow dispatch. No runtime, build, formatting, Clippy, CI success or independent review is claimed. The next stage is exact-source execution of the unchanged RED and revised candidate, confirmation of actual original-bug failure (not build failure), all candidate tests and lint, followed by independent review. No automatic PR submission, release or merge.
+
+**Current status: TEST_CANDIDATE_PREPARED / EVIDENCE_PENDING / NOT READY FOR FINAL ACCEPTANCE OR MERGE.**
