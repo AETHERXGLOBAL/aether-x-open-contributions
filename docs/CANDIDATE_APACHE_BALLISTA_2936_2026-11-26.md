@@ -56,3 +56,13 @@ Fork Actions re-enabled by Founder; workflow dispatch verified against pinned SH
 - Qualification workflow re-pinned to successor, commit `bf193d42e92769f02868c6f7813530c800a1703e`.
 
 Status: CI_STARTED / FORMAT_CORRECTED_UNVERIFIED / EVIDENCE_PENDING.
+
+## Hosted RED/GREEN evidence and qualification harness repair
+
+Verified job outcomes from official Ballista Rust CI, exact pinned commits retained:
+
+- RED `bc9d2cc95c3ca9ff296b722179819fccea8e5d9c`: [linux crates job](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45719905225/job/139575317659), [linux Ballista job](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45719905225/job/139575317765). Both logs report the two intended panics: `standalone pull-staged removed its work directory during startup` and `standalone push-staged removed its work directory during startup`. Executor test result: 114 passed, 2 failed, exit 101. RED reproduced, not compilation failure. Lint failed separately.
+- GREEN `2d04b04b405dc055108391ebd9b05a20e1730e93`: [linux crates](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45719911744/job/139575336151), [linux Ballista](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45719911744/job/139575336121), each successful; executor 123 passed, 0 failed. Named passes include standalone pull/push lifetime, registration cancellation/failure, caller-owned directory, multiple shuffle cancellation, and dedicated-runtime blocking child. Existing standalone push/pull integration tests passed. Cargo check, Clippy, benchmarks, Linux workspace, docs and ancillary jobs passed. macOS still in progress at observation. Lint failed; successor `0a9e79d484b912f72437f2ec14f95504d93ca7e6` is not yet qualified.
+- [Fork-only qualification run 45720314297](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45720314297/job/139576706550) failed before tests at Git's dubious ownership check in the ephemeral container. No code failure established by that run. Harness repair [a28d1f283fe052a9bb3d5ae4ec259f3a6eac8e4a](https://github.com/AETHERXGLOBAL/datafusion-ballista/commit/a28d1f283fe052a9bb3d5ae4ec259f3a6eac8e4a) scopes safe.directory to the checked-out workspace only, retains exact candidate SHA/tree checks and read-only token; removes duplicate RED execution now supported by official logs. Candidate and RED branches unchanged by this harness repair. No new qualification success claimed.
+
+Status: RED_PROVEN / GREEN_LINUX_R2_PROVEN / FORMAT_SUCCESSOR_QUALIFICATION_PENDING / INDEPENDENT_REVIEW_PENDING. No upstream PR or merge.
