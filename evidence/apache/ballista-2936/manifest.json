@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "mission": "AX-OSS-APACHE-BALLISTA-2936-002",
+  "date": "2026-11-26",
+  "candidate": {
+    "repo": "AETHERXGLOBAL/datafusion-ballista",
+    "head": "24e711a0216d3ec72fc8bf915733b420e55ae562",
+    "tree": "e69ce3835ada336883674a359872842b4b69be16",
+    "upstream_base": "a879ad07d204d26df702c681fcb8101dfa1e6c2c"
+  },
+  "classification": "PUBLIC_SANITIZED_INDEX",
+  "report": "../../../docs/CANDIDATE_APACHE_BALLISTA_2936_2026-11-26.md",
+  "verification": {
+    "archives": 7,
+    "archive_bytes": 134405,
+    "internal_files": 59,
+    "sha256": "PASS",
+    "zip_crc": "PASS",
+    "manifest_coverage": "PASS",
+    "original_byte_verification": "Commander and supplied Assurance report",
+    "permanent_original_custody": "PENDING",
+    "expiry": "2027-02-24"
+  },
+  "artifacts": [
+    {
+      "artifact_id": "15074857491",
+      "bytes": 7785,
+      "internal_files": 17,
+      "sha256": "9ecbdf579a148dc932cf0bd6ac1614370700c8501785b7ab95f6689f863bcf97",
+      "run_id": 45726676278,
+      "tested_head": "f6ddcb66d947b72ea8d1d6c592bbd19f98c12968",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45726676278/artifacts/15074857491"
+    },
+    {
+      "artifact_id": "15076341108",
+      "bytes": 8462,
+      "internal_files": 8,
+      "sha256": "8497a7891eebd962d6d39f3e1e12eb2c9db5591c829fd638ade166e8acd2e64d",
+      "run_id": 45728952878,
+      "tested_head": "aed8b4c870990f47cffbaa96954239d67acb24cf",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45728952878/artifacts/15076341108"
+    },
+    {
+      "artifact_id": "15075119512",
+      "bytes": 1622,
+      "internal_files": 3,
+      "sha256": "9e8aedb842db20b238945800f73ac2e177eb9db1f744255ec041a1e0e9d81fa2",
+      "run_id": 45728952878,
+      "tested_head": "aed8b4c870990f47cffbaa96954239d67acb24cf",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45728952878/artifacts/15075119512"
+    },
+    {
+      "artifact_id": "15075424582",
+      "bytes": 21066,
+      "internal_files": 2,
+      "sha256": "09a2c659f84beb9234b89d9a42afb3f3ec0a97131c81d9ba8011a89d5891ff59",
+      "run_id": 45729673171,
+      "tested_head": "cb4f222eb5517aa9f73d3afaedefbfa1a6de8663",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45729673171/artifacts/15075424582"
+    },
+    {
+      "artifact_id": "15077242338",
+      "bytes": 72785,
+      "internal_files": 24,
+      "sha256": "57d51690c46ee2272d563255529180a9e97c31e054f19fa5d0cc631015a64c24",
+      "run_id": 45731179238,
+      "tested_head": "236fdbcbf4f48784b7d79a66924ddbc3552760f2",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45731179238/artifacts/15077242338"
+    },
+    {
+      "artifact_id": "15076059801",
+      "bytes": 1619,
+      "internal_files": 3,
+      "sha256": "7209818aa15ba5c7bcc0f68fd923e7e1b41c3566c732deba2245551f97a96100",
+      "run_id": 45731179238,
+      "tested_head": "236fdbcbf4f48784b7d79a66924ddbc3552760f2",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45731179238/artifacts/15076059801"
+    },
+    {
+      "artifact_id": "15102290866",
+      "bytes": 21066,
+      "internal_files": 2,
+      "sha256": "aa92e7a2c4fb54a23441ba1750b5f3d36efc950603ebe130e5e8e4e96e0e2e47",
+      "run_id": 45788510590,
+      "tested_head": "24e711a0216d3ec72fc8bf915733b420e55ae562",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45788510590/artifacts/15102290866"
+    }
+  ],
+  "gates": {
+    "technical": "GO_SCOPED",
+    "security": "GO_SCOPED",
+    "original_integrity": "PASS",
+    "durable_custody": "OPEN",
+    "review_receipt_authentication": "OPEN",
+    "upstream_lint": "IN_PROGRESS",
+    "rights_and_disclosure": "OPEN",
+    "publication": "NO_GO"
+  }
+}
