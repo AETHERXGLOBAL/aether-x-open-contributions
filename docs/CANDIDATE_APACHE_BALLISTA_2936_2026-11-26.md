@@ -87,3 +87,27 @@ Required independent review decisions:
 4. Scope limits: current direct ownership test exercises do_action range stream; do_get ownership is implemented via the same wrapper but not directly established by the specific owner-drop test. Existing standalone SQL integration tests are separate from the lifecycle fixture. Direct multi-executor cleanup isolation and real shutdown while an in-flight Flight read and Shuffle write overlap have not been established as a combined end-to-end test. The directly tested standalone teardown boundary is runtime destruction, not an independently promised SessionContext-drop or StopExecutor RPC shutdown contract. Review these gaps for materiality; require a targeted falsifier if needed, not broad test repetition or speculative scope expansion.
 
 No claim of completed independent review. Publication remains gated on evidence, review and separate Founder approval of the exact upstream PR. No merge authorized.
+
+## Test Architect independent verdict received — consolidated closure gate
+
+Received the Founder-supplied AETHER TEST ARCHITECT report dated 2026-11-26 for exact candidate `85dabe6fde55ffa4685bc354be04808c5510aa07`, tree `fbfea41229e7fb7bb2c1ebc0e0cd1853b383e9d6`. Report verdict: **NO_GO for final qualification/publication; original fix PASS_SCOPED; Linux PASS; test strength STRONG; macOS PENDING**. This records the submitted review, not an independently authenticated agent execution receipt. Commander rechecked [Linux job 139592053215](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45724870888/job/139592053215) and actual logs: exact SHA/tree match; 124 passed, 0 failed, 0 ignored under umask 022; 4 passed, 0 failed under umask 077; format, diff check, cargo check all targets and Clippy all successful. macOS remained in progress when checked. Prior RED remains proven and must not be repeated without cause.
+
+### Open independent findings
+
+| ID | Severity | Required falsifiable closure |
+| --- | --- | --- |
+| TA-B2936-01 | HIGH | Two independent executors A/B with distinct work directories; tear down A, assert only A directory disappears; demonstrate B can still read/write; then tear down B and prove cleanup. |
+| TA-B2936-02 | HIGH | Deterministic synchronization barriers with Flight read and actual Shuffle write overlapping runtime teardown; assert directory remains until all real users release; assert final deletion and no recreation; verify task/child quiescence. |
+| TA-B2936-03 | MEDIUM | Real Arrow IPC do_get stream; release service owner while stream is live; assert decoded values and directory lifetime across completion or cancellation, including outstanding blocking readers. |
+
+These are coverage deficiencies, not three demonstrated implementation failures. Preserve architecture unless a targeted test or security review establishes a defect. Do not redefine SessionContext-drop or StopExecutor contracts merely to expand scope.
+
+### Execution handoff — one consolidated delta
+
+AETHER SECURITY: READ_ONLY independent review of exact pinned source, outstanding owner/cleanup/recreation boundaries, failure/cancellation and all three findings above. Return all material findings together; distinguish code defect, coverage gap, and pre-existing out-of-scope behavior. No code changes or repetition of accepted tests. The security report is to be consolidated with the Test Architect findings before Engineering closes the batch.
+
+AETHER ENGINEERING: implement the minimum necessary targeted tests and any proven fixes on the existing candidate branch, in a single batch after consolidation. Use real executor/Flight/Shuffle paths, deterministic barriers, bounded timeouts, no fixed sleeps as synchronization, no production test hooks unless justified, no public API changes, no added dependency unless unavoidable and documented. Preserve prior RED and accepted evidence. Add targeted negative controls on separate test-only refs or isolated worktrees (remove the specific ownership protections), showing expected assertion failure rather than compile error, then restore and prove GREEN. Keep qualification-only files out of the upstream diff. Pin exact new SHA/tree; run impacted tests and applicable lint/build/platform gates, including macOS qualification of the final source. Record actual log/job links, test names, exit outcomes, source/negative-control identities and evidence SHA-256 manifest; retain raw logs or evidence artifacts under repository publication policy without exposing secrets. Do not claim tests executed without evidence. If a control or artifact cannot be produced, state the blocker. No upstream PR or merge.
+
+AETHER TEST ARCHITECT and AETHER SECURITY: independent DELTA_ONLY re-review after engineering delivery. AETHER ASSURANCE: final evidence provenance and scope reconciliation, including independent review receipts and published evidence custody. Founder approval of exact upstream PR remains separate.
+
+Status: **NO_GO_PUBLICATION / RED_PROVEN / LINUX_124_OF_124 / MACOS_PENDING / THREE_TECHNICAL_FINDINGS_OPEN / SECURITY_AND_ASSURANCE_PENDING / EVIDENCE_GATE_BLOCKED**.
