@@ -106,6 +106,16 @@
     "review_receipt_authentication": "CLOSED_SCOPED_FOUNDER_ATTESTATION",
     "upstream_lint": "CLOSED_PASS_7_OF_7",
     "rights_and_disclosure": "CLOSED_SCOPED_FOUNDER_ATTESTATION",
-    "publication": "AUTHORIZED_EXACT_CONTENT_PENDING_EXECUTION"
+    "publication": "PUBLISHED_UPSTREAM_PR_2973"
+  },
+  "upstream_pr": {
+    "number": 2973,
+    "url": "https://github.com/apache/datafusion-ballista/pull/2973",
+    "published_at": "2026-11-26T09:53:08Z",
+    "head": "24e711a0216d3ec72fc8bf915733b420e55ae562",
+    "state": "OPEN",
+    "merged": false,
+    "upstream_ci": "PENDING",
+    "upstream_review": "PENDING"
   }
 }
