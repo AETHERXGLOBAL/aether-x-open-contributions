@@ -236,3 +236,20 @@ AETHER SECURITY: independently confirm the same lifecycle closure, safe isolatio
 AETHER ASSURANCE: after independent verdicts, verify original D4 and E01–E06 artifacts (15074857491, 15076341108, 15075119512, 15075424582), digests, internal manifests, actual execution provenance, transfer rationale, durable authorized private custody and review receipts. Public ledger is a sanitized evidence index; no restricted raw logs here. Do not conflate passing CI with independent approval or upstream permission.
 
 Status: HOSTED_BUILD_SUCCESS / E01_E06_EXECUTION_EVIDENCE_AVAILABLE / INDEPENDENT_DELTA_CLOSURE_PENDING / ALL_FEATURES_BOUNDARY_REVIEW_PENDING / DURABLE_CUSTODY_OPEN / PUBLICATION_NO_GO. No external PR or merge; final exact-content Founder approval required.
+
+## Final E01–E06 Test Architect disposition — TA-B2936-05 remaining
+
+Founder supplied verdict AX-OSS-APACHE-BALLISTA-2936-002-TA-E01E06-FINAL dated 2026-11-26 for exact HEAD `cb4f222eb5517aa9f73d3afaedefbfa1a6de8663`, tree `c66c5dae6201f95d2f92250382e60127e4d9bc26`. Submitted technical decision: TA-B2936-02 CLOSED_SCOPED (real writer completion boundary), TA-B2936-04 CLOSED (both Clippy diagnostics resolved), TA-B2936-01/03 retained, runtime mutation and restored GREEN accepted, exact formatting evidence transfer accepted; TA-B2936-05 OPEN (feature isolation and integration qualification); no new functional defect identified. Final technical verdict NO_GO pending this finding. Commander independently rechecked branch identity and [job 139608256571](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45729673171/job/139608256571): SUCCESS, source/delta/format/check/Clippy/normal-feature audit PASS. Submitted review is not itself an authenticated review receipt or independently verified artifact bytes.
+
+### Next independent Security decision — READ_ONLY / DELTA_ONLY
+
+Complete the E01–E06 security review for the same pinned source. Individually rule on the real writer boundary and updated mutation, Clippy resolution, evidence transfer, and TA-B2936-05. Determine whether the public non-default `test-disk-writer-gate` Cargo feature and doc-hidden public API are acceptable for upstream inclusion (including explicit all-features builds, feature unification, inactive gate overhead, exact-path registry cleanup, timeout/panic and release behavior). A normal dependency-tree exclusion check does not prove all-features exclusion. Distinguish demonstrated defects, qualification gaps and maintainability concerns. Give one consolidated, actionable disposition: retain with precise scoped tests and rationale, or specify the smallest viable alternative that preserves the actual writer-boundary proof. If removing or redesigning the seam is required, identify exactly which evidence would become invalid and which tests must be rerun; avoid reopening D1/D3 and unaffected mutation controls. No code modifications or new test runs in the independent review.
+
+If retention is approved in scope, Engineering must execute the two new Test Architect commands on exact candidate in fork-only CI, verify nonzero selection of the intended shuffle_writer tests, record exact commands/exit codes/logs and artifact digests, and reconcile any all-features failure against the upstream baseline before changing source:
+
+    cargo test --locked --profile ci -p ballista-core --features test-disk-writer-gate --lib execution_plans::shuffle_writer
+    cargo check --locked --profile ci -p ballista-core --all-features --all-targets
+
+Collect Security disposition first to avoid qualifying a seam that may require replacement. Preserve all other accepted evidence. Any additional materially necessary check must be justified by the affected delta rather than a broad repeat. Final technical/security approval, independent Assurance, durable authorized private custody, upstream contribution-policy compliance and separate Founder approval remain mandatory. No external PR or merge.
+
+Status: TA02_CLOSED_SCOPED / TA04_CLOSED / TA05_OPEN / HOSTED_BUILD_SUCCESS / SECURITY_DELTA_PENDING / EVIDENCE_CUSTODY_OPEN / PUBLICATION_NO_GO.
