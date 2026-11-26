@@ -111,3 +111,21 @@ AETHER ENGINEERING: implement the minimum necessary targeted tests and any prove
 AETHER TEST ARCHITECT and AETHER SECURITY: independent DELTA_ONLY re-review after engineering delivery. AETHER ASSURANCE: final evidence provenance and scope reconciliation, including independent review receipts and published evidence custody. Founder approval of exact upstream PR remains separate.
 
 Status: **NO_GO_PUBLICATION / RED_PROVEN / LINUX_124_OF_124 / MACOS_PENDING / THREE_TECHNICAL_FINDINGS_OPEN / SECURITY_AND_ASSURANCE_PENDING / EVIDENCE_GATE_BLOCKED**.
+
+## Consolidated independent review disposition — AX-OSS-APACHE-BALLISTA-2936-002
+
+Founder supplied AETHER SECURITY review dated 2026-11-26 for candidate `85dabe6fde55ffa4685bc354be04808c5510aa07`, tree `fbfea41229e7fb7bb2c1ebc0e0cd1853b383e9d6`. Submitted verdict: NO_GO final security/publication; original fix PASS_SCOPED; ownership architecture ACCEPTABLE; zero newly introduced code defects identified by reviewer; engineering continuation GO. This records the supplied review, not authenticated independent execution receipts. Commander rechecked candidate identity and [run 45724870888](https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45724870888): Linux success, macOS in progress at observation. Prior RED and accepted evidence retained.
+
+### Authorized engineering batch D1–D5 (supersedes earlier handoff sequencing)
+
+- D1 / TA-B2936-01: independently owned executor directories; A teardown deletes only A; B remains operational for real reads and writes; then B teardown cleans B.
+- D2 / TA-B2936-02: deterministic overlap of real Shuffle writes, Flight reads and runtime shutdown; demonstrate quiescence, no premature deletion, no recreation following final cleanup.
+- D3 / TA-B2936-03 and SEC-B2936-01: real Arrow IPC do_get ownership, decoded values and completion/cancellation; cover affected range, whole-file and sort-shuffle reads, including pending asynchronous filesystem/blocking operations. Do not substitute synchronous mock reads for actual I/O. Integrate cases where meaningful, document any remaining unproven boundary.
+- D4: targeted ownership-removal negative controls in isolated test-only refs/worktrees; assert intended regression failure rather than build failure; preserve original RED evidence; positive controls on exact final source.
+- D5: final source identity, impacted tests, Linux/macOS qualification, umasks 022/077, rustfmt, diff check, cargo check, Clippy and applicable upstream integration tests. Reuse accepted evidence only with explicit scope and delta justification. Store actual logs, commands, exit codes, test names, source identities and SHA-256 evidence manifest under publication policy; no secrets or unrelated security details.
+
+Retain existing architecture unless a targeted falsifier demonstrates a defect. No broad rework, public API change, new dependency without justification, or change to pre-existing scheduler/Job cleanup contracts. Avoid sleeps as synchronization; bounded timeouts and deterministic barriers. Qualification-only files remain off upstream candidate diff. No external PR or merge. Any unrelated security matter must remain in separate confidential handling; no details or reproduction steps in this public repository. Do not claim broad platform security or guarantees beyond actual runtime lifecycle scope.
+
+Engineering delivers a single pinned successor with actual code, tests and evidence, not another plan. Independent Test Architect and Security DELTA_ONLY re-review required; Assurance reconciles evidence integrity and review provenance. Final external publication requires exact-content Founder approval. No independent gate closed merely by this checkpoint.
+
+Status: ENGINEERING_DELTA_GO / TECHNICAL_FINAL_NO_GO / SECURITY_FINAL_NO_GO / MACOS_PENDING / EVIDENCE_GATE_BLOCKED / UPSTREAM_PUBLICATION_BLOCKED.
