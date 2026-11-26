@@ -18,8 +18,10 @@
     "zip_crc": "PASS",
     "manifest_coverage": "PASS",
     "original_byte_verification": "Commander: all eight originals verified; supplied Assurance report covers first seven",
-    "permanent_original_custody": "PRIVATE_GIT_STORAGE_VERIFIED_BLOB_IDENTITY; INDEPENDENT_READBACK_PENDING",
-    "expiry": "2027-02-24"
+    "permanent_original_custody": "CLOSED_SCOPED_PRIVATE_GIT_RESTORE_AND_SHA256_VERIFIED_BY_ASSURANCE",
+    "expiry": "2027-02-24",
+    "stored_archive_sha256": "f0975e92f5fe081c73053eaddd312753c756e31ea1a074b4a3be66c7d5d576b5",
+    "stored_archive_bytes": 153614
   },
   "artifacts": [
     {
@@ -100,10 +102,10 @@
     "technical": "GO_SCOPED",
     "security": "GO_SCOPED",
     "original_integrity": "PASS",
-    "durable_custody": "STORAGE_VERIFIED_FINAL_ASSURANCE_PENDING",
-    "review_receipt_authentication": "OPEN",
-    "upstream_lint": "PASS_EXECUTION_AND_ORIGINAL_EVIDENCE_VERIFIED",
-    "rights_and_disclosure": "OPEN",
-    "publication": "NO_GO"
+    "durable_custody": "CLOSED_SCOPED",
+    "review_receipt_authentication": "CLOSED_SCOPED_FOUNDER_ATTESTATION",
+    "upstream_lint": "CLOSED_PASS_7_OF_7",
+    "rights_and_disclosure": "CLOSED_SCOPED_FOUNDER_ATTESTATION",
+    "publication": "AUTHORIZED_EXACT_CONTENT_PENDING_EXECUTION"
   }
 }
