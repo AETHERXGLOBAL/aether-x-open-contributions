@@ -11,13 +11,13 @@
   "classification": "PUBLIC_SANITIZED_INDEX",
   "report": "../../../docs/CANDIDATE_APACHE_BALLISTA_2936_2026-11-26.md",
   "verification": {
-    "archives": 7,
-    "archive_bytes": 134405,
-    "internal_files": 59,
+    "archives": 8,
+    "archive_bytes": 149487,
+    "internal_files": 78,
     "sha256": "PASS",
     "zip_crc": "PASS",
     "manifest_coverage": "PASS",
-    "original_byte_verification": "Commander and supplied Assurance report",
+    "original_byte_verification": "Commander: all eight originals verified; supplied Assurance report covers first seven",
     "permanent_original_custody": "PENDING",
     "expiry": "2027-02-24"
   },
@@ -92,7 +92,8 @@
       "run_id": 45791516777,
       "tested_head": "24e711a0216d3ec72fc8bf915733b420e55ae562",
       "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45791516777/artifacts/15103866377",
-      "original_byte_verification": "PENDING"
+      "original_byte_verification": "PASS",
+      "internal_files": 19
     }
   ],
   "gates": {
@@ -101,7 +102,7 @@
     "original_integrity": "PASS",
     "durable_custody": "OPEN",
     "review_receipt_authentication": "OPEN",
-    "upstream_lint": "PASS_EXECUTION_EVIDENCE_REVIEW_PENDING",
+    "upstream_lint": "PASS_EXECUTION_AND_ORIGINAL_EVIDENCE_VERIFIED",
     "rights_and_disclosure": "OPEN",
     "publication": "NO_GO"
   }
