@@ -84,6 +84,15 @@
       "run_id": 45788510590,
       "tested_head": "24e711a0216d3ec72fc8bf915733b420e55ae562",
       "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45788510590/artifacts/15102290866"
+    },
+    {
+      "artifact_id": "15103866377",
+      "bytes": 15082,
+      "sha256": "20385883b3f434aef0f7fdb92de3f2690b7bf62ad5c5adb56326d76903bed807",
+      "run_id": 45791516777,
+      "tested_head": "24e711a0216d3ec72fc8bf915733b420e55ae562",
+      "source": "https://github.com/AETHERXGLOBAL/datafusion-ballista/actions/runs/45791516777/artifacts/15103866377",
+      "original_byte_verification": "PENDING"
     }
   ],
   "gates": {
@@ -92,7 +101,7 @@
     "original_integrity": "PASS",
     "durable_custody": "OPEN",
     "review_receipt_authentication": "OPEN",
-    "upstream_lint": "IN_PROGRESS",
+    "upstream_lint": "PASS_EXECUTION_EVIDENCE_REVIEW_PENDING",
     "rights_and_disclosure": "OPEN",
     "publication": "NO_GO"
   }
