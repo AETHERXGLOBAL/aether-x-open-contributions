@@ -18,7 +18,7 @@
     "zip_crc": "PASS",
     "manifest_coverage": "PASS",
     "original_byte_verification": "Commander: all eight originals verified; supplied Assurance report covers first seven",
-    "permanent_original_custody": "PENDING",
+    "permanent_original_custody": "PRIVATE_GIT_STORAGE_VERIFIED_BLOB_IDENTITY; INDEPENDENT_READBACK_PENDING",
     "expiry": "2027-02-24"
   },
   "artifacts": [
@@ -100,7 +100,7 @@
     "technical": "GO_SCOPED",
     "security": "GO_SCOPED",
     "original_integrity": "PASS",
-    "durable_custody": "OPEN",
+    "durable_custody": "STORAGE_VERIFIED_FINAL_ASSURANCE_PENDING",
     "review_receipt_authentication": "OPEN",
     "upstream_lint": "PASS_EXECUTION_AND_ORIGINAL_EVIDENCE_VERIFIED",
     "rights_and_disclosure": "OPEN",
